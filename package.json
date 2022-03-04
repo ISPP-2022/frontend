@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "stacking-up-frontend",
   "private": true,
   "scripts": {
     "dev": "next dev",

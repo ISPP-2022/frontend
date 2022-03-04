@@ -1,3 +1,5 @@
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-green.svg)](https://conventionalcommits.org)
+
 En este repositorio se encuentra los archivos correspondiente al Frontend de la aplicacion de ISPP-G2.
 
 ## Comenzando 🚀
