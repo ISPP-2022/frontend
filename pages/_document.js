@@ -5,10 +5,9 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>StackingUp</title>
           <link rel="manifest" href="/manifest.json" />
-          <link rel="apple-touch-icon" href='/favicon.ico' />
-          <meta name="theme-color" content="#fff" />
+          <link rel="apple-touch-icon" href='/logo.png' />
+          <meta name="theme-color" content="#f0f0f0" />
         </Head>
         <body>
           <Main />
