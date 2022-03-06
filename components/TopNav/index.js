@@ -12,15 +12,19 @@ function Navbar() {
     <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16">
       <section className="shadow-md mx-auto px-4">
         <div className="flex justify-between">
-          <Link href="/">
-            <div className="h-16 w-16 cursor-pointer mr-4 shrink-0 relative md:hidden">
-              <Image loader={imgLoader} src="/logo.png" alt="StackingUp Logo" layout="fill" />
-            </div>
+          <Link href="/" passHref>
+            <a className="h-16 w-16 cursor-pointer mr-4 shrink-0 relative md:hidden">
+              <div>
+                <Image loader={imgLoader} src="/logo.png" alt="StackingUp Logo" layout="fill" />
+              </div>
+            </a>
           </Link>
-          <Link href="/">
-            <div className="h-16 w-[181px] cursor-pointer relative md:block hidden">
-              <Image loader={imgLoader} src="/logolargo.png" alt="StackingUp Logo" layout="fill" />
-            </div>
+          <Link href="/" passHref>
+            <a className="h-16 w-[181px] cursor-pointer relative md:block hidden">
+              <div className="">
+                <Image loader={imgLoader} src="/logolargo.png" alt="StackingUp Logo" layout="fill" />
+              </div>
+            </a>
           </Link>
 
           <input className="bg-transparent focus:outline-none 
@@ -33,11 +37,11 @@ function Navbar() {
           <div className="md:hidden flex items-center ml-4">
             <button onClick={() => setIsOpen(!isOpen)} className="mobile-menu-button">
               {isOpen ?
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg> :
                 <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               }
 
