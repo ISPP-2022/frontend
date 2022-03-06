@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link"
 
 const imgLoader = ({ src, width, quality }) => {
+  console.log()
   return `http://${process.env.UI_DNS || 'localhost:3000'}/${src}?w=${width}&q=${quality || 75}`
 }
 
@@ -12,6 +13,7 @@ function Navbar() {
     <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16">
       <section className="shadow-md mx-auto px-4">
         <div className="flex justify-between">
+          {/* Logos */}
           <Link href="/" passHref>
             <a className="h-16 w-16 cursor-pointer mr-4 shrink-0 relative md:hidden">
               <div>
@@ -26,14 +28,23 @@ function Navbar() {
               </div>
             </a>
           </Link>
-
+          {/* Barra de busqueda */}
           <input className="bg-transparent focus:outline-none 
             focus:shadow-outline border border-gray-300 focus:border-[#4aa7c0] rounded-lg 
             py-2 px-4 block appearance-none leading-normal my-2 w-full max-w-md
             transition duration-200 ease-in-out md:hidden"
             type="text" placeholder="Search" />
 
-
+          {/* Botones vista navegador */}
+          <div className="mr-5 align-middle md:flex hidden">
+            <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+              <p>Conectar</p>
+            </button>
+          </div>
+          {/* Menu movil */}
           <div className="md:hidden flex items-center ml-4">
             <button onClick={() => setIsOpen(!isOpen)} className="mobile-menu-button">
               {isOpen ?
@@ -44,33 +55,36 @@ function Navbar() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               }
-
             </button>
           </div>
-
         </div>
       </section>
-
+      {/* Modal menu movil */}
       <section className={`mobile-menu transition ${isOpen ? '' : 'translate-x-full'}  absolute inset-0 md:hidden flex`} >
         <div onClick={() => setIsOpen(!isOpen)} className="backdrop basis-1/3 bg-black opacity-25 h-screen ">
 
         </div>
-        <div className={`backdrop bg-gray-100 basis-2/3 h-screen border-t-2`}>
-          <header className="flex justify-center w-full py-1">
-            <Image className="shrink-0" loader={imgLoader} src="/logolargo.png" alt="StackingUp Logo" width={180} height={64} layout="intrinsic" />
+        <div className={`backdrop bg-gray-100 basis-2/3 h-screen border-t-2 grid-rows-9 grid`}>
+          <header className=" text-center w-full py-1 my-auto">
+            <Image className="shrink-0 " loader={imgLoader} src="/logolargo.png" alt="StackingUp Logo" width={180} height={65} layout="intrinsic" />
           </header>
-          <section className="h-1/2 ">
+          <section className="row-span-4 text-center space-y-5">
             <div className="mx-6 border-t-2" />
+            {/* Botones movil */}
+
+            <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+              Conectar
+            </button>
 
           </section>
-          <section className="h-1/2 space-y-3">
+          <section className="row-span-4 space-y-0.5">
             <div className="mx-6 border-t-2" />
-            <div className="text-center">
+            <div className="h-2/6 text-center">
               <p>¿Tienes un problema?</p>
               <button className="text-white bg-[#4aa7c0] px-5 py-3 text-2xl my-2 rounded hover:bg-[#34778a] transition-colors duration-100">Contactanos</button>
             </div>
             <div className="mx-6 border-t-2" />
-            <div className="mx-3 space-y-3">
+            <div className="mx-3 h-3/6 space-y-2">
               <p className="text-[#4aa7c0] underline">Preguntas frecuentes</p>
               <p className="text-[#4aa7c0] underline">Términos y condiciones</p>
               <p className="text-[#4aa7c0] underline">Política de privacidad</p>

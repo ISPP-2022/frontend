@@ -5,7 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {
-    },
+      gridTemplateRows: {
+        '9': 'repeat(9, minmax(0, 1fr))'
+      },
+    }
   },
   plugins: [],
 }
