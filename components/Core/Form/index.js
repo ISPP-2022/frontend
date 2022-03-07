@@ -27,7 +27,7 @@ export const Form = ({ onSubmit, className, children }) => {
 export const FieldTextBox = ({ label, value, placeholder = "", type="text", name, onChange }) => {
     return (
         <div className="w-full">
-            <label className="mx-2 font-medium">{label}
+            <label className="pl-2 font-medium">{label}
                 <input type={type} name={name} value={value} onChange={onChange} placeholder={placeholder} className="mx-2 my-2 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi" ></input>
             </label>
         </div>

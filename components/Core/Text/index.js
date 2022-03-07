@@ -4,7 +4,7 @@
  */
 export const Title = ({ children }) => {
     return (
-        <h1 className="mx-2 font-bold text-3xl">{children}</h1>
+        <h1 className="pl-2 font-bold text-3xl">{children}</h1>
     );
 };
 
@@ -14,7 +14,7 @@ export const Title = ({ children }) => {
  */
 export const Subtitle = ({ children }) => {
     return (
-        <h3 className="mx-2 font-bold text-xl">{children}</h3>
+        <h3 className="pl-2 font-bold text-xl">{children}</h3>
     );
 };
 
@@ -25,7 +25,7 @@ export const Subtitle = ({ children }) => {
  */
 export const Url = ({ children, href }) => {
     return (
-        <a href={href} className="mx-2 text-blue-bondi">{children}</a>
+        <a href={href} className="pl-2 text-blue-bondi">{children}</a>
     );
 };
 
@@ -35,7 +35,7 @@ export const Url = ({ children, href }) => {
  */
 export const Paragraph = ({ children }) => {
     return (
-        <p className="mx-2 text-base">{children}</p>
+        <p className="pl-2 text-base">{children}</p>
     );
 };
 

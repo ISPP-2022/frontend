@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "../Button";
+import { Title } from "../Text";
 /**
  * Returns the dialog object
  * @param  {string} title - The title of the dialog.
@@ -11,37 +12,43 @@ import { Button } from "../Button";
  * @param  {} onClickClose - The function to be executed when the close button is clicked.
  * @param  {} children - The content of the dialog.
  */
-export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCancel = "Cancelar", size = "medium", onClickAccept, onClickCancel, onClickClose, children }) => {
+export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCancel = "Cancelar", width = "medium", height = "small", onClickAccept, onClickCancel, onClickClose, children }) => {
     const dialogSize = {
-        "small": "w-1/4",
-        "medium": "w-1/2",
+        "small": "1/4",
+        "medium": "1/2",
     };
+
     return (
         <>
-            {/*Background*/}
-            <div className="flex items-center justify-center fixed left-0 bottom-0 w-full h-full bg-gray-700">
-                {/*Dialog*/}
-                <div className={"opacity-100 bg-white rounded-lg " + dialogSize[size]}>
-                    <div className="flex flex-col items-start p-4">
-                        <div className="flex items-center w-full">
-                            {/*Title*/}
-                            <div className="text-black font-medium text-lg">{title}</div>
-                            {/*Close button*/}
-                            <svg onClick={onClickClose} className="ml-auto fill-current text-gray-700 w-6 h-6 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
-                                <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z" />
-                            </svg>
+        <div className="fixed inset-0 bg-gray-900 opacity-50 w-full h-full">
+        </div>
+            <div className="fixed inset-0 flex items-center justify-center z-10">
+            {/* Main modal */}
+                <div class="relative px-4 w-full max-w-2xl h-full md:h-auto">
+                    {/* Modal content */}
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        {/* Modal header */}
+                        <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
+                            <h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
+                                Terms of Service
+                            </h3>
+                            <button type="button" onClick={onClickClose} class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="defaultModal">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </button>
                         </div>
-                        <div className="">
+                        {/* Modal body */}
+                        <div class="p-6 space-y-6">
                             {children}
                         </div>
-                        {/*Buttons Accept/Cancel */}
-                        <div className="ml-auto">
-                            <Button color="primary" onClick={onClickAccept}>{textAccept}</Button>
+                        {/* Modal footer */}
+                        <div class="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
+                        <Button color="primary" onClick={onClickAccept}>{textAccept}</Button>
                             <Button color="secondary" onClick={onClickCancel}>{textCancel}</Button>
                         </div>
                     </div>
                 </div>
             </div>
+                
         </>
     );
 };
