@@ -7,12 +7,12 @@ export default function Home() {
       <Head>
         <title>StackingUp</title>
       </Head>
-      <main>
-        <h1 className="text-3xl font-bold underline ">
-          Hello Home!
-        </h1>
-        <Footer />
+      <main className=" h-screen">
+        <div className="crossfade w-full h-full">
+          <figure></figure>
+        </div>
       </main>
+      <Footer />
     </div>
   )
 }
