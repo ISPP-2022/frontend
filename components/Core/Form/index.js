@@ -24,7 +24,7 @@ export const Form = ({ onSubmit, className, children }) => {
  * @param  {string} name - Name of the field.
  * @param  {function} onChange - Callback function to be called when field is changed.
  */
-export const FieldTextBox = ({ label, value, placeholder = "", type="text", name, onChange }) => {
+export const FieldTextBox = ({ label, value, placeholder = "", type = "text", name, onChange }) => {
     return (
         <div className="w-full">
             <label className="pl-2 font-medium">{label}
@@ -77,11 +77,11 @@ export const FieldCheckBox = ({ label, name, onChange }) => {
  * @param  {string} name - Name of the field.
  * @param  {string} label - Label of the field.
  */
-export const FieldSelectorBox = ({options, value, onChange, name, label=""}) => {
+export const FieldSelectorBox = ({ options, value, onChange, name, label = "" }) => {
     return (
-        <div class="w-full mx-2 my-2">
+        <div className="w-full mx-2 my-2">
             <label className="font-medium">{label}
-                <select value={value} onChange={onChange} name={name} class="form-select appearance-none
+                <select value={value} onChange={onChange} name={name} className="form-select appearance-none
                     w-full
                     text-base
                     font-normal
@@ -92,7 +92,7 @@ export const FieldSelectorBox = ({options, value, onChange, name, label=""}) => 
                     transition
                     ease-in-out
                     focus:text-black focus:bg-white focus:border-blue-bondi focus:outline-none" aria-label="Default select example">
-                    {options.map(option => (<option className='bg-gray-200' value={option.value}>{option.label}</option>))}
+                    {options.map(option => (<option className='bg-gray-200' key={option.value} value={option.value}>{option.label}</option>))}
                 </select>
             </label>
         </div>

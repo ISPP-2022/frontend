@@ -29,8 +29,7 @@ function Library() {
         })
     }
 
-    const sendData = (event) =>
-    {
+    const sendData = (event) => {
         event.preventDefault();
         console.log(dataForm);
     }
@@ -39,7 +38,6 @@ function Library() {
         <div>
             <Head>
                 <title>Library</title>
-                <script src="../path/to/flowbite/dist/flowbite.js"></script>
             </Head>
             <Title> Library </Title>
             <Paragraph> This page shows all core components. </Paragraph>
@@ -66,10 +64,10 @@ function Library() {
             <Subtitle> Form </Subtitle>
             <div className="w-1/2">
                 <Form onSubmit={(event) => sendData(event)}>
-                    <FieldTextBox name="text" label="Text" onChange={(event) => handleInputChange(event)}/>
-                    <FieldDateBox name="date" label="Date" onChange={(event) => handleInputChange(event)}/>
-                    <FieldSelectorBox name="select" label="Select" options={options} onChange={(event) => handleInputChange(event)}/>
-                    <FieldCheckBox name="checkbox" label="Checkbox" onChange={(event) => handleInputChange(event)}/>
+                    <FieldTextBox name="text" label="Text" onChange={(event) => handleInputChange(event)} />
+                    <FieldDateBox name="date" label="Date" onChange={(event) => handleInputChange(event)} />
+                    <FieldSelectorBox name="select" label="Select" options={options} onChange={(event) => handleInputChange(event)} />
+                    <FieldCheckBox name="checkbox" label="Checkbox" onChange={(event) => handleInputChange(event)} />
                     <Button type="submit">Submit</Button>
                 </Form>
 
