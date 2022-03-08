@@ -11,7 +11,10 @@ module.exports = {
         webcolor: {
           50: '#4aa7c0'
         }
-      }
+      },
+      gridTemplateRows: {
+        '9': 'repeat(9, minmax(0, 1fr))'
+      },
     }
   },
   plugins: [],
