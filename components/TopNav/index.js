@@ -5,21 +5,21 @@ import Link from "next/link"
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16">
+    <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50">
       <section className="shadow-md mx-auto px-4">
         <div className="flex justify-between">
           {/* Logos */}
           <Link href="/" passHref>
             <a className="h-16 w-16 cursor-pointer mr-4 shrink-0 relative md:hidden">
               <div>
-                <Image src="/logo.png" alt="StackingUp Logo" layout="fill" />
+                <Image priority src="/logo.png" alt="StackingUp Logo" layout="fill" />
               </div>
             </a>
           </Link>
           <Link href="/" passHref>
             <a className="h-16 w-[181px] cursor-pointer relative md:block hidden">
               <div className="">
-                <Image src="/logolargo.png" alt="StackingUp Logo" layout="fill" />
+                <Image priority src="/logolargo.png" alt="StackingUp Logo" layout="fill" />
               </div>
             </a>
           </Link>

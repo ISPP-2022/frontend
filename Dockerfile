@@ -1,12 +1,18 @@
-FROM node:alpine
+FROM node:16.13.0-alpine3.14
+
+RUN mkdir -p /usr/src/app
+ENV PORT 3000
+
 WORKDIR /usr/src/app
 
-COPY . ./
+COPY package.json /usr/src/app
 
-# building the app
-RUN npm i
-RUN npm run build
+RUN yarn install --production
+RUN yarn add tailwindcss@latest postcss@latest autoprefixer@latest --dev
+
+COPY . /usr/src/app
+
+RUN yarn build
 
 EXPOSE 3000
-# Running the app
-CMD [ "npm", "start" ]
+CMD [ "yarn", "start" ]
