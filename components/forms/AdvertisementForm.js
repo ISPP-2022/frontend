@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
+
 export default function AdvertisementForm() {
 
     const [isChecked, setIsChecked] = useState(false);
@@ -15,7 +16,7 @@ export default function AdvertisementForm() {
                             <li>
                                 <input className='hidden peer' type="radio" id="room" name="space" value="room" />
                                 <label htmlFor="room" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
-                                    <img src="/images/room.svg" width="100" height="100" alt='room' />
+                                    <Image src="/images/room.svg" width="100" height="100" alt='room' />
                                 </label>
                                 <p className='flex justify-center'>Habitación</p>
                             </li>
@@ -23,7 +24,7 @@ export default function AdvertisementForm() {
                             <li>
                                 <input className='hidden peer' type="radio" id="garage" name="space" value="garage" />
                                 <label htmlFor="garage" className='flex justify-center  rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
-                                    <img src="/images/garage.svg" width="100" height="100" alt='garage' />
+                                    <Image src="/images/garage.svg" width="100" height="100" alt='garage' />
                                 </label>
                                 <p className='flex justify-center'>Garaje</p>
                             </li>
@@ -31,7 +32,7 @@ export default function AdvertisementForm() {
                             <li>
                                 <input className='hidden peer' type="radio" id="basement" name="space" value="basement" />
                                 <label htmlFor="basement" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
-                                    <img src="/images/basement.svg" width="100" height="100" alt='basement' />
+                                    <Image src="/images/basement.svg" width="100" height="100" alt='basement' />
                                 </label>
                                 <p className='flex justify-center'>Sótano</p>
                             </li>
@@ -39,7 +40,7 @@ export default function AdvertisementForm() {
                             <li>
                                 <input className='hidden peer' type="radio" id="storage-room" name="space" value="storage-room" />
                                 <label htmlFor="storage-room" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
-                                    <img src="/images/storage-room.svg" width="100" height="100" alt='storage-room' />
+                                    <Image src="/images/storage-room.svg" width="100" height="100" alt='storage-room' />
                                 </label>
                                 <p className='flex justify-center'>Trastero</p>
                             </li>
@@ -47,7 +48,7 @@ export default function AdvertisementForm() {
                             <li>
                                 <input className='hidden peer' type="radio" id="warehouse" name="space" value="warehouse" />
                                 <label htmlFor="warehouse" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
-                                    <img src="/images/warehouse.svg" width="100" height="100" alt='warehouse' />
+                                    <Image src="/images/warehouse.svg" width="100" height="100" alt='warehouse' />
                                 </label>
                                 <p className='flex justify-center'>Almacén</p>
                             </li>
@@ -55,7 +56,7 @@ export default function AdvertisementForm() {
                             <li>
                                 <input className='hidden peer' type="radio" id="other" name="space" value="other" />
                                 <label htmlFor="other" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
-                                    <img src="/images/other.svg" width="100" height="100" alt='other' />
+                                    <Image src="/images/other.svg" width="100" height="100" alt='other' />
                                 </label>
                                 <p className='flex justify-center'>Otro</p>
                             </li>
@@ -145,7 +146,7 @@ export default function AdvertisementForm() {
 
                     <fieldset className='space-y-4 space-x-4 flex p-2'>
                         <label htmlFor="tags">
-                            <img src="/images/tag.svg" width="35" height="35" alt='tag' />
+                            <Image src="/images/tag.svg" width="35" height="35" alt='tag' />
                         </label>
                         <select id="tags" multiple>
                             <option value="1">Etiqueta 1</option>
@@ -155,7 +156,7 @@ export default function AdvertisementForm() {
 
                     <fieldset className='space-x-4 pt-4 flex flex-row'>
                         <label className='inline-block' htmlFor='img'>
-                            <img src="/images/image.svg" width='100' height='100' alt='image' />
+                            <Image src="/images/image.svg" width='100' height='100' alt='image' />
                         </label>
                         <input className='pt-0 hidden' type="file" multiple id="img" name="img" accept="image/*" />
                     </fieldset>
@@ -163,7 +164,7 @@ export default function AdvertisementForm() {
                     <div className='pt-10 flex items-center justify-center'>
                         <button className='border-2 py-2 px-4 border-webcolor-50 rounded hover:bg-slate-100 flex items-center' type="submit">
                             <span className='pr-2 text-lg'>Publicar</span>
-                            <img src="/images/paperplane.svg" width="20" height="20" alt='send' />
+                            <Image src="/images/paperplane.svg" width="20" height="20" alt='send' />
                         </button>
                     </div>
                 </form>

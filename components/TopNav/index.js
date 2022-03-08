@@ -10,7 +10,7 @@ const imgLoader = ({ src, width, quality }) => {
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16">
+    <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50">
       <section className="shadow-md mx-auto px-4">
         <div className="flex justify-between">
           {/* Logos */}
