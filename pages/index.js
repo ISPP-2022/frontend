@@ -7,9 +7,13 @@ export default function Home() {
         <title>StackingUp</title>
       </Head>
       <main>
-        <h1 className="text-3xl font-bold underline ">
-          Hello Home!
-        </h1>
+        <div className="crossfade">
+          <figure></figure>
+          <figure></figure>
+          <figure></figure>
+          <figure></figure>
+          <figure></figure>
+      </div>
       </main>
     </div>
   )
