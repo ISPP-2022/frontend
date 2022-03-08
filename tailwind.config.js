@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     colors: {
       'gray-dark': '#273444',
-      'gray' : '#4a5b6c',
+      'gray': '#4a5b6c',
       'gray-100': '#f7fafc',
       'gray-200': '#edf2f7',
       'gray-300': '#e2e8f0',
@@ -18,7 +18,11 @@ module.exports = {
       'blue-bondi': '#4AA7C0',
       'blue-bondi-dark': '#4190A6'
     },
-    extend: {},
+    extend: {
+      gridTemplateRows: {
+        '9': 'repeat(9, minmax(0, 1fr))'
+      },
+    }
   },
   plugins: [
     require('flowbite/plugin')
