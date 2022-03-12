@@ -23,3 +23,7 @@ imageAnimation {
   33% {background-image: url('../public/carouselImages/2.jpg');}
   66% {background-image: url('../public/carouselImages/3.jpg');}
 }
+
+svg.star-svg {
+  display: inline;
+}
