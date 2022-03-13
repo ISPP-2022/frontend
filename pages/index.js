@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import Head from "next/head";
 
 export default function Home() {
@@ -6,11 +7,12 @@ export default function Home() {
       <Head>
         <title>StackingUp</title>
       </Head>
-      <main>
-        <h1 className="text-3xl font-bold underline ">
-          Hello Home!
-        </h1>
+      <main className=" h-screen">
+        <div className="crossfade w-full h-full">
+          <figure></figure>
+        </div>
       </main>
+      <Footer />
     </div>
   )
 }
