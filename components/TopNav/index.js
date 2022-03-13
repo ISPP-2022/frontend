@@ -1,14 +1,15 @@
 import Image from "next/image"
 import { useState } from "react";
 import Link from "next/link"
+import AuthModal from "../AuthModal";
 
 const imgLoader = ({ src, width, quality }) => {
-  console.log()
   return `http://${process.env.UI_DNS || 'localhost:3000'}/${src}?w=${width}&q=${quality || 75}`
 }
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   return (
     <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16">
       <section className="shadow-md mx-auto px-4">
@@ -17,14 +18,14 @@ function Navbar() {
           <Link href="/" passHref>
             <a className="h-16 w-16 cursor-pointer mr-4 shrink-0 relative md:hidden">
               <div>
-                <Image loader={imgLoader} src="/logo.png" alt="StackingUp Logo" layout="fill" />
+                <Image src="/logo.png" alt="StackingUp Logo" layout="fill" />
               </div>
             </a>
           </Link>
           <Link href="/" passHref>
             <a className="h-16 w-[181px] cursor-pointer relative md:block hidden">
               <div className="">
-                <Image loader={imgLoader} src="/logolargo.png" alt="StackingUp Logo" layout="fill" />
+                <Image src="/logolargo.png" alt="StackingUp Logo" layout="fill" />
               </div>
             </a>
           </Link>
@@ -37,7 +38,7 @@ function Navbar() {
 
           {/* Botones vista navegador */}
           <div className="mr-5 align-middle md:flex hidden">
-            <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
+            <button onClick={() => setShowModal(true)} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
               </svg>
@@ -66,13 +67,13 @@ function Navbar() {
         </div>
         <div className={`backdrop bg-gray-100 basis-2/3 h-screen border-t-2 grid-rows-9 grid`}>
           <header className=" text-center w-full py-1 my-auto">
-            <Image className="shrink-0 " loader={imgLoader} src="/logolargo.png" alt="StackingUp Logo" width={180} height={65} layout="intrinsic" />
+            <Image className="shrink-0 " src="/logolargo.png" alt="StackingUp Logo" width={180} height={65} layout="intrinsic" />
           </header>
           <section className="row-span-4 text-center space-y-5">
             <div className="mx-6 border-t-2" />
             {/* Botones movil */}
 
-            <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+            <button onClick={() => setShowModal(true)} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
               Conectar
             </button>
 
@@ -103,6 +104,9 @@ function Navbar() {
           </section>
         </div>
       </section>
+      {showModal && (
+        <AuthModal handleClose={() => setShowModal(false)} />
+      )}
     </nav >
   );
 }
