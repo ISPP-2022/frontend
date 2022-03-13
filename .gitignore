@@ -37,3 +37,6 @@ yarn-error.log*
 **/public/workbox-*.js
 **/public/sw.js
 **/public/fallback-*.js
+
+# local files
+*local*
