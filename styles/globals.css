@@ -3,6 +3,15 @@
 @tailwind utilities;
 
 /*Background carousel https://www.cssscript.com/css-only-crossfading-background-slideshow/*/
+body{
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
 
 .crossfade > figure {
     animation: imageAnimation 30s infinite;
@@ -12,7 +21,7 @@
     height: 100%;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .crossfade{
       display: none;
     }

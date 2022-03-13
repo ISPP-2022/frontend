@@ -6,18 +6,18 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50">
-      <section className="shadow-md mx-auto px-4">
+      <section className="shadow-lg mx-auto px-4">
         <div className="flex justify-between">
           {/* Logos */}
           <Link href="/" passHref>
-            <a className="h-16 w-16 cursor-pointer mr-4 shrink-0 relative md:hidden">
+            <a className="h-16 w-16 cursor-pointer mr-4 shrink-0 relative lg:hidden">
               <div>
                 <Image priority src="/logo.png" alt="StackingUp Logo" layout="fill" />
               </div>
             </a>
           </Link>
           <Link href="/" passHref>
-            <a className="h-16 w-[181px] cursor-pointer relative md:block hidden">
+            <a className="h-16 w-[181px] cursor-pointer relative lg:block hidden">
               <div className="">
                 <Image priority src="/logolargo.png" alt="StackingUp Logo" layout="fill" />
               </div>
@@ -26,12 +26,12 @@ function Navbar() {
           {/* Barra de busqueda */}
           <input className="bg-transparent focus:outline-none 
             focus:shadow-outline border border-gray-300 focus:border-[#4aa7c0] rounded-lg 
-            py-2 px-4 block appearance-none leading-normal my-2 w-full max-w-md
-            transition duration-200 ease-in-out md:hidden"
+            py-2 px-4 block appearance-none leading-normal my-2 w-full max-w-lg
+            transition duration-200 ease-in-out lg:hidden"
             type="text" placeholder="Search" />
 
           {/* Botones vista navegador */}
-          <div className="mr-5 align-middle md:flex hidden">
+          <div className="mr-5 align-middle lg:flex hidden">
             <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
@@ -40,7 +40,7 @@ function Navbar() {
             </button>
           </div>
           {/* Menu movil */}
-          <div className="md:hidden flex items-center ml-4">
+          <div className="lg:hidden flex items-center ml-4">
             <button onClick={() => setIsOpen(!isOpen)} className="mobile-menu-button">
               {isOpen ?
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -55,7 +55,7 @@ function Navbar() {
         </div>
       </section>
       {/* Modal menu movil */}
-      <section className={`mobile-menu transition ${isOpen ? '' : 'translate-x-full'}  absolute inset-0 md:hidden flex`} >
+      <section className={`mobile-menu transition ${isOpen ? '' : 'translate-x-full'}  absolute inset-0 lg:hidden flex`} >
         <div onClick={() => setIsOpen(!isOpen)} className="backdrop basis-1/3 bg-black opacity-25 h-screen ">
 
         </div>
