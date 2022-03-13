@@ -1,9 +1,11 @@
 import Image from "next/image"
 import { useState } from "react";
 import Link from "next/link"
+import AuthModal from "../AuthModal";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   return (
     <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50">
       <section className="shadow-md mx-auto px-4">
@@ -32,7 +34,7 @@ function Navbar() {
 
           {/* Botones vista navegador */}
           <div className="mr-5 align-middle md:flex hidden">
-            <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
+            <button onClick={() => setShowModal(true)} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
               </svg>
@@ -67,7 +69,7 @@ function Navbar() {
             <div className="mx-6 border-t-2" />
             {/* Botones movil */}
 
-            <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+            <button onClick={() => setShowModal(true)} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
               Conectar
             </button>
 
@@ -98,6 +100,9 @@ function Navbar() {
           </section>
         </div>
       </section>
+      {showModal && (
+        <AuthModal handleClose={() => setShowModal(false)} />
+      )}
     </nav >
   );
 }
