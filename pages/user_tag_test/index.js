@@ -9,7 +9,7 @@ function User() {
         <title>Página de test usuario</title>
       </Head>
       <Title>Página de test usuario</Title>
-      <div className="md:w-1/2 border border-2 rounded-lg border-blue-bondi">
+      <div className="md:w-1/2 border-2 rounded-lg border-blue-bondi">
         <div id="relleno" className="h-96">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
           nunc felis, rhoncus at sagittis eget, suscipit at mi. Vivamus

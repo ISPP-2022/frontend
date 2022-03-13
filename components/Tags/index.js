@@ -3,7 +3,7 @@ export const Tags = ({ tags }) => {
 
   tags?.forEach((value) => {
     result.push(
-      <div className="rounded-full bg-white border border-blue-bondi text-blue-bondi px-3 py-1 mx-1 my-2">
+      <div key={value} className="rounded-full bg-white border border-blue-bondi text-blue-bondi px-3 py-1 mx-1 my-2">
         {value}
       </div>
     );
