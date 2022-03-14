@@ -1,3 +1,4 @@
+import SpaceOwner from "../../components/SpaceOwner/index.js";
 import EmblaCarousel from "../../components/SpacesCarousel/index.js";
 import TopNav from "../../components/TopNav";
 
@@ -10,7 +11,10 @@ export default function Space(props) {
         <>
             <TopNav />
             <div className='md:flex justify-center md:mr-[25%]'>
-                <EmblaCarousel slides={slides} />
+                <div className="md:border-webcolor-50 md:border-2 md:rounded-md md:mt-4">
+                    <EmblaCarousel slides={slides} />
+                    <SpaceOwner />
+                </div>
             </div>
         </>
     )
