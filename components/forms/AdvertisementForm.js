@@ -1,6 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Button } from '../Core/Button';
+import Head from 'next/head';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import PostTreatment from './PostTreatment';
 
 /**
  * Add advertisement form
@@ -8,7 +12,9 @@ import { Button } from '../Core/Button';
  * the form is for editing/deleting
  */
 
+
 export default function AdvertisementForm(props) {
+
 
     // Variable para mostrar/ocultar hora de inicio/fin
     const [isChecked, setIsChecked] = useState(false);
@@ -34,7 +40,7 @@ export default function AdvertisementForm(props) {
     const [surface2, setSurface2] = useState(1);
     const [location, setLocation] = useState('');
 
-    const [startAvailability, setStartAvailability] = useState();
+    const [startAvailability, setStartAvailability] = useState('');
     const [endAvailability, setEndAvailability] = useState();
     
     const [shared, setShared] = useState(false);
@@ -44,9 +50,35 @@ export default function AdvertisementForm(props) {
 
     const [isEdit, setIsEdit] = useState(props.isEdit);
 
-    // Faltan etiquetas, imágenes...
+    const [tags, setTags] = useState([]);
+
+    function handleChangeTags(e) {
+        const updatedTags = [...e.target.options]
+            .filter(option => option.selected)
+            .map(x => x.value);
+        setTags(updatedTags);
+    }
+
+    const [images, setImages] = useState([]);
+
+    function handleFiles(e) {        
+        const array1 = Array.from(e.target.files);
+        const array2 = [];
+        for (var i = 0; i < array1.length; i++) {
+            let reader = new FileReader();
+            reader.readAsDataURL(array1[i]);
+            reader.onload = function () {
+                var imageBase64 = reader.result;
+                if (imageBase64 != null) {
+                    array2.push(imageBase64.split(',')[1]);
+                }
+            };
+        }
+        setImages(array2);
+    }
 
     const [errors, setErrors] = useState([]);
+    const [success, setSuccess] = useState(false);
 
 
     /* Tipos de validaciones:
@@ -63,6 +95,30 @@ export default function AdvertisementForm(props) {
     - Etiquetas: ¿cada una de las escogidas tiene que ser una de las posibles opciones?
     - Imágenes: ¿?
     */
+
+    // Cargar campo para introducir dirección
+    useEffect(() => {
+        
+        //DESCOMENTAR Y PONER API_KEY
+
+        /*
+        // PONER AQUÍ LA API KEY  
+        const geocoder = new MapboxGeocoder({
+            countries: 'es',
+            accessToken: "" //API KEY MAPBOX
+        });
+        
+        geocoder.addTo('#geocoder');
+        
+        // Add geocoder result to container.
+        geocoder.on('result', (e) => {
+            if (e.result.geometry.coordinates[0].toString()!=null && e.result.geometry.coordinates[1].toString()!=null) {
+                setLocation(e.result.geometry.coordinates[1].toString() + ',' + e.result.geometry.coordinates[0].toString());
+            }
+        });
+        */
+    }, []);
+
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -84,11 +140,15 @@ export default function AdvertisementForm(props) {
             errorsArray.push('La hora de inicio debe ser anterior a la fecha de fin.');
         }
 
-        if (startAvailability>endAvailability) {
+        if (location == '') {
+            errorsArray.push('Escoge una localización válida.');
+        }
+
+        if (endAvailability != undefined && startAvailability>endAvailability) {
             errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
         }
 
-        if (type=='months') {
+        if (type=='months' && endAvailability != undefined) {
             const date1 = new Date(startAvailability);
             const date2 = new Date(endAvailability);
             const diffTime = Math.abs(date2 - date1);
@@ -97,18 +157,40 @@ export default function AdvertisementForm(props) {
                 errorsArray.push('Si se indica un alquiler de meses, la disponibilidad debe ser al menos de 30 días.');
             }
         }
+
+        if (shared==undefined) {
+            errorsArray.push('Selecciona un valor posible en "Compartido".')
+        }
         
         setErrors(errorsArray);
+
+        // Si no hay errores, hacemos POST
+        if (errorsArray.length == 0) {
+            PostTreatment(title, description, startAvailability, endAvailability, location, 
+                surface1, surface2, shared, type, price, tags, space, images);
+        }
     }
 
 
     return (
+        <>
+        <Head>
+            <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet"/>
+        </Head>
+
+        {/*Localizacion*/ }
+        <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css"></link>
+        
         <div>
             <main className='grid bg-[#e6f6fa]  place-items-center md:py-4 '>
-                <form onSubmit={handleSubmit}className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
+                <form onSubmit={handleSubmit} className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
                     <p className='text-center'>INFORMACIÓN DE TU ESPACIO</p>
                     <>
                         {errors.map((error) => <p key={error} className='text-red-600'>{error}</p>)}
+                        {success==true &&
+                            <p className='text-green-600'>Espacio creado con éxito.</p>
+                        
+                        }
                     </>
 
                     {/* Tipos de espacios */}
@@ -116,7 +198,7 @@ export default function AdvertisementForm(props) {
                         <p className='py-4'>Tipo de espacio</p>
                         <ul className='grid grid-cols-3'>
                             <li>
-                                <input className='hidden peer' type="radio" id="room" name="space" value="room" onChange={(e) => setSpace(e.target.value)} />
+                                <input className='hidden peer' type="radio" id="room" name="space" value="HOUSE_ROOM" onChange={(e) => setSpace(e.target.value)} />
                                 <label htmlFor="room" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                     <Image src="/images/room.svg" width="100" height="100" alt='room' />
                                 </label>
@@ -124,7 +206,7 @@ export default function AdvertisementForm(props) {
                             </li>
 
                             <li>
-                                <input className='hidden peer' type="radio" id="garage" name="space" value="garage" onChange={(e) => setSpace(e.target.value)} />
+                                <input className='hidden peer' type="radio" id="garage" name="space" value="GARAGE" onChange={(e) => setSpace(e.target.value)} />
                                 <label htmlFor="garage" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                     <Image src="/images/garage.svg" width="100" height="100" alt='garage' />
                                 </label>
@@ -132,7 +214,7 @@ export default function AdvertisementForm(props) {
                             </li>
 
                             <li>
-                                <input className='hidden peer' type="radio" id="basement" name="space" value="basement" onChange={(e) => setSpace(e.target.value)} />
+                                <input className='hidden peer' type="radio" id="basement" name="space" value="BASEMENT" onChange={(e) => setSpace(e.target.value)} />
                                 <label htmlFor="basement" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                     <Image src="/images/basement.svg" width="100" height="100" alt='basement' />
                                 </label>
@@ -140,7 +222,7 @@ export default function AdvertisementForm(props) {
                             </li>
 
                             <li>
-                                <input className='hidden peer' type="radio" id="storage-room" name="space" value="storage-room" onChange={(e) => setSpace(e.target.value)} />
+                                <input className='hidden peer' type="radio" id="storage-room" name="space" value="STORAGE_ROOM" onChange={(e) => setSpace(e.target.value)} />
                                 <label htmlFor="storage-room" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                     <Image src="/images/storage-room.svg" width="100" height="100" alt='storage-room' />
                                 </label>
@@ -148,7 +230,7 @@ export default function AdvertisementForm(props) {
                             </li>
 
                             <li>
-                                <input className='hidden peer' type="radio" id="warehouse" name="space" value="warehouse" onChange={(e) => setSpace(e.target.value)} />
+                                <input className='hidden peer' type="radio" id="warehouse" name="space" value="INDUSTRIAL_WAREHOUSE" onChange={(e) => setSpace(e.target.value)} />
                                 <label htmlFor="warehouse" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                     <Image src="/images/warehouse.svg" width="100" height="100" alt='warehouse' />
                                 </label>
@@ -216,8 +298,8 @@ export default function AdvertisementForm(props) {
 
                     {/* Ubicación */}
                     <fieldset className='space-y-4 space-x-4'>
-                        <label htmlFor="location">Ubicación:</label>
-                        <input className="border" required type="text" id="location" value={location} onChange={(e) => setLocation(e.target.value)} />
+                        <label htmlFor="geocoder">Ubicación:</label>
+                        <div id="geocoder"></div>
                     </fieldset>
 
                     {/* Disponibilidad */}
@@ -226,7 +308,7 @@ export default function AdvertisementForm(props) {
                             <span className='pr-4'>Disponibilidad: </span>
                             <input className='border' required type="date" id="start_availability" value={startAvailability} onChange={(e) => setStartAvailability(e.target.value)}  />
                             -
-                            <input className='border' required type="date" id="end_availability" value={endAvailability} onChange={(e) => setEndAvailability(e.target.value)} />
+                            <input className='border' type="date" id="end_availability" value={endAvailability} onChange={(e) => setEndAvailability(e.target.value)} />
                         </label>
 
 
@@ -244,7 +326,7 @@ export default function AdvertisementForm(props) {
                     {/* Título */}
                     <fieldset className='space-y-4 space-x-4'>
                         <label htmlFor="title">Título</label>
-                        <input className='border' required type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <input className='border' required type="text" id="title" minLength="3" maxLength="50" value={title} onChange={(e) => setTitle(e.target.value)} />
                     </fieldset>
 
                     {/* Descripción */}
@@ -258,9 +340,29 @@ export default function AdvertisementForm(props) {
                         <label htmlFor="tags">
                             <Image src="/images/tag.svg" width="35" height="35" alt='tag' />
                         </label>
-                        <select id="tags" multiple>
-                            <option value="1">Etiqueta 1</option>
-                            <option value="2">Etiqueta 2</option>
+                        <select id="tags" multiple 
+                            onChange={handleChangeTags} value={tags}>
+                            <option value="GROUND_FLOOR">Planta baja</option>
+                            <option value="FLOOR_1">Primera planta</option>
+                            <option value="FLOOR_2">Segunda planta</option>
+                            <option value="FLOOR_3UP">Tercera planta o superior</option>
+                            <option value="OFFICE_ROOM">Oficina</option>
+                            <option value="PENTHOUSE">Ático</option>
+                            <option value="ELEVATOR">Con ascensor</option>
+                            <option value="WET">Húmedo</option>
+                            <option value="DRY">Seco</option>
+                            <option value="COLD">Frío</option>
+                            <option value="WARM">Templado</option>
+                            <option value="HOT">Caluroso</option>
+                            <option value="SECURITY_ALARM">Alarma de seguridad</option>
+                            <option value="VIDEO_MONITORING">Videovigilancia</option>
+                            <option value="FIRE_ALARM">Alarma antiincendios</option>
+                            <option value="SOCKET">Con enchufe</option>
+                            <option value="INDOOR">Interior</option>
+                            <option value="OUTDOOR">Exterior</option>
+                            <option value="NARROW_ACCESS">Acceso estrecho</option>
+                            <option value="MEDIUM_WIDTH_ACCESS">Acceso de anchura media</option>
+                            <option value="WIDE_ACCESS">Acceso amplio</option>
                         </select>
                     </fieldset>
 
@@ -269,7 +371,7 @@ export default function AdvertisementForm(props) {
                         <label className='inline-block' htmlFor='img'>
                             <Image src="/images/image.svg" width='100' height='100' alt='image' />
                         </label>
-                        <input className='pt-0 hidden' type="file" multiple id="img" name="img" accept="image/*" />
+                        <input className='pt-0 hidden' onChange={handleFiles} type="file" multiple id="img" name="img" accept="image/png, image/jpeg" />
                     </fieldset>
 
                     {isEdit==false &&
@@ -287,11 +389,10 @@ export default function AdvertisementForm(props) {
                             <Button type='submit' color='red' onClick='' className='text-lg border-2 mt-4'>Eliminar</Button>
                         </div>
                     }
-
                 </form>
             </main>
         </div>
+        </>
     )
 
-    rf
 }
