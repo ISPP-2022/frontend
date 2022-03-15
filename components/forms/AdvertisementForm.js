@@ -4,12 +4,14 @@ import { Button } from '../Core/Button';
 import Head from 'next/head';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import PostTreatment from './PostTreatment';
+import PostUpdateVerification, { CreateNewSpaceObject } from './PostUpdateAuxiliar';
+import axios from 'axios';
 
 /**
  * Add advertisement form
  * @param  {boolean} isEdit - if true, the form is for creating a new one; if false, 
  * the form is for editing/deleting
+ * @param  {int} userId - id from authToken 
  */
 
 
@@ -32,13 +34,14 @@ export default function AdvertisementForm(props) {
             setIsChecked(false);
         }
     }
+
     const [startHour, setStartHour] = useState('');
     const [endHour, setEndHour] = useState('');
 
     const [price, setPrice] = useState(1);
     const [surface1, setSurface1] = useState(1);
     const [surface2, setSurface2] = useState(1);
-    const [location, setLocation] = useState('');
+    const [location, setLocation] = useState('1.0,1.0'); //MODIFICAR API KEY
 
     const [startAvailability, setStartAvailability] = useState('');
     const [endAvailability, setEndAvailability] = useState();
@@ -61,20 +64,25 @@ export default function AdvertisementForm(props) {
 
     const [images, setImages] = useState([]);
 
-    function handleFiles(e) {        
-        const array1 = Array.from(e.target.files);
-        const array2 = [];
-        for (var i = 0; i < array1.length; i++) {
-            let reader = new FileReader();
-            reader.readAsDataURL(array1[i]);
-            reader.onload = function () {
-                var imageBase64 = reader.result;
-                if (imageBase64 != null) {
-                    array2.push(imageBase64.split(',')[1]);
-                }
-            };
+    {/* Convierte los archivos a base64 y los guarda en images */}
+    async function handleFiles(e) {
+        setImages([]);      
+        let array1 = Array.from(e.target.files);
+        let array2 = [];
+        for (let file of array1) {
+            var imageBase64 = await readFileAsDataURL(file);
+            array2.push(imageBase64.split(',')[1]);
         }
         setImages(array2);
+    }
+
+    async function readFileAsDataURL(file) {
+        let result_base64 = await new Promise((resolve) => {
+            let fileReader = new FileReader();
+            fileReader.onload = (e) => resolve(fileReader.result);
+            fileReader.readAsDataURL(file);
+        });
+        return result_base64;
     }
 
     const [errors, setErrors] = useState([]);
@@ -102,10 +110,9 @@ export default function AdvertisementForm(props) {
         //DESCOMENTAR Y PONER API_KEY
 
         /*
-        // PONER AQUÍ LA API KEY  
         const geocoder = new MapboxGeocoder({
             countries: 'es',
-            accessToken: "" //API KEY MAPBOX
+            accessToken: "pk.eyJ1Ijoic3RhY2tpbmd1cCIsImEiOiJjbDBwZ2s4bjkwcmd4M2Jwa2FmNjJjOXA1In0.eNZfZgg24TpoixJ5wMQuIA" //API KEY MAPBOX
         });
         
         geocoder.addTo('#geocoder');
@@ -123,51 +130,36 @@ export default function AdvertisementForm(props) {
     function handleSubmit(e) {
         e.preventDefault();
 
-        let errorsArray = [];
-        if (space == '') {
-            errorsArray.push('Escoge un tipo de espacio.');
-        }
+        // Vacía los errores al hacer un nuevo submit
+        setErrors([]);
 
-        if (type == '') {
-            errorsArray.push('Escoge un tipo de alquiler.');
-        }
+        // Realiza las validaciones
+        let errorsArray = (PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, 
+            shared, type, space));
 
-        if ((type == 'hours') && (startHour=='' || endHour=='')) {
-            errorsArray.push('Selecciona un tramo horario.');
-        }
 
-        if ((type == 'hours') && (startHour>endHour)) {
-            errorsArray.push('La hora de inicio debe ser anterior a la fecha de fin.');
-        }
-
-        if (location == '') {
-            errorsArray.push('Escoge una localización válida.');
-        }
-
-        if (endAvailability != undefined && startAvailability>endAvailability) {
-            errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
-        }
-
-        if (type=='months' && endAvailability != undefined) {
-            const date1 = new Date(startAvailability);
-            const date2 = new Date(endAvailability);
-            const diffTime = Math.abs(date2 - date1);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-            if (diffDays<30) {
-                errorsArray.push('Si se indica un alquiler de meses, la disponibilidad debe ser al menos de 30 días.');
-            }
-        }
-
-        if (shared==undefined) {
-            errorsArray.push('Selecciona un valor posible en "Compartido".')
-        }
-        
-        setErrors(errorsArray);
-
-        // Si no hay errores, hacemos POST
+        // Si no hay errores, hacemos POST/UPDATE
         if (errorsArray.length == 0) {
-            PostTreatment(title, description, startAvailability, endAvailability, location, 
+            // Crea un objeto con los atributos adecuados
+            let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, location,
                 surface1, surface2, shared, type, price, tags, space, images);
+
+            console.log(newSpace);
+            
+            axios.post(`http://localhost:4100/api/v1/spaces`, newSpace, {
+                withCredentials: true,
+            })
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+                setSuccess(true);
+            }).catch(err => {
+                console.log(err.message);
+                setErrors(['Datos no válidos']);
+            });
+
+        } else {
+            setErrors(errorsArray);
         }
     }
 
@@ -185,13 +177,6 @@ export default function AdvertisementForm(props) {
             <main className='grid bg-[#e6f6fa]  place-items-center md:py-4 '>
                 <form onSubmit={handleSubmit} className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
                     <p className='text-center'>INFORMACIÓN DE TU ESPACIO</p>
-                    <>
-                        {errors.map((error) => <p key={error} className='text-red-600'>{error}</p>)}
-                        {success==true &&
-                            <p className='text-green-600'>Espacio creado con éxito.</p>
-                        
-                        }
-                    </>
 
                     {/* Tipos de espacios */}
                     <fieldset className='space-y-4'>
@@ -371,7 +356,8 @@ export default function AdvertisementForm(props) {
                         <label className='inline-block' htmlFor='img'>
                             <Image src="/images/image.svg" width='100' height='100' alt='image' />
                         </label>
-                        <input className='pt-0 hidden' onChange={handleFiles} type="file" multiple id="img" name="img" accept="image/png, image/jpeg" />
+                        <div className='pt-10'>Suba imágenes pulsando el icono (PNG o JPEG).</div>
+                        <input className='pt-0 hidden' onChange={handleFiles} type="file" multiple id="img" name="img" accept="image/png,image/jpeg" />
                     </fieldset>
 
                     {isEdit==false &&
@@ -389,6 +375,14 @@ export default function AdvertisementForm(props) {
                             <Button type='submit' color='red' onClick='' className='text-lg border-2 mt-4'>Eliminar</Button>
                         </div>
                     }
+
+                    <>
+                        {errors.map((error) => <p key={error} className='text-red-600'>{error}</p>)}
+                        {success==true &&
+                            <p className='text-green-600'>Espacio creado con éxito.</p>
+                        
+                        }
+                    </>
                 </form>
             </main>
         </div>
