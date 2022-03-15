@@ -112,7 +112,7 @@ export default function AdvertisementForm(props) {
         /*
         const geocoder = new MapboxGeocoder({
             countries: 'es',
-            accessToken: "" //API KEY MAPBOX
+            accessToken: "pk.eyJ1Ijoic3RhY2tpbmd1cCIsImEiOiJjbDBwZ2s4bjkwcmd4M2Jwa2FmNjJjOXA1In0.eNZfZgg24TpoixJ5wMQuIA" //API KEY MAPBOX
         });
         
         geocoder.addTo('#geocoder');
