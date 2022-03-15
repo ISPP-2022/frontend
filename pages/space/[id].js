@@ -10,7 +10,7 @@ export default function Space(props) {
     return (
         <>
             <TopNav />
-            <div className='md:flex justify-center md:mr-[25%]'>
+            <div className='md:flex justify-center'>
                 <div className="md:border-webcolor-50 md:border-2 md:rounded-md md:mt-4">
                     <EmblaCarousel slides={slides} />
                     <SpaceOwner />
