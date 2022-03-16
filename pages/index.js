@@ -54,7 +54,7 @@ export default function Home() {
           <div className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
             {arr.map((item) => (
               <div key={item} className="shrink-0 md:basis-1/2 lg:basis-1/4">
-                <Card title="Habitación" surface="5" rating="4" price="220" unitPrice="€/h" tags={["enchufe", "agua", "wifi", "iluminacion", "cerrado"]} />
+                <Card title="Habitación" surface="5" rating={4} price="220" unitPrice="€/h" tags={["enchufe", "agua", "wifi", "iluminacion", "cerrado"]} />
               </div>
             ))}
           </div>
