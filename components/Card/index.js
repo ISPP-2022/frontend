@@ -55,11 +55,11 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, URLimage 
     return (
         <div className="p-4">
             <div className="flex w-full m-2 bg-white shadow-lg rounded-lg overflow-hidden">
-                <div className="w-1/3 bg-cover">
-                    <Image  alt="Image" className="h-full object-cover" src={URLimage}></Image>
+                <div className="w-1/3 bg-cover relative">
+                    <Image alt="Image" className="h-full object-cover" src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover"></Image>
                 </div>
                 <div className="w-2/3 p-4">
-                    <h1 className="text-gray-900 font-bold text-2xl">{title} | {surface} m²</h1>
+                    <h1 className="text-gray-900 font-bold sm:text-2xl">{title} | {surface} m²</h1>
 
                     <Rating value={rating} readOnly />
                     <h1 className="text-blue-bondi font-bold text-2xl">{price} {unitPrice}</h1>
@@ -83,18 +83,16 @@ export const Tag = ({ children }) => {
 
 export const CardMobile = ({ title, surface, rating, price, unitPrice, tags, URLimage }) => {
     return (
-
-
-        <div className=" w-96 bg-white shadow-lg rounded-xl my-4">
+        <div className="w-full max-w-[540px] bg-white shadow-lg rounded-xl ">
             {/* Image */}
-            <div className=" ">
-                <Image src={URLimage} alt="Image" className=" w-96 h-96 rounded-3xl object-cover p-6 bg-cover" />
+            <div className="h-52 relative">
+                <Image src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover" alt="Image" className="w-96 h-96 rounded-t-xl object-cover p-6 bg-cover" />
             </div>
             {/* Body */}
-            <div className="">
-                <h1 className="text-gray-900 font-bold text-2xl pl-6 pr-6">{title} | {surface} m²</h1>
+            <div className="grid grid-cols-2 grid-rows-2 h-20">
+                <h1 className="text-gray-900 font-bold text-xl sm:text-2xl px-6 col-span-2">{title} | {surface} m²</h1>
                 <div className="pl-6 pt-2 float-left"><Rating value={rating} readOnly /></div>
-                <h1 className="text-blue-bondi font-bold text-2xl float-right pr-6 pb-6">{price} {unitPrice}</h1>
+                <h1 className="text-blue-bondi font-bold sm:text-2xl float-right pr-6 pb-6 align-middle text-right">{price} {unitPrice}</h1>
             </div>
         </div>
     );
