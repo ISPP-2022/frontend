@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Image from "next/image"
 import axios from "axios";
+import { useRouter } from "next/router";
 
 
 export default function AuthModal({ childerns, ...props }) {
   const { handleClose, setIsLogged } = props;
+  const router = useRouter();
 
   const [type, setType] = useState("login");
 
@@ -193,6 +195,8 @@ export default function AuthModal({ childerns, ...props }) {
         .then(res => {
           setIsLogged(res.data)
           handleClose()
+          if (router.route === '/') router.reload()
+          router.push("/");
         })
         .catch(err => {
           if (err.response.status === 400) {

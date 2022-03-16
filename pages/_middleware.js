@@ -1,0 +1,25 @@
+import { NextResponse } from "next/server"
+var jwt = require('jsonwebtoken');
+
+export async function middleware(req) {
+
+  const session = req.cookies.authToken
+  let user = null
+  if (session) {
+    try {
+      user = jwt.verify(session, process.env.JWT_SECRET || 'stackingupsecret')
+    } catch (error) {
+      console.log('Invalid token');
+    }
+  }
+
+  if (req.url.includes('/publish/add')) {
+    if (!user || user.role === 'USER') {
+      return NextResponse.redirect('/')
+    }
+  }
+
+
+  // If user is authenticated, continue.
+  return NextResponse.next()
+}

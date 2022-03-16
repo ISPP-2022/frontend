@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router';
 import Image from 'next/image'
 import { Button } from '../Core/Button';
 import Head from 'next/head';
@@ -17,7 +18,7 @@ import axios from 'axios';
 
 export default function AdvertisementForm(props) {
 
-
+    const router = useRouter();
     // Variable para mostrar/ocultar hora de inicio/fin
     const [isChecked, setIsChecked] = useState(false);
 
@@ -141,13 +142,12 @@ export default function AdvertisementForm(props) {
             let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, location,
                 surface1, surface2, shared, type, price, tags, space, images);
 
-            console.log(newSpace);
-
             axios.post(`http://localhost:4100/api/v1/spaces`, newSpace, {
                 withCredentials: true,
             })
                 .then(res => {
                     setSuccess(true);
+                    router.push('/');
                 }).catch(err => {
                     setErrors(['Datos no válidos']);
                 });
