@@ -17,8 +17,8 @@ function Navbar({ user }) {
   const handleLogout = () => {
     axios.post(`${process.env.AUTH_API_URL || 'http://localhost:4000'}/api/v1/logout`, {}, { withCredentials: true })
       .then(res => {
-        if (router.route === '/') router.reload()
         router.push("/");
+        router.reload()
         setIsOpen(false);
       })
   }
