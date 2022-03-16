@@ -15,7 +15,7 @@ export default function AdvertisementForm() {
                         <ul className='grid grid-cols-3'>
                             <li>
                                 <input className='hidden peer' type="radio" id="room" name="space" value="room" />
-                                <label htmlFor="room" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
+                                <label htmlFor="room" className='flex justify-center rounded-xl hover:bg-gray-100 peer-checked:bg-gray-200'>
                                     <Image src="/images/room.svg" width="100" height="100" alt='room' />
                                 </label>
                                 <p className='flex justify-center'>Habitación</p>
@@ -23,7 +23,7 @@ export default function AdvertisementForm() {
 
                             <li>
                                 <input className='hidden peer' type="radio" id="garage" name="space" value="garage" />
-                                <label htmlFor="garage" className='flex justify-center  rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
+                                <label htmlFor="garage" className='flex justify-center  rounded-xl hover:bg-gray-100 peer-checked:bg-gray-200'>
                                     <Image src="/images/garage.svg" width="100" height="100" alt='garage' />
                                 </label>
                                 <p className='flex justify-center'>Garaje</p>
@@ -31,7 +31,7 @@ export default function AdvertisementForm() {
 
                             <li>
                                 <input className='hidden peer' type="radio" id="basement" name="space" value="basement" />
-                                <label htmlFor="basement" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
+                                <label htmlFor="basement" className='flex justify-center rounded-xl hover:bg-gray-100 peer-checked:bg-gray-200'>
                                     <Image src="/images/basement.svg" width="100" height="100" alt='basement' />
                                 </label>
                                 <p className='flex justify-center'>Sótano</p>
@@ -39,7 +39,7 @@ export default function AdvertisementForm() {
 
                             <li>
                                 <input className='hidden peer' type="radio" id="storage-room" name="space" value="storage-room" />
-                                <label htmlFor="storage-room" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
+                                <label htmlFor="storage-room" className='flex justify-center rounded-xl hover:bg-gray-100 peer-checked:bg-gray-200'>
                                     <Image src="/images/storage-room.svg" width="100" height="100" alt='storage-room' />
                                 </label>
                                 <p className='flex justify-center'>Trastero</p>
@@ -47,7 +47,7 @@ export default function AdvertisementForm() {
 
                             <li>
                                 <input className='hidden peer' type="radio" id="warehouse" name="space" value="warehouse" />
-                                <label htmlFor="warehouse" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
+                                <label htmlFor="warehouse" className='flex justify-center rounded-xl hover:bg-gray-100 peer-checked:bg-gray-200'>
                                     <Image src="/images/warehouse.svg" width="100" height="100" alt='warehouse' />
                                 </label>
                                 <p className='flex justify-center'>Almacén</p>
@@ -55,7 +55,7 @@ export default function AdvertisementForm() {
 
                             <li>
                                 <input className='hidden peer' type="radio" id="other" name="space" value="other" />
-                                <label htmlFor="other" className='flex justify-center rounded-xl hover:bg-slate-100 peer-checked:bg-slate-200'>
+                                <label htmlFor="other" className='flex justify-center rounded-xl hover:bg-gray-100 peer-checked:bg-gray-200'>
                                     <Image src="/images/other.svg" width="100" height="100" alt='other' />
                                 </label>
                                 <p className='flex justify-center'>Otro</p>
@@ -68,15 +68,15 @@ export default function AdvertisementForm() {
                         <ul className='grid grid-cols-3'>
                             <li className='border-2 border-webcolor-50'>
                                 <input className='hidden peer' type="radio" id="hours" name="type" value="hours" onChange={(e) => setIsChecked(true)} />
-                                <label htmlFor="hours" className='flex justify-center hover:bg-slate-100 peer-checked:bg-[#e6f6fa]'>Horas</label>
+                                <label htmlFor="hours" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa]'>Horas</label>
                             </li>
                             <li className='border-2 border-webcolor-50 text-center'>
                                 <input className='hidden peer' type="radio" id="days" name="type" value="days" onChange={(e) => setIsChecked(false)} />
-                                <label htmlFor="days" className='flex justify-center hover:bg-slate-100 peer-checked:bg-[#e6f6fa]'>Días</label>
+                                <label htmlFor="days" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa]'>Días</label>
                             </li>
                             <li className='border-2 border-webcolor-50 text-center'>
                                 <input className='hidden peer' type="radio" id="months" name="type" value="months" onChange={(e) => setIsChecked(false)} />
-                                <label htmlFor="months" className='flex justify-center hover:bg-slate-100 peer-checked:bg-[#e6f6fa]'>Meses</label>
+                                <label htmlFor="months" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa]'>Meses</label>
                             </li>
                         </ul>
                         {isChecked ?
@@ -130,7 +130,7 @@ export default function AdvertisementForm() {
                         <label htmlFor="share" className="group pt-4">
                             Compartido
                             <input id="share" type="checkbox" className="peer appearance-none rounded-md" />
-                            <span className="w-12 h-6 inline-flex flex-shrink-0 p-1 ml-4 bg-gray-300 rounded-full duration-300 ease-in-out peer-checked:bg-green-400 after:w-4 after:h-4 after:bg-white after:rounded-full after:shadow-md after:duration-300 peer-checked:after:translate-x-6 group-hover:after:translate-x-1"></span>
+                            <span className="w-12 h-6 inline-flex flex-shrink-0 p-1 ml-4 bg-gray-300 rounded-full duration-300 ease-in-out peer-checked:bg-green-400 after:w-4 after:h-4 after:bg-white after:rounded-full after:shadow-md after:duration-300 peer-checked:after:trangray-x-6 group-hover:after:trangray-x-1"></span>
                         </label>
                     </fieldset>
 
@@ -162,7 +162,7 @@ export default function AdvertisementForm() {
                     </fieldset>
 
                     <div className='pt-10 flex items-center justify-center'>
-                        <button className='border-2 py-2 px-4 border-webcolor-50 rounded hover:bg-slate-100 flex items-center' type="submit">
+                        <button className='border-2 py-2 px-4 border-webcolor-50 rounded hover:bg-gray-100 flex items-center' type="submit">
                             <span className='pr-2 text-lg'>Publicar</span>
                             <Image src="/images/paperplane.svg" width="20" height="20" alt='send' />
                         </button>

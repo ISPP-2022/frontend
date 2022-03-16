@@ -1,5 +1,7 @@
 import '../styles/globals.css'
+import '../styles/SpacesCarousel.css';
 import TopNav from '../components/TopNav'
+
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -9,7 +11,6 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
       </div>
     </>
-
   )
 }
 
