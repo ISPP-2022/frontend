@@ -4,10 +4,9 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 var jwt = require('jsonwebtoken');
 
 export default function index(props) {
-  
   return (
     <div>
-      <AdvertisementForm isEdit={false} userId={props.user.userId}/>
+      <AdvertisementForm isEdit={false} userId={props.user.userId} />
     </div>
   )
 }
@@ -15,7 +14,7 @@ export default function index(props) {
 
 export function getServerSideProps(ctx) {
   const cookies = ctx.req.cookies;
-  const user = jwt.verify(cookies.authToken, process.env.JWT_SECRET || 'stackingupsecretlocal');
+  const user = jwt.decode(cookies.authToken);
   return {
     props: {
       user: user,

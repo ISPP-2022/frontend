@@ -4,22 +4,30 @@
 
 /*Background carousel https://www.cssscript.com/css-only-crossfading-background-slideshow/*/
 
-.crossfade > figure {
-    animation: imageAnimation 30s infinite;
-    background-size: cover;
-    background-position: center center;
-    color: transparent;
+html,body
+{
+    width: 100%;
     height: 100%;
-  }
-
-  @media (max-width: 768px) {
-    .crossfade{
-      display: none;
-    }
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden; 
 }
-@keyframes 
-imageAnimation {
-  0%,100%  {background-image: url('../public/carouselImages/1.jpg');}
-  33% {background-image: url('../public/carouselImages/2.jpg');}
-  66% {background-image: url('../public/carouselImages/3.jpg');}
+
+body{
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html {overflow: -moz-scrollbars-none;}
+
+body::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+}
+
+.imageBackground{
+  background-image: url('../public/carouselImages/1.jpg');
+  background-size: cover;
+  background-position: center;
 }
