@@ -106,13 +106,10 @@ export default function AdvertisementForm(props) {
 
     // Cargar campo para introducir dirección
     useEffect(() => {
-        
-        //DESCOMENTAR Y PONER API_KEY
-
-        /*
+            
         const geocoder = new MapboxGeocoder({
             countries: 'es',
-            accessToken: "" //API KEY MAPBOX
+            accessToken: process.env.NEXT_PUBLIC_API_KEY_MAPBOX
         });
         
         geocoder.addTo('#geocoder');
@@ -123,7 +120,6 @@ export default function AdvertisementForm(props) {
                 setLocation(e.result.geometry.coordinates[1].toString() + ',' + e.result.geometry.coordinates[0].toString());
             }
         });
-        */
     }, []);
 
 
@@ -132,6 +128,7 @@ export default function AdvertisementForm(props) {
 
         // Vacía los errores al hacer un nuevo submit
         setErrors([]);
+        setSuccess(false);
 
         // Realiza las validaciones
         let errorsArray = (PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, 
@@ -150,11 +147,8 @@ export default function AdvertisementForm(props) {
                 withCredentials: true,
             })
             .then(res => {
-                console.log(res);
-                console.log(res.data);
                 setSuccess(true);
             }).catch(err => {
-                console.log(err.message);
                 setErrors(['Datos no válidos']);
             });
 
@@ -166,7 +160,7 @@ export default function AdvertisementForm(props) {
 
     return (
         <>
-        {/* Estilo para la hoj */}
+        {/* Estilo para el input de localizacion */}
         <Head>
             <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet"/>
         </Head>
@@ -357,7 +351,7 @@ export default function AdvertisementForm(props) {
                         <label className='inline-block' htmlFor='img'>
                             <Image src="/images/image.svg" width='100' height='100' alt='image' />
                         </label>
-                        <div className='pt-10'>Suba imágenes pulsando el icono (PNG o JPEG).</div>
+                        <div className='pt-10'>Suba imágenes pulsando el icono (PNG o JPEG). {images.length} imágenes subidas.</div>
                         <input className='pt-0 hidden' onChange={handleFiles} type="file" multiple id="img" name="img" accept="image/png,image/jpeg" />
                     </fieldset>
 
