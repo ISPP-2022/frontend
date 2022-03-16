@@ -41,7 +41,7 @@ export default function AdvertisementForm(props) {
     const [price, setPrice] = useState(1);
     const [surface1, setSurface1] = useState(1);
     const [surface2, setSurface2] = useState(1);
-    const [location, setLocation] = useState('1.0,1.0'); //MODIFICAR API KEY
+    const [location, setLocation] = useState('');
 
     const [startAvailability, setStartAvailability] = useState('');
     const [endAvailability, setEndAvailability] = useState();
