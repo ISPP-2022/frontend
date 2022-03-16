@@ -20,8 +20,8 @@ function Navbar({ user }) {
   }
 
   return (
-    <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50">
-      <section className="shadow-md mx-auto px-4">
+    <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50 w-screen">
+      <section className="shadow-lg mx-auto px-4">
         <div className="flex justify-between">
           {/* Logos */}
           <Link href="/" passHref>
@@ -41,7 +41,7 @@ function Navbar({ user }) {
           {/* Barra de busqueda */}
           <input className="bg-transparent focus:outline-none 
             focus:shadow-outline border border-gray-300 focus:border-[#4aa7c0] rounded-lg 
-            py-2 px-4 block appearance-none leading-normal my-2 w-full max-w-md
+            py-2 px-4 block appearance-none leading-normal my-2 w-full max-w-lg
             transition duration-200 ease-in-out md:hidden"
             type="text" placeholder="Search" />
           {/* Botones vista navegador */}

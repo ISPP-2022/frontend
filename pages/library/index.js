@@ -5,6 +5,7 @@ import { Loading } from "../../components/Core/Loading";
 import { DialogText } from "../../components/Core/Dialog";
 import { FieldCheckBox, FieldDateBox, FieldSelectorBox, FieldTextBox, Form } from "../../components/Core/Form";
 import { Paragraph, Subtitle, Title, Url } from "../../components/Core/Text";
+import Card from "../../components/Card";
 
 function Library() {
     const [showDialog, setShowDialog] = useState(false);
@@ -70,7 +71,6 @@ function Library() {
                     <FieldCheckBox name="checkbox" label="Checkbox" onChange={(event) => handleInputChange(event)} />
                     <Button type="submit">Submit</Button>
                 </Form>
-
             </div>
         </div>
     )
