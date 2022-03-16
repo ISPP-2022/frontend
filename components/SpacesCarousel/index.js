@@ -36,34 +36,36 @@ const EmblaCarousel = ({ slides }) => {
     }, [embla, onSelect]);
 
     return (
-        <div className="inline-flex justify-start mt-4 ml-4 mr-4">
-            <div className="embla embla--thumb hidden md:flex">
-                <div className="embla__viewport" ref={thumbViewportRef}>
-                    <div className="embla__container--thumb">
-                        {slides.map((index) => (
-                            <Thumb
-                                onClick={() => onThumbClick(index)}
-                                selected={index === selectedIndex}
-                                imgSrc={thumbByIndex(index)}
-                                key={index}
-                            />
-                        ))}
+        <div className="justify-center">
+            <div className="inline-flex justify-start  mt-4 ml-4 mr-4">
+                <div className="embla embla--thumb hidden md:flex">
+                    <div className="embla__viewport" ref={thumbViewportRef}>
+                        <div className="embla__container--thumb">
+                            {slides.map((index) => (
+                                <Thumb
+                                    onClick={() => onThumbClick(index)}
+                                    selected={index === selectedIndex}
+                                    imgSrc={thumbByIndex(index)}
+                                    key={index}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="embla">
-                <div className="embla__viewport" ref={mainViewportRef}>
-                    <div className="embla__container">
-                        {slides.map((index) => (
-                            <div className="embla__slide embla__slide__inner" key={index}>
-                                <Image
-                                    layout="fill"
-                                    className="embla__slide__img"
-                                    src={thumbByIndex(index)}
-                                    alt="Imágenes del espacio no encontradas"
-                                />
-                            </div>
-                        ))}
+                <div className="embla">
+                    <div className="embla__viewport" ref={mainViewportRef}>
+                        <div className="embla__container">
+                            {slides.map((index) => (
+                                <div className="embla__slide embla__slide__inner" key={index}>
+                                    <Image
+                                        layout="fill"
+                                        className="embla__slide__img"
+                                        src={thumbByIndex(index)}
+                                        alt="Imágenes del espacio no encontradas"
+                                    />
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

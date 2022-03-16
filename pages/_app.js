@@ -1,5 +1,7 @@
 import '../styles/globals.css'
 import '../styles/SpacesCarousel.css';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import TopNav from '../components/TopNav'
 import App from 'next/app'
 import jwt from 'jsonwebtoken';
