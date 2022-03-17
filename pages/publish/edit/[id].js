@@ -13,7 +13,7 @@ export default function index(props) {
 
   // Comprobación para que un usuario solo pueda modificar sus espacios
   useEffect(() => {
-    axios.get(`http://localhost:4100/api/v1/spaces/${props.spaceId}`)
+    axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.spaceId}`)
     .then(res => {
       let ownerId = res.data.ownerId;
       if (ownerId == props.user.userId) {

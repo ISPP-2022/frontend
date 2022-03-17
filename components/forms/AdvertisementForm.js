@@ -98,7 +98,7 @@ export default function AdvertisementForm(props) {
     useEffect(() => {
         if (isEdit) {
             let actualSpace = {};
-            axios.get(`http://localhost:4100/api/v1/spaces/${props.spaceId}`)
+            axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.spaceId}`)
             .then(res => {
                 actualSpace = res.data;
                 fillForm(actualSpace);
@@ -184,7 +184,7 @@ export default function AdvertisementForm(props) {
 
         // Petición para coger las imágenes
         // Da 404 si no tiene imágenes o el id no existe
-        axios.get(`http://localhost:4100/api/v1/spaces/${props.spaceId}/images`)
+        axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.spaceId}/images`)
             .then(res => {
                 setImages(res.data);    
             }).catch (err => {
@@ -213,7 +213,7 @@ export default function AdvertisementForm(props) {
             
             // Si es edit --> PUT
             if (props.isEdit) {
-                axios.put(`http://localhost:4100/api/v1/spaces/${props.spaceId}`, newSpace, {
+                axios.put(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.spaceId}`, newSpace, {
                     withCredentials: true,
                 })
                 .then(res => {
@@ -225,7 +225,7 @@ export default function AdvertisementForm(props) {
                
             // Si no es edit --> POST
             } else {
-                axios.post(`http://localhost:4100/api/v1/spaces`, newSpace, {
+                axios.post(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, newSpace, {
                     withCredentials: true,
                 })
                 .then(res => {
@@ -240,7 +240,7 @@ export default function AdvertisementForm(props) {
     }
 
     function handleDelete() {
-        axios.delete(`http://localhost:4100/api/v1/spaces/${props.spaceId}`,{
+        axios.delete(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.spaceId}`,{
             withCredentials: true,
         })
         .then(res => {
