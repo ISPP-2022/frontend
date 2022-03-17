@@ -15,6 +15,7 @@ export default function Home() {
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     router.push(`/search?q=${search}`);
