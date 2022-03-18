@@ -77,7 +77,7 @@ export const FieldCheckBox = ({ label, name, onChange }) => {
  * @param  {string} name - Name of the field.
  * @param  {string} label - Label of the field.
  */
-export const FieldSelectorBox = ({ options, value, onChange, name, label = "", multiple=false}) => {
+export const FieldSelectorBox = ({ options, value, onChange, name, label = "", multiple=false }) => {
     return (
         <div className="w-full mx-2 my-2">
             <label className="font-medium">{label}
