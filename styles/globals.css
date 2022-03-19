@@ -31,3 +31,7 @@ body::-webkit-scrollbar {
   background-size: cover;
   background-position: center;
 }
+
+svg.star-svg {
+  display: inline;
+}

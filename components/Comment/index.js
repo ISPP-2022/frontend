@@ -1,11 +1,11 @@
 import { Button } from "../../components/Core/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form } from "../../components/Core/Form";
 import { TextArea } from "../../components/TextArea";
 import { Rating } from "react-simple-star-rating";
 import { DialogText } from "../../components/Core/Dialog";
 
-export const Comment = ({ userID, loggedIn = false }) => {
+export const Comment = ({ ratings, reviewers, loggedIn = false }) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const [dataForm, setDataForm] = useState({
@@ -29,6 +29,7 @@ export const Comment = ({ userID, loggedIn = false }) => {
 
   const sendData = (event) => {
     event.preventDefault();
+    checkLogged(loggedIn)
     // CAMBIAR: No puede estar vacío
     console.log(dataForm);
   };
@@ -47,54 +48,17 @@ export const Comment = ({ userID, loggedIn = false }) => {
     }
   }
 
-  function getUserName(userID) {
-    if (userID === -1) {
-      return "Usuario prueba";
-    } else {
-      //CAMBIAR: axios
-    }
-  }
+  function loadComments(comments, reviewers) {
 
-  function loadComments(userID) {
-    const data = [];
-    if (userID === undefined) {
-      data[0] = {
-        title: "Título 1",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ut ipsum sem. Vivamus at mollis elit. Quisque condimentum, libero et consectetur molestie, arcu nunc congue dolor, eget hendrerit enim lacus sit amet metus. Etiam ullamcorper porttitor placerat. Nulla lacinia viverra placerat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec at vestibulum arcu. Nam pulvinar elit ex, a aliquam erat aliquam scelerisque. Maecenas eu venenatis massa, vitae pretium ipsum. Etiam a luctus lorem, maximus tempor leo.",
-        rating: 1,
-        reviewerId: -1,
-        receiverId: -1,
-      };
-      data[1] = {
-        title: "Título 2",
-        description: "Descripción 2",
-        rating: 3,
-        reviewerId: -1,
-        receiverId: -1,
-      };
-      data[2] = {
-        title: "Título 3",
-        description:
-          "Suspendisse porta ante sem, sed feugiat tellus ultrices at. Donec vestibulum orci nec dui aliquet eleifend. Cras lobortis magna id sapien consectetur, nec vestibulum enim varius. Phasellus accumsan turpis nunc, vel lacinia ante iaculis ut. Mauris nec eleifend ante. Sed pellentesque interdum tempus. Aliquam condimentum nisi risus, et vehicula nibh egestas sit amet. Vestibulum ornare id nunc et maximus. Cras semper nibh quis nunc lobortis, vitae condimentum magna tempor. Nam placerat arcu nec lorem iaculis, ac sodales justo aliquet. Curabitur blandit euismod lectus id posuere. Donec at sollicitudin tortor, quis dictum neque. Vivamus ac enim libero. Mauris a sodales odio.",
-        rating: 5,
-        reviewerId: -1,
-        receiverId: -1,
-      };
-    } else {
-      // CAMBIAR: Implementar el get con axios
-    }
-
-    const comments = [];
-
-    data.forEach((value) => {
-      comments.push(
+    const parsedComments = [];
+    comments.forEach((comment) => {
+      parsedComments.push(
         <div className="w-9/12 mr-4 md:mx-4 md:w-5/12">
           <TextArea
             placeholder="Escribe una valoración"
             className="shadow-lg h-24"
-            label={getUserName(value.reviewerId) + " - " + value.title}
-            value={value.description}
+            label={reviewers[comment.rating] + " - " + comment.title} // CAMBIAR: añadir url del perfil del usuario
+            value={comment.description}
             disabled
           ></TextArea>
           <div>
@@ -104,7 +68,7 @@ export const Comment = ({ userID, loggedIn = false }) => {
                 className="px-3 py-3"
                 fullClassName="px-3 py-3"
                 size={30}
-                ratingValue={value.rating * 20}
+                ratingValue={comment.rating * 20}
                 readonly
               />
             </div>
@@ -112,8 +76,7 @@ export const Comment = ({ userID, loggedIn = false }) => {
         </div>
       );
     });
-
-    return comments;
+    return parsedComments;
   }
 
   return (
@@ -157,7 +120,7 @@ export const Comment = ({ userID, loggedIn = false }) => {
           </div>
         </Form>
       </div>
-      {loadComments(userID)}
+      {loadComments(ratings, reviewers)}
     </div>
   );
 };
