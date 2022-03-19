@@ -36,7 +36,7 @@ const EmblaCarousel = ({ slides }) => {
     }, [embla, onSelect]);
 
     return (
-        <div className="inline-flex justify-start mt-4 ml-4 mr-4">
+        <div className="flex justify-center mt-4 ml-4 mr-4">
             <div className="embla embla--thumb hidden md:flex">
                 <div className="embla__viewport" ref={thumbViewportRef}>
                     <div className="embla__container--thumb">
@@ -55,7 +55,7 @@ const EmblaCarousel = ({ slides }) => {
                 <div className="embla__viewport" ref={mainViewportRef}>
                     <div className="embla__container">
                         {slides.map((index) => (
-                            <div className="embla__slide embla__slide__inner" key={index}>
+                            <div className="embla__slide embla__slide__inner mx-2" key={index}>
                                 <Image
                                     layout="fill"
                                     className="embla__slide__img"
