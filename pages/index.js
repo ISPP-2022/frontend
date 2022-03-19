@@ -19,6 +19,9 @@ export default function Home() {
     e.preventDefault();
     router.push(`/search?q=${search}`);
   };
+  const handleSmart = () => {
+    router.push("/smartsearch");
+  }
 
   return (
     <div>
@@ -30,7 +33,18 @@ export default function Home() {
         {/* Seachbar */}
         <div className="w-full h-full hidden md:grid md:grid-rows-2 lg:grid-cols-3 lg:grid-rows-1">
           <div className="imageBackground md:row-span-2 lg:col-span-2 h-full">
-            <div className="top-1/2 left-1/4 relative">
+            {/* SmartSearch*/}
+            <div className="flex justify-end m-3 top-1/5 left-1/5">
+                <button 
+                onClick={handleSmart}
+                className="rounded-full bg-white transition duration-150 ease-in-out border-2 border-blue-bondi hover:border-blue-bondi-dark hover:bg-blue-bondi-dark text-blue-bondi hover:text-white font-bold py-5 px-8 focus:outline-none focus:shadow-outline">
+                  Smart Search
+                  <svg className="float-right ml-2 h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button> 
+            </div>
+            <div className="top-1/3 left-1/4 relative">
               <div className="w-3/5 opacity-85">
                 <form onSubmit={handleSubmit}>
                   <div className="w-4/5 float-left">
