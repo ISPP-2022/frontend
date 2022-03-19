@@ -27,6 +27,11 @@ function Navbar({ user }) {
     isLogged.role === 'USER' ? alert('Tienes que verificarte') : router.push("/publish/add");
     setIsOpen(false);
   }
+
+  const handleSmart = () => {
+    router.push("/smartsearch")
+  }
+
   return (
     <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50 w-screen">
       <section className="shadow-lg mx-auto px-4">
@@ -123,8 +128,12 @@ function Navbar({ user }) {
                 </button>
               )
             }
-
-
+            <button onClick={handleSmart} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl  space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+              Smart Search
+              <svg className="float-right mt-1 ml-1 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </button>
           </section>
           <section className="row-span-4 space-y-0.5">
             <div className="mx-6 border-t-2" />
