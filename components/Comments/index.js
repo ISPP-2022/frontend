@@ -1,11 +1,11 @@
-import { Button } from "../../components/Core/Button";
-import { useState, useEffect } from "react";
-import { Form } from "../../components/Core/Form";
-import { TextArea } from "../../components/TextArea";
+import { Button } from "../Core/Button";
+import { useState } from "react";
+import { Form } from "../Core/Form";
+import { TextArea } from "../TextArea";
 import { Rating } from "react-simple-star-rating";
-import { DialogText } from "../../components/Core/Dialog";
+import { DialogText } from "../Core/Dialog";
 
-export const Comment = ({ ratings, reviewers, loggedIn = false }) => {
+export const Comments = ({ ratings, reviewers, loggedIn = false }) => {
   const [showDialog, setShowDialog] = useState(false);
 
   const [dataForm, setDataForm] = useState({
@@ -29,7 +29,7 @@ export const Comment = ({ ratings, reviewers, loggedIn = false }) => {
 
   const sendData = (event) => {
     event.preventDefault();
-    checkLogged(loggedIn)
+    checkLogged(loggedIn);
     // CAMBIAR: No puede estar vacío
     console.log(dataForm);
   };
@@ -48,17 +48,23 @@ export const Comment = ({ ratings, reviewers, loggedIn = false }) => {
     }
   }
 
-  function loadComments(comments, reviewers) {
-
-    const parsedComments = [];
-    comments.forEach((comment) => {
-      parsedComments.push(
+  /** A partir de los parámetros obligatorios del componente se genera el html
+   * de las reseñas
+   *
+   * @param {array} ratings
+   * @param {object} reviewers
+   * @returns {array} parsedRatings
+   */
+  function loadRatings(ratings, reviewers) {
+    const parsedRatings = [];
+    ratings.forEach((rating) => {
+      parsedRatings.push(
         <div className="w-9/12 mr-4 md:mx-4 md:w-5/12">
           <TextArea
             placeholder="Escribe una valoración"
             className="shadow-lg h-24"
-            label={reviewers[comment.rating] + " - " + comment.title} // CAMBIAR: añadir url del perfil del usuario
-            value={comment.description}
+            label={reviewers[rating.rating] + " - " + rating.title} // CAMBIAR: añadir link al perfil del usuario
+            value={rating.description}
             disabled
           ></TextArea>
           <div>
@@ -68,7 +74,7 @@ export const Comment = ({ ratings, reviewers, loggedIn = false }) => {
                 className="px-3 py-3"
                 fullClassName="px-3 py-3"
                 size={30}
-                ratingValue={comment.rating * 20}
+                ratingValue={rating.rating * 20}
                 readonly
               />
             </div>
@@ -76,7 +82,7 @@ export const Comment = ({ ratings, reviewers, loggedIn = false }) => {
         </div>
       );
     });
-    return parsedComments;
+    return parsedRatings;
   }
 
   return (
@@ -120,7 +126,7 @@ export const Comment = ({ ratings, reviewers, loggedIn = false }) => {
           </div>
         </Form>
       </div>
-      {loadComments(ratings, reviewers)}
+      {loadRatings(ratings, reviewers)}
     </div>
   );
-};
+}

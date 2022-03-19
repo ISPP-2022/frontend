@@ -1,9 +1,17 @@
-import { Comment } from "../../components/Comment";
+import { Comments } from "../../components/Comments";
 import { Subtitle, Title } from "../../components/Core/Text";
 import Head from "next/head";
 import axios from "axios";
 
-async function getCommentComponentData({query}){
+/** A partir del context proporcionado por getServerSideProps(context), 
+ * saca el id del usuario y obtiene las reseñas que se le han hecho.
+ * Devuelve las reseñas y un objeto cuyas claves son los id de las reseñas 
+ * y los valores son el nombre completo del usuario que realizó la reseña
+ * 
+ * @param {*} param0 
+ * @returns {object} data
+ */
+async function getRatingComponentData({query}){
   const ratings = await axios.get(
     `${process.env.DATA_API_URL}/api/v1/users/${query.id}/ratings`
   );
@@ -18,12 +26,12 @@ async function getCommentComponentData({query}){
     const ratingId = rating.rating;
     reviewers[ratingId] = user.data.name + " " + user.data.surname;
   }
-  return { ratings: ratings.data, reviewers: reviewers };
+  return { ratings: ratings.data || [], reviewers: reviewers || [] };
 }
 
 export function getServerSideProps(context) {
   return {
-    props: getCommentComponentData(context),
+    props: getRatingComponentData(context),
   };
 }
 
@@ -36,7 +44,7 @@ function User(props) {
         <title>Usuario</title>
       </Head>
       <Title> Página del usuario ª</Title>
-      <Comment ratings={ratings} reviewers={reviewers} ></Comment>
+      <Comments ratings={ratings} reviewers={reviewers}/>
     </div>
   );
 }
