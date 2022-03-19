@@ -5,7 +5,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <TopNav />
-      <div className='my-16'>
+      <div className='pt-16 h-screen'>
         <Component {...pageProps} />
       </div>
     </>
