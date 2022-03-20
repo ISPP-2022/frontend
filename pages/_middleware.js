@@ -7,7 +7,7 @@ export async function middleware(req) {
   let user = null
   if (session) {
     try {
-      user = jwt.verify(session, process.env.JWT_SECRET || 'stackingupsecret')
+      user = jwt.verify(session, process.env.JWT_SECRET || 'stackingupsecretlocal')
     } catch (error) {
       console.log('Invalid token');
     }
