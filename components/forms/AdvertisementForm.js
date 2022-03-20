@@ -45,7 +45,7 @@ export default function AdvertisementForm(props) {
     const [price, setPrice] = useState(1);
     const [surface1, setSurface1] = useState(1);
     const [surface2, setSurface2] = useState(1);
-    const [location, setLocation] = useState('');
+    const [location, setLocation] = useState('1.0,1.0');
 
     const [startAvailability, setStartAvailability] = useState('');
     const [endAvailability, setEndAvailability] = useState('');
@@ -145,6 +145,14 @@ export default function AdvertisementForm(props) {
             setPrice(space.priceHour);
             document.getElementById('hours').checked = true;
             setIsChecked(true);
+
+            // Obtiene las horas de inicio y fin a partir de la fecha
+            let initialDateSplitted = space.initialDate.split("T")[1].split(":");
+            setStartHour(initialDateSplitted[0] + ":" + initialDateSplitted[1]);
+            
+            let finalDateSplitted = space.finalDate.split("T")[1].split(":");
+            setEndHour(finalDateSplitted[0] + ":" + finalDateSplitted[1]);
+
         } else if ('priceDay' in space) {
             setType('days');
             setPrice(space.priceDay);
@@ -196,9 +204,8 @@ export default function AdvertisementForm(props) {
         // Si no hay errores, hacemos POST/UPDATE
         if (errorsArray.length == 0) {
             // Crea un objeto con los atributos adecuados
-            let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, location,
+            let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, startHour, endHour, location,
                 surface1, surface2, shared, type, price, tags, space, images);
-
 
             // Si es edit --> PUT
             if (props.isEdit) {
@@ -212,7 +219,7 @@ export default function AdvertisementForm(props) {
                         setErrors(['Ha habido un problema. Inténtelo más tarde.']);
                     });
 
-                // Si no es edit --> POST
+            // Si no es edit --> POST
             } else {
                 axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, newSpace, {
                     withCredentials: true,
@@ -221,7 +228,6 @@ export default function AdvertisementForm(props) {
                         setSuccess(true);
                         router.push('/')
                     }).catch(err => {
-                        console.log(err);
                         setErrors(['Ha habido un problema. Inténtelo más tarde.']);
                     });
             }
@@ -332,11 +338,11 @@ export default function AdvertisementForm(props) {
                                 <div className='md:grid md:grid-cols-2 flex'>
                                     <div className='py-4 basis-1/2'>
                                         <label htmlFor="start_hour" className='pr-4'>Hora de inicio</label>
-                                        <input className='border' type="time" id="start_hour" onChange={(e) => setStartHour(e.target.value)} />
+                                        <input className='border' type="time" id="start_hour" value={startHour} onChange={(e) => setStartHour(e.target.value)} />
                                     </div>
                                     <div className='py-4 basis-1/2'>
                                         <label htmlFor='end_hour' className='pr-9 md:pr-4'>Hora de fin</label>
-                                        <input className='border' type="time" id="end_hour" onChange={(e) => setEndHour(e.target.value)} />
+                                        <input className='border' type="time" id="end_hour" value={endHour} onChange={(e) => setEndHour(e.target.value)} />
                                     </div>
                                 </div> : <></>
                             }

@@ -8,12 +8,22 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
         errorsArray.push('Escoge un tipo de alquiler.');
     }
 
-    if ((type == 'hours') && (startHour=='' || endHour=='')) {
-        errorsArray.push('Selecciona un tramo horario.');
-    }
-
-    if ((type == 'hours') && (startHour>endHour)) {
-        errorsArray.push('La hora de inicio debe ser anterior a la fecha de fin.');
+    if (type=='hours') {
+        if (startHour=='' || endHour=='') {
+            errorsArray.push('Selecciona un tramo horario.');
+        } else if (endAvailability=='') {
+            errorsArray.push('Selecciona una fecha de fin de disponibilidad.');
+        } else if (startHour<endHour) {
+            let SHOnlyHour = startHour.split(':')[0];
+            let EHOnlyHour = endHour.split(':')[0];
+            if ((EHOnlyHour-SHOnlyHour)<1) {
+                errorsArray.push('La diferencia entre la hora de inicio y la hora de fin debe ser de al menos una hora.');
+            }
+        } else if (startHour==endHour) {
+            errorsArray.push('La diferencia entre la hora de inicio y la hora de fin debe ser de al menos una hora.');
+        } else if (startHour>endHour) {
+            errorsArray.push('La hora de inicio debe ser anterior a la hora de fin.');
+        }
     }
 
     if (location == '') {
@@ -47,15 +57,31 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
     return errorsArray;
 }
 
-export function CreateNewSpaceObject(userId, title, description, startAvailability, endAvailability, location,
+export function CreateNewSpaceObject(userId, title, description, startAvailability, endAvailability, startHour, endHour, location,
     surface1, surface2, shared, type, price, tags, space, images) {
     let newSpace = {};
     newSpace.ownerId = userId;
     newSpace.name = title;
     newSpace.description = description;
-    newSpace.initialDate = new Date(startAvailability);
+
+    if (type=='hours') {
+        let initialDate = new Date(startAvailability);
+        let startHourSplitted = startHour.split(':')
+        initialDate.setHours(startHourSplitted[0], startHourSplitted[1]);
+        newSpace.initialDate = initialDate;
+    } else {
+        newSpace.initialDate = new Date(startAvailability);
+    }
+
     if (endAvailability!=undefined) {
-        newSpace.finalDate = new Date(endAvailability);
+        if (type=='hours') {
+            let finalDate = new Date(endAvailability);
+            let endHourSplitted = endHour.split(':')
+            finalDate.setHours(endHourSplitted[0], endHourSplitted[1]);
+            newSpace.finalDate = finalDate;
+        } else {
+            newSpace.finalDate = new Date(endAvailability);
+        }
     }
     newSpace.location = location;
     newSpace.dimensions = surface1.toString() + 'x' + surface2.toString();
