@@ -1,8 +1,24 @@
 import Head from "next/head";
 import { Title } from "../../components/Core/Text";
 import { Tags } from "../../components/Tags";
+import axios from "axios";
 
-function User() {
+async function getTags({ query }) {
+  const space = await axios.get(
+    `${process.env.DATA_API_URL}/api/v1/spaces/${query.sid}`
+  );
+
+  return { tags: space.data.tags };
+}
+
+export function getServerSideProps(context) {
+  return {
+    props: getTags(context),
+  };
+}
+
+function Space(props) {
+  const { tags } = props;
   return (
     <div>
       <Head>
@@ -20,17 +36,7 @@ function User() {
           lorem elit, ut pellentesque neque vulputate commodo. Nunc sed neque
           imperdiet, tempor dolor non, molestie erat.
         </div>
-        <Tags
-          tags={[
-            "Limpio",
-            "Espacioso",
-            "Enchufe",
-            "Compartido",
-            "Cerrado",
-            "Iluminado",
-            "Agua",
-          ]}
-        ></Tags>
+        <Tags tags={tags}/>
         <div id="relleno2" className="h-96">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
           nunc felis, rhoncus at sagittis eget, suscipit at mi. Vivamus
@@ -46,4 +52,4 @@ function User() {
   );
 }
 
-export default User;
+export default Space;
