@@ -93,7 +93,6 @@ export default function AdvertisementForm(props) {
     // Cargar campo para introducir dirección
     useEffect(() => {
         if (props.isEdit) {
-            console.log(props.space);
             fillForm(props.space);
         } else {
             setGeocoder();
@@ -105,7 +104,7 @@ export default function AdvertisementForm(props) {
     function setGeocoder(query) {
         const geocoder = new MapboxGeocoder({
             countries: 'es',
-            accessToken: process.env.NEXT_PUBLIC_MAPBOX_API_KEY, //API KEY MAPBOX
+            accessToken: process.env.NEXT_PUBLIC_MAPBOX_API_KEY,
             reverseGeocode: true
         });
 
@@ -210,7 +209,7 @@ export default function AdvertisementForm(props) {
                         setSuccess(true);
                         router.push('/');
                     }).catch(err => {
-                        setErrors(['Datos no válidos.']);
+                        setErrors(['Ha habido un problema. Inténtelo más tarde.']);
                     });
 
                 // Si no es edit --> POST
@@ -220,8 +219,10 @@ export default function AdvertisementForm(props) {
                 })
                     .then(res => {
                         setSuccess(true);
+                        router.push('/')
                     }).catch(err => {
-                        setErrors(['Datos no válidos.']);
+                        console.log(err);
+                        setErrors(['Ha habido un problema. Inténtelo más tarde.']);
                     });
             }
         } else {

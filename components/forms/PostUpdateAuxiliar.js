@@ -24,8 +24,14 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
         errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
     }
 
+    
+    const date1 = new Date(startAvailability);
+    const today = new Date();
+    if (date1<today) {
+        errorsArray.push('La fecha de inicio de disponibilidad debe ser posterior a la fecha actual');
+    }
+
     if (type=='months' && endAvailability != undefined) {
-        const date1 = new Date(startAvailability);
         const date2 = new Date(endAvailability);
         const diffTime = Math.abs(date2 - date1);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
