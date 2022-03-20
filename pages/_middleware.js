@@ -19,6 +19,11 @@ export async function middleware(req) {
     }
   }
 
+  if (req.url.includes('/publish/edit')) {
+    if (!user || user.role === 'USER') {
+      return NextResponse.redirect('/')
+    }
+  }
 
   // If user is authenticated, continue.
   return NextResponse.next()
