@@ -1,55 +1,53 @@
 import AdvertisementForm from '../../../components/forms/AdvertisementForm'
 import axios from 'axios';
 import jwt from 'jsonwebtoken'
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
-export default function index(props) {
-
-  
-  const [correctUser, setCorrectUser] = useState(false);
-  const router = useRouter();
-
-  // Comprobación para que un usuario solo pueda modificar sus espacios
-  useEffect(() => {
-    axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.spaceId}`)
-    .then(res => {
-      let ownerId = res.data.ownerId;
-      if (ownerId == props.user.userId) {
-        setCorrectUser(true);
-      } else {
-        router.push("/");
-      }
-      
-    }).catch(err => {
-      router.push("/"); 
-    });
-
-  }, [])
-  
-
+function Edit(props) {
   return (
     <>
-      {correctUser==true &&
       <div>
-        <AdvertisementForm isEdit={true} userId={props.user.userId} spaceId={props.spaceId}/>
+        <AdvertisementForm isEdit={true} userId={props.user.userId} space={props.space} />
       </div>
-      }
     </>
   )
 }
 
+export async function getServerSideProps(ctx) {
 
-export function getServerSideProps(ctx) {
   const spaceId = ctx.params.id
   const cookies = ctx.req.cookies;
   const user = jwt.decode(cookies.authToken);
+  let space = null;
+
+  const result = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${spaceId}`)
+    .then(res => {
+      space = res.data;
+      if (space.ownerId !== user.userId || space === null) {
+        return {
+          redirect: {
+            destination: "/",
+            permanent: false,
+          }
+        }
+      }
+      return {}
+    }).catch(err => {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        }
+      }
+    });
 
   return {
+    redirect: result.redirect,
     props: {
       user: user,
-      spaceId: spaceId,
+      space: space,
     },
   };
 }
+
+export default Edit;
