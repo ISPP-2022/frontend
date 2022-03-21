@@ -20,32 +20,15 @@ export default function AdvertisementForm(props) {
     // Para redirigir en caso de publish/edit/idquenoexiste
     const router = useRouter();
 
-    // Variable para mostrar/ocultar hora de inicio/fin
-    const [isChecked, setIsChecked] = useState(false);
-
     // Variables para los inputs
     const [space, setSpace] = useState('');
 
     const [type, setType] = useState('');
 
-    // Cuando se escoge "Horas", se muestran hora de inicio y hora de fin.
-    // Cuando se escoge "Días" o "Meses" 
-    function handleTypeChange(event) {
-        setType(event.target.value);
-        if (event.target.value == 'hours') {
-            setIsChecked(true);
-        } else {
-            setIsChecked(false);
-        }
-    }
-
-    const [startHour, setStartHour] = useState('');
-    const [endHour, setEndHour] = useState('');
-
     const [price, setPrice] = useState(1);
     const [surface1, setSurface1] = useState(1);
     const [surface2, setSurface2] = useState(1);
-    const [location, setLocation] = useState('1.0,1.0');
+    const [location, setLocation] = useState('');
 
     const [startAvailability, setStartAvailability] = useState('');
     const [endAvailability, setEndAvailability] = useState('');
@@ -144,15 +127,6 @@ export default function AdvertisementForm(props) {
             setType('hours');
             setPrice(space.priceHour);
             document.getElementById('hours').checked = true;
-            setIsChecked(true);
-
-            // Obtiene las horas de inicio y fin a partir de la fecha
-            let initialDateSplitted = space.initialDate.split("T")[1].split(":");
-            setStartHour(initialDateSplitted[0] + ":" + initialDateSplitted[1]);
-            
-            let finalDateSplitted = space.finalDate.split("T")[1].split(":");
-            setEndHour(finalDateSplitted[0] + ":" + finalDateSplitted[1]);
-
         } else if ('priceDay' in space) {
             setType('days');
             setPrice(space.priceDay);
@@ -171,7 +145,7 @@ export default function AdvertisementForm(props) {
 
         for (var i = 0; i < space.tags.length; i++) {
             var tag = space.tags[i].tag;
-            if (['HOUSE_ROOM', 'GARAGE', 'BASEMENT', 'WAREHOUSE', 'STORAGE-ROOM', 'OTHER'].includes(tag)) {
+            if (['HOUSE_ROOM', 'GARAGE', 'BASEMENT', 'WAREHOUSE', 'STORAGE_ROOM', 'OTHER'].includes(tag)) {
                 document.getElementById(tag).checked = true;
                 setSpace(tag);
             }
@@ -197,14 +171,14 @@ export default function AdvertisementForm(props) {
         setErrors([]);
 
         // Realiza las validaciones
-        let errorsArray = (PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location,
+        let errorsArray = (PostUpdateVerification(startAvailability, endAvailability, location,
             shared, type, space));
 
 
         // Si no hay errores, hacemos POST/UPDATE
         if (errorsArray.length == 0) {
             // Crea un objeto con los atributos adecuados
-            let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, startHour, endHour, location,
+            let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, location,
                 surface1, surface2, shared, type, price, tags, space, images);
 
             // Si es edit --> PUT
@@ -292,8 +266,8 @@ export default function AdvertisementForm(props) {
                                 </li>
 
                                 <li>
-                                    <input className='hidden peer' type="radio" id="STORAGE-ROOM" name="space" value="STORAGE_ROOM" onChange={(e) => setSpace(e.target.value)} />
-                                    <label htmlFor="STORAGE-ROOM" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
+                                    <input className='hidden peer' type="radio" id="STORAGE_ROOM" name="space" value="STORAGE_ROOM" onChange={(e) => setSpace(e.target.value)} />
+                                    <label htmlFor="STORAGE_ROOM" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                         <Image src="/images/storage-room.svg" width="100" height="100" alt='storage-room' />
                                     </label>
                                     <p className='flex justify-center'>Trastero</p>
@@ -322,32 +296,18 @@ export default function AdvertisementForm(props) {
                             <p className='py-4'>Tipo de alquiler</p>
                             <ul className='grid grid-cols-3'>
                                 <li className='border-2 border-webcolor-50'>
-                                    <input className='hidden peer' type="radio" id="hours" name="type" value="hours" onChange={(e) => handleTypeChange(e)} />
+                                    <input className='hidden peer' type="radio" id="hours" name="type" value="hours" onChange={(e) => setType(e.target.value)} />
                                     <label htmlFor="hours" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa]'>Horas</label>
                                 </li>
                                 <li className='border-2 border-webcolor-50 text-center'>
-                                    <input className='hidden peer' type="radio" id="days" name="type" value="days" onChange={(e) => handleTypeChange(e)} />
+                                    <input className='hidden peer' type="radio" id="days" name="type" value="days" onChange={(e) => setType(e.target.value)} />
                                     <label htmlFor="days" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa]'>Días</label>
                                 </li>
                                 <li className='border-2 border-webcolor-50 text-center'>
-                                    <input className='hidden peer' type="radio" id="months" name="type" value="months" onChange={(e) => handleTypeChange(e)} />
+                                    <input className='hidden peer' type="radio" id="months" name="type" value="months" onChange={(e) => setType(e.target.value)} />
                                     <label htmlFor="months" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa]'>Meses</label>
                                 </li>
                             </ul>
-                            {isChecked ?
-                                <div className='md:grid md:grid-cols-2 flex'>
-                                    <div className='py-4 basis-1/2'>
-                                        <label htmlFor="start_hour" className='pr-4'>Hora de inicio</label>
-                                        <input className='border' type="time" id="start_hour" value={startHour} onChange={(e) => setStartHour(e.target.value)} />
-                                    </div>
-                                    <div className='py-4 basis-1/2'>
-                                        <label htmlFor='end_hour' className='pr-9 md:pr-4'>Hora de fin</label>
-                                        <input className='border' type="time" id="end_hour" value={endHour} onChange={(e) => setEndHour(e.target.value)} />
-                                    </div>
-                                </div> : <></>
-                            }
-
-
                         </fieldset>
 
                         {/* Precio y Superficie */}

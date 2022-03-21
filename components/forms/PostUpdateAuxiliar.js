@@ -1,4 +1,4 @@
-export default function PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, shared, type, space) {
+export default function PostUpdateVerification(startAvailability, endAvailability, location, shared, type, space) {
     let errorsArray = [];
     if (space == '') {
         errorsArray.push('Escoge un tipo de espacio.');
@@ -6,24 +6,6 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
 
     if (type == '') {
         errorsArray.push('Escoge un tipo de alquiler.');
-    }
-
-    if (type=='hours') {
-        if (startHour=='' || endHour=='') {
-            errorsArray.push('Selecciona un tramo horario.');
-        } else if (endAvailability=='') {
-            errorsArray.push('Selecciona una fecha de fin de disponibilidad.');
-        } else if (startHour<endHour) {
-            let SHOnlyHour = startHour.split(':')[0];
-            let EHOnlyHour = endHour.split(':')[0];
-            if ((EHOnlyHour-SHOnlyHour)<1) {
-                errorsArray.push('La diferencia entre la hora de inicio y la hora de fin debe ser de al menos una hora.');
-            }
-        } else if (startHour==endHour) {
-            errorsArray.push('La diferencia entre la hora de inicio y la hora de fin debe ser de al menos una hora.');
-        } else if (startHour>endHour) {
-            errorsArray.push('La hora de inicio debe ser anterior a la hora de fin.');
-        }
     }
 
     if (location == '') {
@@ -34,7 +16,6 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
         errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
     }
 
-    
     const date1 = new Date(startAvailability);
     const today = new Date();
     if (date1<today) {
@@ -57,32 +38,19 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
     return errorsArray;
 }
 
-export function CreateNewSpaceObject(userId, title, description, startAvailability, endAvailability, startHour, endHour, location,
+export function CreateNewSpaceObject(userId, title, description, startAvailability, endAvailability, location,
     surface1, surface2, shared, type, price, tags, space, images) {
     let newSpace = {};
     newSpace.ownerId = userId;
     newSpace.name = title;
     newSpace.description = description;
 
-    if (type=='hours') {
-        let initialDate = new Date(startAvailability);
-        let startHourSplitted = startHour.split(':')
-        initialDate.setHours(startHourSplitted[0], startHourSplitted[1]);
-        newSpace.initialDate = initialDate;
-    } else {
-        newSpace.initialDate = new Date(startAvailability);
-    }
+    newSpace.initialDate = new Date(startAvailability);
 
     if (endAvailability!=undefined) {
-        if (type=='hours') {
-            let finalDate = new Date(endAvailability);
-            let endHourSplitted = endHour.split(':')
-            finalDate.setHours(endHourSplitted[0], endHourSplitted[1]);
-            newSpace.finalDate = finalDate;
-        } else {
-            newSpace.finalDate = new Date(endAvailability);
-        }
+        newSpace.finalDate = new Date(endAvailability);
     }
+    
     newSpace.location = location;
     newSpace.dimensions = surface1.toString() + 'x' + surface2.toString();
     newSpace.shared = shared;
