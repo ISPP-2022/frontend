@@ -20,7 +20,7 @@ export default function Home() {
     router.push(`/search?q=${search}`);
   };
   const handleSmart = () => {
-    router.push("/smartsearch");
+    router.push("/smartSearch");
   }
 
   return (
