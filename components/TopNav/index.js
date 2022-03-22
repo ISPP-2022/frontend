@@ -29,7 +29,7 @@ function Navbar({ user }) {
   }
 
   const handleSmart = () => {
-    router.push("/smartsearch")
+    router.push("/smartSearch")
   }
 
   return (

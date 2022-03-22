@@ -7,9 +7,8 @@ export async function middleware(req) {
   let user = null
   if (session) {
     try {
-      user = jwt.verify(session, process.env.JWT_SECRET || 'stackingupsecret')
+      user = jwt.verify(session, process.env.JWT_SECRET || 'stackingupsecretlocal')
     } catch (error) {
-      console.log('Invalid token');
     }
   }
 
@@ -21,6 +20,12 @@ export async function middleware(req) {
 
   if (req.url.includes('/publish/edit')) {
     if (!user || user.role === 'USER') {
+      return NextResponse.redirect('/')
+    }
+  }
+
+  if (req.url.includes('/smartSearch/renter')) {
+    if (!user) {
       return NextResponse.redirect('/')
     }
   }

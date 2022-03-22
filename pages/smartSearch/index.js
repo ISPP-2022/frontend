@@ -25,7 +25,7 @@ export default function Selection() {
               </div>
             </button>
           </Link>
-          <Link href='smartSearch/tenant' passHref>
+          <Link href='smartSearch/renter' passHref>
             <button>
               <div className="grid grid-cols-1 gap-4 w-64 h-64 content-center rounded-xl border-2 border-[#4aa7c0] ">
                 <div className="flex justify-center">
