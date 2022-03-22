@@ -12,7 +12,7 @@ import Image from 'next/image';
  * @param  {array<string>} tags
  * @param  {string} URLimage
  */
-export const Card = ({ title, surface, rating, price, unitPrice, tags, URLimage }) => {
+export const Card = ({ title, surface, rating, price, unitPrice, tags, images }) => {
     const modelTags = {
         enchufe: <><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 float-left" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> Enchufe</>,
         wifi: <><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 float-left" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" /></svg> Wifi</>,
@@ -57,7 +57,8 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, URLimage 
         <div className="p-4">
             <div className="flex w-full m-2 bg-white shadow-lg rounded-lg overflow-hidden">
                 <div className="w-1/3 bg-cover relative">
-                    <Image alt="Image" className="h-full object-cover" src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover"></Image>
+                    <Image src={images?.length > 0 ? `data:${images[0].mimetipe};base64, ${obj.images[0].image}` :'/spacePlaceholder.jpg'} layout='fill' objectFit="cover" className="h-full" alt={`${title}`} />
+                    {/*<Image alt="Image" className="h-full object-cover" src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover"></Image>*/}
                 </div>
                 <div className="w-2/3 p-4">
                     <h1 className="text-gray-900 font-bold sm:text-2xl">{title} | {surface} m²</h1>
@@ -87,7 +88,7 @@ export const CardMobile = ({ title, surface, rating, price, unitPrice, tags, URL
         <div className="w-full max-w-[540px] bg-white shadow-lg rounded-xl ">
             {/* Image */}
             <div className="h-52 relative">
-                <Image src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover" alt="Image" className="w-96 h-96 rounded-t-xl object-cover p-6 bg-cover" />
+                <Image src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover" alt={`${title}`} className="w-96 h-96 rounded-t-xl object-cover p-6 bg-cover" />
             </div>
             {/* Body */}
             <div className="grid grid-cols-2 grid-rows-2 h-20">

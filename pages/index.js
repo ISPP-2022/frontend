@@ -1,10 +1,11 @@
 import Footer from "../components/Footer";
 import Head from "next/head";
 import { Card, CardMobile } from "../components/Card";
-import { Title } from "../components/Core/Text";
+import { Paragraph, Title } from "../components/Core/Text";
 
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -12,13 +13,59 @@ export default function Home() {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
+  const url = `${process.env.AUTH_API_URL || 'http://localhost:4100'}`;
+  const [respuestaAPI, setRespuestaAPI] = useState({ respuesta: 'KO' });
+
+  useEffect(async () => {
+    await axios.get(url + `/api/v1/spaces`)
+      .then(response => { setRespuestaAPI({ respuesta: 'OK', data: response.data }) })
+      .catch(error => { setRespuestaAPI({ respuesta: 'KO', error: error.message }) });
+  }, []);
+
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/search?q=${search}`);
+    router.push(`/search/${search}`);
+  };
+
+  const calculateSurface = (dimensions) => {
+    const [width, height] = dimensions.split('x');
+    return parseInt(width) * parseInt(height);
+  };
+
+  const calculatePrice = (priceHour, priceDay, priceMonth) => {
+    if (priceHour !== null) {
+      return priceHour;
+    } else if (priceDay !== null) {
+      return priceDay;
+    } else if (priceMonth !== null) {
+      return priceMonth;
+    } else {
+      return "-";
+    }
+  };
+
+  const calculateUnitPrice = (priceHour, priceDay, priceMonth) => {
+    if (priceHour !== null) {
+      return "€/h";
+    } else if (priceDay !== null) {
+      return "€/d";
+    } else {
+      return "€/m";
+    }
+  };
+
+  const calculateTags = (inputTag) => {
+    if (inputTag.length > 0 && inputTag.length < 3) {
+      return inputTag;
+    } else if (inputTag.length > 2) {
+      return inputTag.slice(0, 2);
+    } else {
+      return ["empty"];
+    }
   };
 
   return (
@@ -53,22 +100,36 @@ export default function Home() {
             </div>
           </div>
           <div className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
-            {arr.map((item) => (
-              <div key={item} className="shrink-0 md:basis-1/2 lg:basis-1/4">
-                <Card title="Habitación" surface="5" rating={4} price="220" unitPrice="€/h" tags={["enchufe", "agua", "wifi", "iluminacion", "cerrado"]} />
-              </div>
-            ))}
+            {respuestaAPI.respuesta === "OK" ?
+              respuestaAPI.data.map((item) => (
+                <div key={item} className="shrink-0 md:basis-1/2 lg:basis-1/4">
+                  <Card
+                    title={item.name}
+                    surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
+                    rating={item.rating ? item.rating : undefined}
+                    price={calculatePrice(item.priceHour, item.priceDay, item.priceMonth)}
+                    unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth)}
+                    tags={item.tags ? calculateTags(item.tags) : undefined} />
+                </div>
+              )) : <Paragraph>Ha ocurrido un error.</Paragraph>}
           </div>
         </div>
         <div className="block md:hidden">
           <div className="p-3 text-blue-bondi-dark">
             <Title>Cerca de ti</Title>
           </div>
-          {arr.map((item) => (
-            <div key={item} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
-              <CardMobile title="Habitación" surface="5" rating={4} price="220" unitPrice="€/h" tags={["enchufe", "agua", "wifi", "iluminacion", "cerrado"]} />
-            </div>
-          ))}
+          {respuestaAPI.respuesta === "OK" ?
+            respuestaAPI.data.map((item, index) => (
+              <div key={index} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
+                <CardMobile
+                  title={item.name}
+                  surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
+                  rating={item.rating ? item.rating : undefined}
+                  price={calculatePrice(item.priceHour, item.priceDay, item.priceMonth)}
+                  unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth)}
+                  tags={item.tags ? calculateTags(item.tags) : undefined} />
+              </div>
+            )) : <Paragraph>Ha ocurrido un error.</Paragraph>}
         </div>
       </main>
       <Footer />

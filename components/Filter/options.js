@@ -1,4 +1,4 @@
-export const options = [
+export const optionTags = [
     { value: 'FLOOR_1', label: 'Primera planta' },
     { value: 'FLOOR_2', label: 'Segunda planta' },
     { value: 'FLOOR_3UP', label: 'Tercera planta (o superior)' },
