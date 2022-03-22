@@ -5,9 +5,9 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken'
 import { useState, useEffect } from "react";
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps({ req, res, query }) {
 
-    const cookies = ctx.req.cookies;
+    const cookies = req.cookies;
     const user = jwt.decode(cookies.authToken);
     const userId = user.userId;
     let spaces
@@ -16,11 +16,24 @@ export async function getServerSideProps(ctx) {
         spaces = spacesres.data
     }
     catch (error) {
-        console.log(error)
+        spaces = []
     }
+
+    if (parseInt(query?.userId) === userId) {
+        return {
+            props: {
+                spaces,
+            }
+        }
+    }
+
     return {
         props: {
-            spaces: spaces ? spaces : []
+            spaces,
+        },
+        redirect: {
+            destination: '/smartSearch/renter?userId=' + userId,
+            permanent: false,
         }
     }
 }

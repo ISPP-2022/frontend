@@ -74,7 +74,7 @@ function Space({ datadimensions, dataTypes, user, items }) {
                 })
                 sessionStorage.setItem("smartSearch", JSON.stringify(result.data));
                 router.push({
-                    pathname: `/smartSearch/spaces/results`,
+                    pathname: `/smartSearch/space/results`,
 
                 });
             }, function (error) {

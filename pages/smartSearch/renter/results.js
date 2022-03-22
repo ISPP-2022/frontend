@@ -120,7 +120,7 @@ export default function Results() {
                                 </svg>
                                 <p className="ml-1">Alquileres: {data?.nRentals || 0}</p>
                             </div>
-                        </div>`
+                        </div>
 
                     </div>
 
