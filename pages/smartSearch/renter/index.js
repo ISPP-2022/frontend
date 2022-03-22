@@ -12,9 +12,11 @@ export async function getServerSideProps(ctx) {
     const userId = user.userId;
     let spaces
     try {
-        spaces = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${userId}/spaces`).data;
+        let spacesres = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${userId}/spaces`);
+        spaces = spacesres.data
     }
     catch (error) {
+        console.log(error)
     }
     return {
         props: {
@@ -103,7 +105,7 @@ function Renter({ spaces }) {
                     })}
                 </div>
                 <div className="flex flex-row justify-center items-center mt-5">
-                    <Link href={{ pathname: '/smartSearch/renter/result', query: { space: page[selected]?.id } }}>
+                    <Link href={{ pathname: '/smartSearch/renter/results', query: { space: page[selected]?.id } }}>
                         <button disabled={!page[selected]?.id} className={`text-white font-bold py-2 px-4 rounded ${!page[selected]?.id ? 'bg-gray-300 text-gray-500' : 'bg-[#4aa7c0] hover:bg-blue-bondi-dark'}`}>
                             Start
                         </button>
