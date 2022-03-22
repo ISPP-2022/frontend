@@ -1,7 +1,7 @@
 import SpaceOwner from "../../components/SpaceOwner/index.js";
 import EmblaCarousel from "../../components/SpacesCarousel/index.js";
 import TopNav from "../../components/TopNav";
-
+import { addDays, isSameDay } from "date-fns";
 import BookingModal from "../../components/Booking/modal.js";
 import BookingDiv from "../../components/Booking/div.js";
 import { useState } from "react";
@@ -33,6 +33,25 @@ export default function Space(props) {
         }
     );
 
+    const calculateDisabledDates = () => {
+        let disabledDates = [];
+        if (props.rentalsDates) {
+            props.rentalsDates.forEach(rental => {
+                let currentDate = rental.initialDate;
+                while (currentDate <= rental.finalDate) {
+                    disabledDates.push(new Date(currentDate));
+                    currentDate = addDays(currentDate, 1);
+                }
+            });
+        }
+        return disabledDates;
+    };
+
+
+
+
+    const [disabledDates, setDisabledDates] = useState(calculateDisabledDates());
+
     return (
         <>
             <TopNav />
@@ -42,9 +61,10 @@ export default function Space(props) {
                     <SpaceInfo space={props.space} owner={props.owner} showModal={showModal} setShowModal={setShowModal} />
                 </div>
                 <div className="">
-                    <BookingDiv user={props.user} space={props.space} rentalsDates={props.rentalsDates} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange} />
+                    <BookingDiv user={props.user} space={props.space} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange}
+                        disabledDates={disabledDates} setDisabledDates={setDisabledDates} />
                     {showModal && (
-                        <BookingModal user={props.user} space={props.space} rentalsDates={props.rentalsDates} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange} handleClose={() => setShowModal(false)} />
+                        <BookingModal user={props.user} space={props.space} disabledDates={disabledDates} setDisabledDates={setDisabledDates} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange} handleClose={() => setShowModal(false)} />
                     )}
                 </div>
             </div>
@@ -74,7 +94,8 @@ export async function getStaticProps({ params }) {
 
     let rentalDates = [];
     await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/rentals`).then(res => {
-        rentalDates = res.data.filter(rental => new Date(rental.initialDate) >= new Date() && new Date(rental.finalDate) !== new Date(rental.initialDate))
+        rentalDates = res.data.filter(rental => new Date(rental.initialDate) >= new Date() &&
+            !isSameDay(new Date(rental.finalDate), new Date(rental.initialDate)))
             .map(rental => {
                 return {
                     initialDate: new Date(rental.initialDate).getTime(),

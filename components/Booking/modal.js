@@ -3,7 +3,7 @@ import DateRangeInput from "../DateRange/index.js";
 import TimeRangeInput from "../TimeRange/index.js";
 import { Button } from "../Core/Button/index.js";
 import axios from "axios";
-import { differenceInCalendarMonths, differenceInCalendarDays, differenceInHours, setMinutes, setHours } from "date-fns";
+import { addDays, differenceInCalendarMonths, differenceInCalendarDays, differenceInHours, setMinutes, setHours, isSameDay, isAfter, isBefore } from "date-fns";
 
 export default function BookingModal({ childrens, ...props }) {
   const { handleClose, setIsLogged } = props;
@@ -25,15 +25,22 @@ export default function BookingModal({ childrens, ...props }) {
 
     // Si hay concurrencia de reservas
     let rentalDates = [];
-    await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`).then(res =>
-      rentalDates = res.data.filter(rental => (
-        initialDate >= rental.initialDate && initialDate <= rental.finalDate) ||
-        (finalDate >= rental.initialDate && finalDate <= rental.finalDate) ||
-        (initialDate <= rental.initialDate && finalDate >= rental.finalDate))
-    ).catch(err => console.log(`No rentals found for space ${props.space.id}`));
+    await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`).then(res => {
+      console.log(res.data);
+      rentalDates = res.data.filter(rental =>
+        isAfter(initialDate, new Date(rental.initialDate)) && isBefore(initialDate, new Date(rental.finalDate)) ||
+        isAfter(finalDate, new Date(rental.initialDate)) && isBefore(finalDate, new Date(rental.finalDate)) ||
+        isBefore(initialDate, new Date(rental.initialDate)) && isAfter(finalDate, new Date(rental.finalDate)) ||
+        isAfter(initialDate, new Date(rental.initialDate)) && isBefore(finalDate, new Date(rental.finalDate))
+      )
+    }
+    ).catch(() => console.log(`No se ha encontrado concurrencia de fechas para el espacio ${props.space.id}`));
+
+    console.log(rentalDates);
 
     if (rentalDates.length > 0) {
-      alert("La fecha seleccionada está ocupada");
+      alert(`La fecha seleccionada está ocupada por la siguiente reserva:
+        ${new Date(rentalDates[0].initialDate).toUTCString()} - ${new Date(rentalDates[0].finalDate).toUTCString()}`);
       return false;
     }
 
@@ -43,10 +50,12 @@ export default function BookingModal({ childrens, ...props }) {
   //Devuelve el tipo de coste más barato según  
   const rentalCost = (initialDate, finalDate) => {
     const costs = [
-      { rentalType: 'HOUR', price: differenceInHours(finalDate, initialDate, "ceil") * props.space.priceHour },
+      { rentalType: 'HOUR', price: (differenceInHours(finalDate, initialDate, { roundingMethod: "ceil" }) || 1) * props.space.priceHour },
       { rentalType: 'DAY', price: (differenceInCalendarDays(finalDate, initialDate) || 1) * props.space.priceDay },
       { rentalType: 'MONTH', price: (differenceInCalendarMonths(finalDate, initialDate) || 1) * props.space.priceMonth }
     ];
+
+    costs.forEach(cost => console.log(cost.price));
 
     return costs.filter(o => o.price).reduce((min, obj) => min.price < obj.price ? min : obj);
 
@@ -58,8 +67,8 @@ export default function BookingModal({ childrens, ...props }) {
     let initialDate = setMinutes(setHours(props.dateRange[0].startDate, ~~initialTime[0] + 1), ~~initialTime[1]);
     let finalDate = setMinutes(setHours(props.dateRange[0].endDate, ~~finalTime[0] + 1), ~~finalTime[1]);
 
-    if (rentalValidation(initialDate, finalDate)) {
-      const cost = rentalCost(initialTime, finalTime)
+    if (await rentalValidation(initialDate, finalDate)) {
+      const cost = rentalCost(initialDate, finalDate)
       confirm(`¿Está seguro que desea reservar el espacio ${props.space.name} por ${cost.price}€?`) &&
         (await axios.post(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
           initialDate: initialDate,
@@ -71,8 +80,27 @@ export default function BookingModal({ childrens, ...props }) {
           renterId: props.user.userId,
         }, {
           withCredentials: true,
-        }).then(res => {
-          console.log(res);
+        }).then(() => {
+          alert("Reserva realizada con éxito");
+          props.setDateRange([{
+            startDate: new Date(),
+            endDate: new Date(),
+            key: 'selection'
+          }]);
+
+          props.setTimeRange({
+            initialTime: '00:00',
+            finalTime: '00:00'
+          });
+
+          // La de inicio y fin no se desactiva por si se pudieran alquilar algunas horas de esos días
+          let newDisabledDates = props.disabledDates;
+          let currentDate = addDays(currentDate, 1);
+          while (!isSameDay(currentDate, finalDate)) {
+            newDisabledDates.push(new Date(currentDate));
+            currentDate = addDays(currentDate, 1);
+          }
+          props.setDisabledDates(newDisabledDates);
         }).catch(err => console.log(err.response.data)));
     }
   };
@@ -90,7 +118,7 @@ export default function BookingModal({ childrens, ...props }) {
           <h2 className="text-webcolor-50 text-2xl font-bold Disponibilidad mb-4 mt-2 ml-10">
             Reservar
           </h2>
-          <DateRangeInput rentalsDates={props.rentalsDates} dateRange={props.dateRange} setDateRange={props.setDateRange} />
+          <DateRangeInput disabledDates={props.disabledDates} dateRange={props.dateRange} setDateRange={props.setDateRange} />
           <hr className=" bg-webcolor-50 w-[80%] m-auto" />
           <TimeRangeInput timeRange={props.timeRange} setTimeRange={props.setTimeRange} />
           <div className='flex justify-center'>
