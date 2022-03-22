@@ -36,10 +36,10 @@ const EmblaCarousel = ({ slides }) => {
     }, [embla, onSelect]);
 
     return (
-        <div className="flex justify-center mt-4 ml-4 mr-4">
-            <div className="embla embla--thumb hidden md:flex">
-                <div className="embla__viewport" ref={thumbViewportRef}>
-                    <div className="embla__container--thumb">
+        <div className="flex justify-center mt-4 mx-4">
+            <div className="p-2 mx-auto pt-0 hidden md:flex">
+                <div className="overflow-hidden relative block mx-auto" ref={thumbViewportRef}>
+                    <div className="cursor-default select-none h-[300px] w-[200px]">
                         {slides.map((index) => (
                             <Thumb
                                 onClick={() => onThumbClick(index)}
@@ -51,14 +51,14 @@ const EmblaCarousel = ({ slides }) => {
                     </div>
                 </div>
             </div>
-            <div className="embla">
-                <div className="embla__viewport" ref={mainViewportRef}>
-                    <div className="embla__container">
+            <div className="p-2 mx-auto">
+                <div className="overflow-hidden bg-contain relative block mx-auto" ref={mainViewportRef}>
+                    <div className="flex select-none w-auto sm:w-[500px]">
                         {slides.map((index) => (
-                            <div className="embla__slide embla__slide__inner mx-2" key={index}>
+                            <div className="min-w-full my-[8%] relative h-[300px] rounded:md mx-2 px-2" key={index}>
                                 <Image
                                     layout="fill"
-                                    className="embla__slide__img"
+                                    className="touch-manipulation relative block mx-auto rounded-md"
                                     src={thumbByIndex(index)}
                                     alt="Imágenes del espacio no encontradas"
                                 />

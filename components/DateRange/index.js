@@ -1,16 +1,8 @@
 import { addDays } from 'date-fns';
 import { DateRange } from 'react-date-range';
-import { useState } from "react";
 import * as locales from 'react-date-range/dist/locale';
 
 export default function DateRangeInput(props) {
-    const [state, setState] = useState([
-        {
-            startDate: new Date(),
-            endDate: new Date(),
-            key: 'selection'
-        }
-    ]);
 
     let disabledDates = [];
     if (props.rentalsDates) {
@@ -27,8 +19,8 @@ export default function DateRangeInput(props) {
         <div className='flex justify-center'>
             <DateRange
                 editableDateInputs={false}
-                onChange={item => setState([item.selection])}
-                ranges={state}
+                onChange={item => props.setDateRange([item.selection])}
+                ranges={props.dateRange}
                 locale={locales.es}
                 minDate={new Date()}
                 maxDate={new Date(new Date().getFullYear() + 1, 11, 31)}

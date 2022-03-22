@@ -4,9 +4,7 @@ import TopNav from "../../components/TopNav";
 
 import BookingModal from "../../components/Booking/modal.js";
 import BookingDiv from "../../components/Booking/div.js";
-import { Button } from "../../components/Core/Button/index.js";
 import { useState } from "react";
-import { useRouter } from "next/router";
 import axios from "axios";
 import SpaceInfo from "../../components/SpaceInfo/index.js";
 
@@ -20,18 +18,33 @@ export default function Space(props) {
 
     const [showModal, setShowModal] = useState(false);
 
+    const [dateRange, setDateRange] = useState(
+        [{
+            startDate: new Date(),
+            endDate: new Date(),
+            key: 'selection'
+        }]
+    );
+
+    const [timeRange, setTimeRange] = useState(
+        {
+            initialTime: '00:00',
+            finalTime: '00:00'
+        }
+    );
+
     return (
         <>
             <TopNav />
             <div className='flex justify-center items-start'>
-                <div className="lg:border-webcolor-50 md:border-2 md:rounded-md md:mt-4 lg:w-2/3 ">
+                <div className="lg:border-webcolor-50 md:border-2 md:rounded-md md:mt-4 lg:w-2/3 w-full ">
                     <EmblaCarousel slides={slides} />
                     <SpaceInfo space={props.space} owner={props.owner} showModal={showModal} setShowModal={setShowModal} />
                 </div>
-                <div>
-                    <BookingDiv rentalsDates={props.rentalsDates} />
+                <div className="">
+                    <BookingDiv user={props.user} space={props.space} rentalsDates={props.rentalsDates} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange} />
                     {showModal && (
-                        <BookingModal rentalsDates={props.rentalsDates} showModal={showModal} setShowModal={setShowModal} handleClose={() => setShowModal(false)} />
+                        <BookingModal user={props.user} space={props.space} rentalsDates={props.rentalsDates} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange} handleClose={() => setShowModal(false)} />
                     )}
                 </div>
             </div>
@@ -60,8 +73,8 @@ export async function getStaticProps({ params }) {
     // const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.data.ownerId}`);
 
     let rentalDates = [];
-    const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/rentals`).then(res => {
-        rentalDates = res.data.filter(rental => new Date(rental.initialDate) >= new Date())
+    await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/rentals`).then(res => {
+        rentalDates = res.data.filter(rental => new Date(rental.initialDate) >= new Date() && new Date(rental.finalDate) !== new Date(rental.initialDate))
             .map(rental => {
                 return {
                     initialDate: new Date(rental.initialDate).getTime(),
