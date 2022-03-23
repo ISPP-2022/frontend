@@ -51,7 +51,9 @@ jobs:
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_PAT }}
+          git-user-name: StackingUpBot
+          git-user-email: 101150232+StackingUpBot@users.noreply.github.com
           output-file: 'CHANGELOG.md'
           tag-prefix: 'v'
           release-count: 0
@@ -71,11 +73,10 @@ jobs:
           destination_branch: "develop"
           pr_title: "Synchronize develop with master after release ${{ steps.changelog.outputs.tag }}"
           pr_body: ":crown:"
-          pr_reviewer: "tomgalbar"
-          pr_assignee: "borjar20"
+          pr_reviewer: "borjar20"
+          pr_assignee: "StackingUpBot"
           pr_label: "auto-pr"                              
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: AutoModality/action-clean@v1
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -89,7 +90,8 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          context: .
           push: true
-          tags: stackingup/ui-service:${{ steps.changelog.outputs.tag }}
+          tags: stackingup/data-service:${{ steps.changelog.outputs.tag }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
