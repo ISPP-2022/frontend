@@ -186,7 +186,7 @@ export default function AuthModal({ childerns, ...props }) {
       if (!valid) {
         return
       }
-      axios.post(`${process.env.AUTH_API_URL || 'http://localhost:4000'}/api/v1/login`, {
+      axios.post(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/login`, {
         username: email,
         password
       }, {

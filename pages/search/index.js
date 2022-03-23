@@ -66,7 +66,7 @@ const Search = () => {
         axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
             .then(async (response) => {
                 for (let i = 0; i < response.data.length; i++) {
-                    const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+                    const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
                         .then(rat => rat.data).catch(() => { return [] });
                     response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
                 }
@@ -80,7 +80,7 @@ const Search = () => {
         axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
             .then(async (response) => {
                 for (let i = 0; i < response.data.length; i++) {
-                    const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+                    const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
                         .then(rat => rat.data).catch(() => { return [] });
                     response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
                 }

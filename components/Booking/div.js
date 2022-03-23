@@ -26,7 +26,7 @@ export default function BookingDiv(props) {
 
         // Si hay concurrencia de reservas
         let rentalDates = [];
-        await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`).then(res => {
+        await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`).then(res => {
             rentalDates = res.data.filter(rental =>
                 isAfter(initialDate, new Date(rental.initialDate)) && isBefore(initialDate, new Date(rental.finalDate)) ||
                 isAfter(finalDate, new Date(rental.initialDate)) && isBefore(finalDate, new Date(rental.finalDate)) ||
@@ -67,7 +67,7 @@ export default function BookingDiv(props) {
             if (await rentalValidation(initialDate, finalDate)) {
                 const cost = rentalCost(initialDate, finalDate)
                 confirm(`¿Está seguro que desea reservar el espacio ${props.space.name} por ${cost.price}€?`) &&
-                    (await axios.post(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
+                    (await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
                         initialDate: initialDate,
                         finalDate: finalDate,
                         cost: cost.price,

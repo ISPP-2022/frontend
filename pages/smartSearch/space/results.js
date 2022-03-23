@@ -23,17 +23,17 @@ export default function SpaceSmartSearch(props) {
         if (data.length > 0) {
             Promise.all(
                 data.map((item, index) =>
-                    axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${item.id}`).then(async res => {
-                        let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${item.id}/images`).then(imageres => imageres.data).catch(() => { });
+                    axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${item.id}`).then(async res => {
+                        let images = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${item.id}/images`).then(imageres => imageres.data).catch(() => { });
                         if (images) res.data.images = images;
 
-                        const owner = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.ownerId}`).then(async resOwner => {
-                            let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${resOwner.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { });
+                        const owner = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.ownerId}`).then(async resOwner => {
+                            let avatar = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${resOwner.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { });
                             if (avatar) resOwner.data.avatar = avatar;
                             return resOwner.data;
                         });
 
-                        const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.ownerId}/ratings?filter=received`).then(rat => rat.data).catch(() => { });
+                        const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.ownerId}/ratings?filter=received`).then(rat => rat.data).catch(() => { });
                         res.data.owner = owner;
                         if (ratings) res.data.owner.rating = ratings.reduce((acc, cur, _idx, arr) => { return acc + cur.rating / arr.length }, 0);
                         return res.data;
