@@ -33,6 +33,9 @@ function Navbar({ user }) {
     e.preventDefault();
     if (search.trim().length > 3)
       router.push(`/search?search=${search.trim()}`);
+    else {
+      router.push(`/search`);
+    }
   };
 
   const handleSmart = () => {
@@ -59,7 +62,7 @@ function Navbar({ user }) {
             </a>
           </Link>
           {/* Barra de busqueda */}
-          <form className="w-full max-w-lg py-2 px-4 flex items-center block md:hidden" onSubmit={handleSubmit}>
+          <form className="w-full max-w-lg py-2 px-4 items-center block md:hidden" onSubmit={handleSubmit}>
             <input className="bg-transparent focus:outline-none 
             focus:shadow-outline border border-gray-300 focus:border-[#4aa7c0] rounded-lg 
               appearance-none leading-normal w-full max-w-lg

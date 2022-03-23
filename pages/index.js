@@ -18,7 +18,12 @@ export default function Home() {
 
   useEffect(() => {
     axios.get(`${process.env.AUTH_API_URL || 'http://localhost:4100'}/api/v1/spaces`)
-      .then(response => {
+      .then(async (response) => {
+        for (let i = 0; i < response.data.length; i++) {
+          const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+            .then(rat => rat.data).catch(() => { return [] });
+          response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
+        }
         setData(response.data)
       })
       .catch(error => { });
@@ -32,6 +37,9 @@ export default function Home() {
     e.preventDefault();
     if (search.trim().length > 3)
       router.push(`/search?search=${search.trim()}`);
+    else {
+      router.push(`/search`);
+    }
   };
 
   const calculateSurface = (dimensions) => {

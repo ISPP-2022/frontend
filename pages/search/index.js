@@ -55,20 +55,37 @@ const Search = () => {
         let tempSearch = router.query.search;
         if (search.trim().length > 3)
             tempSearch = search;
+        else {
+            tempSearch = "";
+        }
         return { search: tempSearch, isRentPerDay, isRentPerHour, isRentPerMonth, minDim, maxDim, minPriceDay, maxPriceDay, minPriceHour, maxPriceHour, minPriceMonth, maxPriceMonth, tag: tag.join(",") };
     }
 
     useEffect(() => {
         parseQueryToState(router.query);
         axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
-            .then(response => { setData(response.data) })
+            .then(async (response) => {
+                for (let i = 0; i < response.data.length; i++) {
+                    const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+                        .then(rat => rat.data).catch(() => { return [] });
+                    response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
+                }
+                setData(response.data)
+            })
             .catch(error => { });
     }, []);
 
     useEffect(() => {
         parseQueryToState(router.query);
         axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
-            .then(response => { setData(response.data) })
+            .then(async (response) => {
+                for (let i = 0; i < response.data.length; i++) {
+                    const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+                        .then(rat => rat.data).catch(() => { return [] });
+                    response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
+                }
+                setData(response.data)
+            })
             .catch(error => { });
     }, [router.query]);
 
@@ -139,7 +156,6 @@ const Search = () => {
                     </div>
                     :
                     <div>
-                        <Title>Resultados para "{router.query?.search}"</Title>
                         <Paragraph>{data.length} resultados encontrados</Paragraph>
                         {/* Filter mobile version */}
                         {/* TODO LUCAS: Código duplicado, extraer en un componente y hacer dos llamadas */}

@@ -282,7 +282,7 @@ export default function AdvertisementForm(props) {
                                 </li>
 
                                 <li>
-                                    <input className='hidden peer' type="radio" id="OTHER" name="space" value="OTHER" onChange={(e) => setSpace(e.target.value)} />
+                                    <input className='hidden peer' type="radio" id="OTHER" name="space" value="OTHERS" onChange={(e) => setSpace(e.target.value)} />
                                     <label htmlFor="OTHER" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                         <Image src="/images/other.svg" width="100" height="100" alt='other' />
                                     </label>

@@ -66,7 +66,7 @@ export default function SpaceSmartSearch(props) {
                 <div className='flex flex-col h-[90%]'>
                     {/* Title */}
                     <div className='basis-[56px] flex flex-row justify-center'>
-                        <h2 className='font-bold text-[40px] py-2 text-blue-bondi'>{spaces[selectedSpaceIndex]?.name}</h2>
+                        <h2 className='font-bold text-[40px] py-2 text-blue-bondi'>{spaces[selectedSpaceIndex]?.name} ({spaces[selectedSpaceIndex]?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1)} m²)</h2>
                     </div>
 
                     {/* Caroussel and price */}
@@ -98,6 +98,11 @@ export default function SpaceSmartSearch(props) {
                                 </div>
                                 <div className="basis-[45%] md:basis-1/2 xl:basis-3/4 flex flex-col items-center xl:items-start justify-start pl-2 pr-2 w-full mt-2 xl:mt-0">
                                     <p className="font-bold text-ellipsis whitespace-nowrap">{spaces[selectedSpaceIndex]?.owner.name || 'SomeUser'}</p>
+                                    <p className="text-gray-700 text-ellipsis whitespace-nowrap flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                        {spaces[selectedSpaceIndex]?.owner.phoneNumber || ''}</p>
                                     <Rating value={spaces[selectedSpaceIndex]?.owner.rating || 0} readOnly />
                                 </div>
                             </div>

@@ -17,9 +17,20 @@ export default function index(props) {
 export function getServerSideProps(ctx) {
   const cookies = ctx.req.cookies;
   const user = jwt.decode(cookies.authToken);
+
+  console.log(user)
+  if (parseInt(ctx.query?.userId) === user.userId) {
+    return {
+      props: {
+        user: user,
+      }
+    }
+  }
+
   return {
-    props: {
-      user: user,
-    },
-  };
+    redirect: {
+      destination: '/publish/add?userId=' + user.userId,
+      permanent: false,
+    }
+  }
 }
