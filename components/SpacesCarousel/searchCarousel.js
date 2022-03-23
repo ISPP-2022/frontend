@@ -9,7 +9,7 @@ const SpaceSearchCarousel = ({ slides }) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [mainViewportRef, embla] = useEmblaCarousel({});
     const [thumbViewportRef, emblaThumbs] = useEmblaCarousel({
-        axis: "x",
+        axis: "y",
         containScroll: "keepSnaps",
         selectedClass: "",
         dragFree: true,
@@ -38,40 +38,34 @@ const SpaceSearchCarousel = ({ slides }) => {
     }, [embla, onSelect]);
 
     return (
-        <div className="justify-start mt-4 ml-4 mr-4 w-2/3">
-            <div className="mx-auto">
-                <div className="overflow-hidden relative block mx-auto" ref={mainViewportRef}>
-                    <div className="flex select-none">
-                        {slides.map((index) => (
-                            <div className="relative my-[8%] min-w-full overflow-hidden rounded-lg mr-1 h-80" key={index}>
-                                <Image
-                                    layout="fill"
-                                    className="relative mx-auto block touch-manipulation"
-                                    src={thumbByIndex(index)}
-                                    alt="Imágenes del espacio no encontradas"
-                                />
-                            </div>
-                        ))}
-                    </div>
+        <div className="flex flex-row justify-start w-full h-full">
+            <div className="basis-full lg:basis-2/3 relative overflow-hidden" ref={mainViewportRef}>
+                <div className="flex select-none h-full">
+                    {slides.map((index) => (
+                        <div className="relative min-w-full h-full shadow-lg" key={index}>
+                            <Image
+                                layout="fill"
+                                className="relative mx-auto block touch-manipulation rounded-lg"
+                                src={thumbByIndex(index)}
+                                alt="Imágenes del espacio no encontradas"
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
-            <div className="mx-auto p-3 pt-0">
-                <div className="overflow-hidden relative block mx-auto" ref={thumbViewportRef}>
-                    <div className="flex select-none w-[200px]">
-                        {slides.map((index) => (
-                            <div className="mx-1" key={index}>
-                                <Thumb
-                                    onClick={() => onThumbClick(index)}
-                                    imgSrc={thumbByIndex(index)}
-                                    className="w-[200px]"
-                                    key={index}
-                                />
-                            </div>
-                        ))}
-                    </div>
+            <div className="hidden basis-0 lg:block lg:basis-1/3 relative overflow-hidden" ref={thumbViewportRef}>
+                <div className="flex flex-col select-none h-10">
+                    {slides.map((index) => (
+                        <div className="mx-2" key={index}>
+                            <Thumb
+                                onClick={() => onThumbClick(index)}
+                                imgSrc={thumbByIndex(index)}
+                                key={index}
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
-
         </div>
     );
 };
