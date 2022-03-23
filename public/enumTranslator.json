@@ -1,0 +1,16 @@
+{
+  "types": {
+    "APPLIANCES": "Electrodomesticos",
+    "ELECTRONICS": "Aparatos Electronicos",
+    "CLOTHES": "Ropa",
+    "FURNITURE": "Mobiliario",
+    "DIYs": "Bricolaje",
+    "OTHER": "Otros"
+  },
+  "dimensions": {
+    "SMALL": "Pequeño",
+    "MEDIUM": "Mediano",
+    "LARGE": "Grande",
+    "VERY_LARGE": "Muy grande"
+  }
+}

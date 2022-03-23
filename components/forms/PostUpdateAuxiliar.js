@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, shared, type, space) {
     let errorsArray = [];
     if (space == '') {
@@ -22,7 +20,7 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
         errorsArray.push('Escoge una localización válida.');
     }
 
-    if (endAvailability != undefined && startAvailability>endAvailability) {
+    if (endAvailability != '' && startAvailability>endAvailability) {
         errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
     }
 
@@ -67,10 +65,14 @@ export function CreateNewSpaceObject(userId, title, description, startAvailabili
 
     // Añade el tipo de espacio a los tags
     let tagsArray = tags;
-    tagsArray.push(space);
+    if (!(space in tags)) {
+        tagsArray.push(space);
+    }
     newSpace.tags = tagsArray;
 
     newSpace.images = images;
 
     return newSpace;
 }
+
+

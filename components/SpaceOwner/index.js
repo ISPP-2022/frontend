@@ -26,14 +26,14 @@ export default function SpaceOwner() {
                     <h1 className='text-base font-bold'>Space O.</h1>
                     <div className='flex'>
                         <h2 className='text-sm font-bold mr-1'> 4,2/5 </h2>
-                        <Rating
+                        {/* <Rating
                             fillColorArray={fillColorArray}
                             className="px-3"
                             fullClassName="px-3"
                             size={20}
                             ratingValue={4 * 20}
                             readonly
-                        />
+                        /> */}
                     </div>
                 </div>
 

@@ -5,8 +5,9 @@
  * @param  {string} className - The aditional class name of the button.
  * @param  {function} onClick - The function to be executed when the button is clicked.
  * @param  {any} children - The content of the button.
+ * @param  {boolean} disabled - If the button is disabled or not.
  */
-export const Button = ({type = "button", color = "primary", className = "", onClick, children}) =>
+export const Button = ({type = "button", color = "primary", disabled = false, className = "", onClick, children}) =>
 {
     const colorStyle = {
         "primary": "mx-2 my-2 bg-blue-bondi transition duration-150 ease-in-out hover:bg-blue-bondi-dark rounded text-white px-6 py-2 text-s",
@@ -17,6 +18,7 @@ export const Button = ({type = "button", color = "primary", className = "", onCl
 
     return(
         <button type={type}
+        disabled={disabled}
         className={colorStyle[color]+ " " + className}
         onClick={onClick}> {children} </button>  
     );

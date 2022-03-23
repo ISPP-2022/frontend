@@ -1,12 +1,13 @@
 import Image from "next/image"
 
-const Thumb = ({ selected, onClick, imgSrc }) => (
-    <div className={`embla__slide embla__slide--thumb ${selected ? "is-selected" : ""}`}    >
+const Thumb = ({ onClick, imgSrc }) => (
+    <div className={`min-w-full relative`}    >
         <button
             onClick={onClick}
-            className="embla__slide__inner embla__slide__inner--thumb"
+            className="relative my-2 min-w-full overflow-hidden rounded-lg mr-1 h-36
+            touch-manipulation cursor-pointer bg-transparent block w-[200px] shadow-lg"
             type="button">
-            <Image layout="fill" className="embla__slide__thumbnail rounded-sm" src={imgSrc} alt="No se encontraron imágenes del espacio" />
+            <Image layout="fill" className="absolute opacity-100 transition-opacity rounded-sm" src={imgSrc} alt="No se encontraron imágenes del espacio" />
         </button>
     </div>
 );
