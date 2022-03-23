@@ -1,10 +1,12 @@
 import Footer from "../components/Footer";
 import Head from "next/head";
 import { Card, CardMobile } from "../components/Card";
-import { Title } from "../components/Core/Text";
+import { Paragraph, Title } from "../components/Core/Text";
 
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Link from "next/link";
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -12,12 +14,51 @@ export default function Home() {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${process.env.AUTH_API_URL || 'http://localhost:4100'}/api/v1/spaces`)
+      .then(response => {
+        setData(response.data)
+      })
+      .catch(error => { });
+  }, []);
+
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/search?q=${search}`);
+    router.push(`/search?search=${search}`);
+  };
+
+  const calculateSurface = (dimensions) => {
+    const [width, height] = dimensions.split('x');
+    return parseInt(width) * parseInt(height);
+  };
+
+
+  const calculateUnitPrice = (priceHour, priceDay, priceMonth) => {
+    if (priceHour) {
+      return { amount: priceHour, unit: "€/h" };
+    } else if (priceDay) {
+      return { amount: priceDay, unit: "€/d" };
+    } else if (priceMonth) {
+      return { amount: priceMonth, unit: "€/m" };
+    } else {
+      return { amount: "-", unit: "" };
+    }
+  };
+
+  const calculateTags = (inputTag) => {
+    if (inputTag.length > 0 && inputTag.length < 3) {
+      return inputTag;
+    } else if (inputTag.length > 2) {
+      return inputTag.slice(0, 2);
+    } else {
+      return ["empty"];
+    }
   };
   const handleSmart = () => {
     router.push("/smartSearch");
@@ -66,22 +107,48 @@ export default function Home() {
             </div>
           </div>
           <div className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
-            {arr.map((item) => (
-              <div key={item} className="shrink-0 md:basis-1/2 lg:basis-1/4">
-                <Card title="Habitación" surface="5" rating={4} price="220" unitPrice="€/h" tags={["enchufe", "agua", "wifi", "iluminacion", "cerrado"]} />
-              </div>
-            ))}
+            {data && data.length > 0 ?
+              data.map((item, index) => (
+                <div key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
+                  <Link href={`/space/${item.id}`} passHref className="w-full h-full">
+                    <a className="w-full h-full">
+                      <Card
+                        title={item.name}
+                        surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
+                        rating={item.rating ? item.rating : undefined}
+                        price={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).amount}
+                        unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).unit}
+                        tags={item.tags ? calculateTags(item.tags) : undefined}
+                        images={item.images ? item.images : undefined}
+                      />
+                    </a>
+                  </Link>
+                </div>
+              )) : <Paragraph>Ha ocurrido un error.</Paragraph>}
           </div>
         </div>
         <div className="block md:hidden">
           <div className="p-3 text-blue-bondi-dark">
             <Title>Cerca de ti</Title>
           </div>
-          {arr.map((item) => (
-            <div key={item} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
-              <CardMobile title="Habitación" surface="5" rating={4} price="220" unitPrice="€/h" tags={["enchufe", "agua", "wifi", "iluminacion", "cerrado"]} />
-            </div>
-          ))}
+          {data && data.length > 0 ?
+            data.map((item, index) => (
+              <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
+                <Link href={`/space/${item.id}`} passHref className="w-full h-full">
+                  <a className="w-full h-full flex justify-center">
+                    <CardMobile
+                      title={item.name}
+                      surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
+                      rating={item.rating ? item.rating : undefined}
+                      price={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).amount}
+                      unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).unit}
+                      tags={item.tags ? calculateTags(item.tags) : undefined}
+                      images={item.images ? item.images : undefined}
+                    />
+                  </a>
+                </Link>
+              </div>
+            )) : <Paragraph>Ha ocurrido un error.</Paragraph>}
         </div>
       </main>
       <Footer />
