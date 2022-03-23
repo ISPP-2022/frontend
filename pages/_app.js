@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <TopNav user={pageProps.user} />
-      <div className='mt-16'>
+      <div className='pt-16 h-screen'>
         <Component {...pageProps} />
       </div>
     </>

@@ -6,6 +6,7 @@ import { Paragraph, Title } from "../components/Core/Text";
 import { useRouter } from "next/router";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Link from "next/link";
 
 const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -13,13 +14,14 @@ export default function Home() {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
-  const url = `${process.env.AUTH_API_URL || 'http://localhost:4100'}`;
-  const [respuestaAPI, setRespuestaAPI] = useState({ respuesta: 'KO' });
+  const [data, setData] = useState([]);
 
-  useEffect(async () => {
-    await axios.get(url + `/api/v1/spaces`)
-      .then(response => { setRespuestaAPI({ respuesta: 'OK', data: response.data }) })
-      .catch(error => { setRespuestaAPI({ respuesta: 'KO', error: error.message }) });
+  useEffect(() => {
+    axios.get(`${process.env.AUTH_API_URL || 'http://localhost:4100'}/api/v1/spaces`)
+      .then(response => {
+        setData(response.data)
+      })
+      .catch(error => { });
   }, []);
 
   const handleChange = (e) => {
@@ -28,7 +30,7 @@ export default function Home() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/search/${search}`);
+    router.push(`/search?search=${search}`);
   };
 
   const calculateSurface = (dimensions) => {
@@ -36,25 +38,16 @@ export default function Home() {
     return parseInt(width) * parseInt(height);
   };
 
-  const calculatePrice = (priceHour, priceDay, priceMonth) => {
-    if (priceHour !== null) {
-      return priceHour;
-    } else if (priceDay !== null) {
-      return priceDay;
-    } else if (priceMonth !== null) {
-      return priceMonth;
-    } else {
-      return "-";
-    }
-  };
 
   const calculateUnitPrice = (priceHour, priceDay, priceMonth) => {
-    if (priceHour !== null) {
-      return "€/h";
-    } else if (priceDay !== null) {
-      return "€/d";
+    if (priceHour) {
+      return { amount: priceHour, unit: "€/h" };
+    } else if (priceDay) {
+      return { amount: priceDay, unit: "€/d" };
+    } else if (priceMonth) {
+      return { amount: priceMonth, unit: "€/m" };
     } else {
-      return "€/m";
+      return { amount: "-", unit: "" };
     }
   };
 
@@ -100,16 +93,22 @@ export default function Home() {
             </div>
           </div>
           <div className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
-            {respuestaAPI.respuesta === "OK" ?
-              respuestaAPI.data.map((item) => (
-                <div key={item} className="shrink-0 md:basis-1/2 lg:basis-1/4">
-                  <Card
-                    title={item.name}
-                    surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
-                    rating={item.rating ? item.rating : undefined}
-                    price={calculatePrice(item.priceHour, item.priceDay, item.priceMonth)}
-                    unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth)}
-                    tags={item.tags ? calculateTags(item.tags) : undefined} />
+            {data && data.length > 0 ?
+              data.map((item, index) => (
+                <div key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
+                  <Link href={`/space/${item.id}`} passHref className="w-full h-full">
+                    <a className="w-full h-full">
+                      <Card
+                        title={item.name}
+                        surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
+                        rating={item.rating ? item.rating : undefined}
+                        price={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).amount}
+                        unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).unit}
+                        tags={item.tags ? calculateTags(item.tags) : undefined}
+                        images={item.images ? item.images : undefined}
+                      />
+                    </a>
+                  </Link>
                 </div>
               )) : <Paragraph>Ha ocurrido un error.</Paragraph>}
           </div>
@@ -118,16 +117,22 @@ export default function Home() {
           <div className="p-3 text-blue-bondi-dark">
             <Title>Cerca de ti</Title>
           </div>
-          {respuestaAPI.respuesta === "OK" ?
-            respuestaAPI.data.map((item, index) => (
-              <div key={index} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
-                <CardMobile
-                  title={item.name}
-                  surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
-                  rating={item.rating ? item.rating : undefined}
-                  price={calculatePrice(item.priceHour, item.priceDay, item.priceMonth)}
-                  unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth)}
-                  tags={item.tags ? calculateTags(item.tags) : undefined} />
+          {data && data.length > 0 ?
+            data.map((item, index) => (
+              <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
+                <Link href={`/space/${item.id}`} passHref className="w-full h-full">
+                  <a className="w-full h-full flex justify-center">
+                    <CardMobile
+                      title={item.name}
+                      surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
+                      rating={item.rating ? item.rating : undefined}
+                      price={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).amount}
+                      unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).unit}
+                      tags={item.tags ? calculateTags(item.tags) : undefined}
+                      images={item.images ? item.images : undefined}
+                    />
+                  </a>
+                </Link>
               </div>
             )) : <Paragraph>Ha ocurrido un error.</Paragraph>}
         </div>

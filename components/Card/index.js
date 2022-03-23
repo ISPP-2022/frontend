@@ -54,10 +54,10 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, images })
     };
 
     return (
-        <div className="p-4">
-            <div className="flex w-full m-2 bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="p-4 h-full">
+            <div className="flex w-full h-full m-2 bg-white shadow-lg rounded-lg overflow-hidden">
                 <div className="w-1/3 bg-cover relative">
-                    <Image src={images?.length > 0 ? `data:${images[0].mimetipe};base64, ${obj.images[0].image}` :'/spacePlaceholder.jpg'} layout='fill' objectFit="cover" className="h-full" alt={`${title}`} />
+                    <Image src={images?.length > 0 ? `data:${images[0].mimetype};base64, ${images[0].image}` : '/spacePlaceholder.jpg'} layout='fill' objectFit="cover" className="h-full" alt={`${title}`} />
                     {/*<Image alt="Image" className="h-full object-cover" src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover"></Image>*/}
                 </div>
                 <div className="w-2/3 p-4">
@@ -83,12 +83,12 @@ export const Tag = ({ children }) => {
     return (<p className="mt-2 text-gray-600 text-base">{children}</p>)
 };
 
-export const CardMobile = ({ title, surface, rating, price, unitPrice, tags, URLimage }) => {
+export const CardMobile = ({ title, surface, rating, price, unitPrice, tags, images }) => {
     return (
         <div className="w-full max-w-[540px] bg-white shadow-lg rounded-xl ">
             {/* Image */}
             <div className="h-52 relative">
-                <Image src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover" alt={`${title}`} className="w-96 h-96 rounded-t-xl object-cover p-6 bg-cover" />
+                <Image src={images?.length > 0 ? `data:${images[0].mimetype};base64, ${images[0].image}` : '/spacePlaceholder.jpg'} layout="fill" objectFit="cover" alt={`${title}`} className="w-96 h-96 rounded-t-xl object-cover p-6 bg-cover" />
             </div>
             {/* Body */}
             <div className="grid grid-cols-2 grid-rows-2 h-20">

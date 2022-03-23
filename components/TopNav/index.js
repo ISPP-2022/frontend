@@ -9,6 +9,7 @@ function Navbar({ user }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
+  const [search, setSearch] = useState("");
   const router = useRouter();
   useEffect(() => {
     setIsLogged(user);
@@ -27,6 +28,12 @@ function Navbar({ user }) {
     isLogged.role === 'USER' ? alert('Tienes que verificarte') : router.push("/publish/add");
     setIsOpen(false);
   }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    router.push(`/search?search=${search}`);
+  };
+
   return (
     <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50 w-screen">
       <section className="shadow-lg mx-auto px-4">
@@ -47,11 +54,13 @@ function Navbar({ user }) {
             </a>
           </Link>
           {/* Barra de busqueda */}
-          <input className="bg-transparent focus:outline-none 
+          <form className="w-full max-w-lg py-2 px-4 flex items-center block md:hidden" onSubmit={handleSubmit}>
+            <input className="bg-transparent focus:outline-none 
             focus:shadow-outline border border-gray-300 focus:border-[#4aa7c0] rounded-lg 
-            py-2 px-4 block appearance-none leading-normal my-2 w-full max-w-lg
-            transition duration-200 ease-in-out md:hidden"
-            type="text" placeholder="Search" />
+              appearance-none leading-normal w-full max-w-lg
+            transition duration-200 ease-in-out "
+              type="text" placeholder="Search" value={search} onChange={(e) => { setSearch(e.target.value) }} />
+          </form>
           {/* Botones vista navegador */}
 
           {
