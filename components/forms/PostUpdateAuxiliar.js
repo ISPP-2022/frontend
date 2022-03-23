@@ -1,4 +1,4 @@
-export default function PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, shared, type, space) {
+export default function PostUpdateVerification(startAvailability, endAvailability, location, shared, type, space) {
     let errorsArray = [];
     if (space == '') {
         errorsArray.push('Escoge un tipo de espacio.');
@@ -6,14 +6,6 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
 
     if (type == '') {
         errorsArray.push('Escoge un tipo de alquiler.');
-    }
-
-    if ((type == 'hours') && (startHour=='' || endHour=='')) {
-        errorsArray.push('Selecciona un tramo horario.');
-    }
-
-    if ((type == 'hours') && (startHour>endHour)) {
-        errorsArray.push('La hora de inicio debe ser anterior a la fecha de fin.');
     }
 
     if (location == '') {
@@ -24,8 +16,13 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
         errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
     }
 
+    const date1 = new Date(startAvailability);
+    const today = new Date();
+    if (date1<today) {
+        errorsArray.push('La fecha de inicio de disponibilidad debe ser posterior a la fecha actual');
+    }
+
     if (type=='months' && endAvailability != undefined) {
-        const date1 = new Date(startAvailability);
         const date2 = new Date(endAvailability);
         const diffTime = Math.abs(date2 - date1);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
@@ -47,10 +44,13 @@ export function CreateNewSpaceObject(userId, title, description, startAvailabili
     newSpace.ownerId = userId;
     newSpace.name = title;
     newSpace.description = description;
+
     newSpace.initialDate = new Date(startAvailability);
+
     if (endAvailability!=undefined) {
         newSpace.finalDate = new Date(endAvailability);
     }
+    
     newSpace.location = location;
     newSpace.dimensions = surface1.toString() + 'x' + surface2.toString();
     newSpace.shared = shared;
