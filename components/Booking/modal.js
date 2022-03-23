@@ -7,7 +7,7 @@ import { addDays, differenceInCalendarMonths, differenceInCalendarDays, differen
 
 export default function BookingModal({ childrens, ...props }) {
   const { handleClose, setIsLogged } = props;
-
+  const [metros, setMetros] = useState(1);
   const [errors, setErrors] = useState({ response: "" });
 
   const rentalValidation = async (initialDate, finalDate) => {
@@ -75,7 +75,7 @@ export default function BookingModal({ childrens, ...props }) {
           finalDate: finalDate,
           cost: cost.price,
           type: cost.rentalType,
-          meters: 4,
+          meters: metros,
           spaceId: props.space.id,
           renterId: props.user.userId,
         }, {
@@ -109,8 +109,8 @@ export default function BookingModal({ childrens, ...props }) {
     <>
       <div className="fixed inset-0 mt-4 z-50">
         <div onClick={handleClose} className="absolute inset-0 bg-gray-900 opacity-50" />
-        <div className="fixed block top-1/2 left-1/2 w-full h-full sm:w-[30rem] sm:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 sm:border-webcolor-50 sm:border-2 sm:rounded-sm sm:my-4 sm:mx-4 justify-center">
-          <header className="flex justify-end items-center sm:hidden ">
+        <div className="fixed block top-1/2 left-1/2 w-full h-full md:w-[30rem] md:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 md:border-webcolor-50 md:border-2 md:rounded-md md:my-4 md:mx-4 justify-center">
+          <header className="flex justify-end items-center md:hidden ">
             <svg onClick={handleClose} xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 m-5 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="#4aa7c0" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -121,6 +121,10 @@ export default function BookingModal({ childrens, ...props }) {
           <DateRangeInput disabledDates={props.disabledDates} dateRange={props.dateRange} setDateRange={props.setDateRange} />
           <hr className=" bg-webcolor-50 w-[80%] m-auto" />
           <TimeRangeInput timeRange={props.timeRange} setTimeRange={props.setTimeRange} />
+          {props.space.shared ?
+                <div className="flex flex-col items-center"><hr className=" bg-webcolor-50 w-[80%] my-4" />
+                <input type="number" placeholder="metros" className="rounded-full" onChange={(e) => setMetros(e.target.value)}/></div> : null
+            }
           <div className='flex justify-center'>
             <Button onClick={() => rent()} type="button" className="fill-webcolor-50 mt-4">
               Reservar

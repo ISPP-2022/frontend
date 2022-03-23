@@ -6,7 +6,7 @@ export default function TimeRangeInput(props) {
             <div className='flex justify-center mt-4'>
 
                 <div>
-                    <input type={'time'} label={'Hora de inicio'} value={props.timeRange.initialTime}
+                    <input type={'time'} label={'Hora de inicio'} value={props.timeRange.initialTime} className="rounded-tl-full rounded-bl-full"
                         onChange={(e) => {
                             props.setTimeRange(
                                 {
@@ -20,7 +20,7 @@ export default function TimeRangeInput(props) {
                         }} />
                 </div>
                 <div >
-                    <input type={'time'} label={'Hora de fin'} value={props.timeRange.finalTime}
+                    <input type={'time'} label={'Hora de fin'} value={props.timeRange.finalTime} className="rounded-tr-full rounded-br-full"
                         onChange={(e) => {
                             props.setTimeRange(
                                 {

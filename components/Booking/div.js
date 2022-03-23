@@ -3,10 +3,12 @@ import TimeRangeInput from "../TimeRange";
 import { Button } from "../Core/Button";
 import axios from "axios";
 import { addDays, differenceInCalendarMonths, differenceInCalendarDays, differenceInHours, setMinutes, setHours, isSameDay, isAfter, isBefore } from "date-fns";
+import { useState } from "react";
 
 
 export default function BookingDiv(props) {
 
+    const [metros, setMetros] = useState(1);
     const rentalValidation = async (initialDate, finalDate) => {
 
         if (!initialDate || !finalDate) {
@@ -72,7 +74,7 @@ export default function BookingDiv(props) {
                     finalDate: finalDate,
                     cost: cost.price,
                     type: cost.rentalType,
-                    meters: 4,
+                    meters: metros,
                     spaceId: props.space.id,
                     renterId: props.user.userId,
                 }, {
@@ -103,13 +105,17 @@ export default function BookingDiv(props) {
     };
 
     return (
-        <div className="hidden lg:block lg:border-webcolor-50 lg:border-2 lg:rounded-lg lg:mt-4 lg:ml-4">
-            <h2 className="text-webcolor-50 text-2xl font-bold Disponibilidad mb-4 mt-2 ml-10">
+        <div className="lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg">
+            <h2 className="text-webcolor-50 text-2xl font-bold Disponibilidad mb-4 mt-2 w-full text-center">
                 Reservar
             </h2>
-            <DateRangeInput dateRange={props.dateRange} setDateRange={props.setDateRange} disabledDates={props.disabledDates} />
+            <DateRangeInput dateRange={props.dateRange} setDateRange={props.setDateRange} disabledDates={props.disabledDates}/>
             <hr className=" bg-webcolor-50 w-[80%] m-auto" />
             <TimeRangeInput timeRange={props.timeRange} setTimeRange={props.setTimeRange} />
+            {props.space.shared ?
+                <div className="flex flex-col items-center"><hr className=" bg-webcolor-50 w-[80%] my-4" />
+                <input type="number" placeholder="metros" className="rounded-full" onChange={(e) => setMetros(e.target.value)}/></div> : null
+            }
             <div className='flex justify-center'>
                 <Button onClick={() => rent()}
                     type="button" className="fill-webcolor-50 mt-4">
