@@ -65,8 +65,8 @@ export default function SpaceSmartSearch(props) {
                 {/* Main body */}
                 <div className='flex flex-col h-[90%]'>
                     {/* Title */}
-                    <div className='basis-[56px] flex flex-row justify-center'>
-                        <h2 className='font-bold text-[40px] py-2 text-blue-bondi'>{spaces[selectedSpaceIndex]?.name} ({spaces[selectedSpaceIndex]?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1)} m²)</h2>
+                    <div className='basis[30px] md:basis-[56px] flex flex-row justify-center'>
+                        <h2 className='font-bold text-[25px] md:text-[40px] py-2 text-blue-bondi'>{spaces[selectedSpaceIndex]?.name}</h2>
                     </div>
 
                     {/* Caroussel and price */}
@@ -74,14 +74,14 @@ export default function SpaceSmartSearch(props) {
                         <SpaceSearchCarousel slides={spaces[selectedSpaceIndex]?.images} />
 
                         <div className='flex flex-row justify-center absolute bottom-2 left-2'>
-                            <div className="text-white font-bold bg-blue-bondi rounded-full p-5 py-2">
-                                {spaces[selectedSpaceIndex]?.priceHour && type === 'hours' && <h2 className="text-2xl">{spaces[selectedSpaceIndex]?.priceHour} €/hora</h2>}
-                                {spaces[selectedSpaceIndex]?.priceDay && type === 'days' && <h2 className="text-2xl">{spaces[selectedSpaceIndex]?.priceDay} €/día</h2>}
-                                {spaces[selectedSpaceIndex]?.priceMonth && type === 'months' && <h2 className="text-2xl">{spaces[selectedSpaceIndex]?.priceMonth} €/mes</h2>}
+                            <div className="text-white font-bold bg-blue-bondi rounded-full p-2 xl:p-5 py-2">
+                                {spaces[selectedSpaceIndex]?.priceHour && type === 'hours' && <h2 className="text-sm xl:text-2xl">{spaces[selectedSpaceIndex]?.priceHour} €/hora</h2>}
+                                {spaces[selectedSpaceIndex]?.priceDay && type === 'days' && <h2 className="text-sm xl:text-2xl">{spaces[selectedSpaceIndex]?.priceDay} €/día</h2>}
+                                {spaces[selectedSpaceIndex]?.priceMonth && type === 'months' && <h2 className="text-sm xl:text-2xl">{spaces[selectedSpaceIndex]?.priceMonth} €/mes</h2>}
                             </div>
                             {spaces[selectedSpaceIndex]?.shared ?
-                                <div className="text-white font-bold bg-blue-bondi rounded-full p-5 py-2">
-                                    <h2 className="text-2xl">Espacio compartido</h2>
+                                <div className="text-white font-bold bg-blue-bondi rounded-full p-2 xl:p-5 py-2">
+                                    <h2 className="text-sm xl:text-2xl">Espacio compartido</h2>
                                 </div> : null
                             }
                         </div>
@@ -98,19 +98,14 @@ export default function SpaceSmartSearch(props) {
                                 </div>
                                 <div className="basis-[45%] md:basis-1/2 xl:basis-3/4 flex flex-col items-center xl:items-start justify-start pl-2 pr-2 w-full mt-2 xl:mt-0">
                                     <p className="font-bold text-ellipsis whitespace-nowrap">{spaces[selectedSpaceIndex]?.owner.name || 'SomeUser'}</p>
-                                    <p className="text-gray-700 text-ellipsis whitespace-nowrap flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                        </svg>
-                                        {spaces[selectedSpaceIndex]?.owner.phoneNumber || ''}</p>
                                     <Rating value={spaces[selectedSpaceIndex]?.owner.rating || 0} readOnly />
                                 </div>
                             </div>
                             <div className='basis-1/2 md:basis-1/6 xl:basis-[60%]'>
                                 <div className='flex flex-col md:flex-row justify-evenly xl:justify-center items-center lg:items-end xl:items-center h-full w-full'>
-                                    <Button type="button" onClick={() => setType('hours')} disabled={!spaces[selectedSpaceIndex]?.priceHour || type === 'hours'} color={type === 'hours' ? 'secondary' : 'primary'} className="rounded-3xl w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
-                                    <Button type="button" onClick={() => setType('days')} disabled={!spaces[selectedSpaceIndex]?.priceDay || type === 'days'} color={type === 'days' ? 'secondary' : 'primary'} className="rounded-3xl w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">D</Button>
-                                    <Button type="button" onClick={() => setType('months')} disabled={!spaces[selectedSpaceIndex]?.priceMonth || type === 'months'} color={type === 'months' ? 'secondary' : 'primary'} className="rounded-3xl w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">M</Button>
+                                    <Button type="button" onClick={() => setType('hours')} disabled={!spaces[selectedSpaceIndex]?.priceHour || type === 'hours'} color={type === 'hours' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
+                                    <Button type="button" onClick={() => setType('days')} disabled={!spaces[selectedSpaceIndex]?.priceDay || type === 'days'} color={type === 'days' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">D</Button>
+                                    <Button type="button" onClick={() => setType('months')} disabled={!spaces[selectedSpaceIndex]?.priceMonth || type === 'months'} color={type === 'months' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">M</Button>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +121,7 @@ export default function SpaceSmartSearch(props) {
                             <hr className=" bg-webcolor-50 w-full mx-auto my-1" />
                             <div className='basis-1/2 md:basis-[28%] xl:basis-1/2 line-clamp-3 md:line-clamp-2'>
                                 {spaces[selectedSpaceIndex]?.tags.map(tag => (
-                                    <span className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl inline-block px-2 py-1 my-3 mr-2">
+                                    <span className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl inline-block px-2 py-1 my-1 md:my-3 mr-2">
                                         {enumTranslator.tags[tag.tag]}
                                     </span>
                                 ))}
@@ -137,15 +132,15 @@ export default function SpaceSmartSearch(props) {
 
                 {/* Back and Next buttons */}
                 <hr className=" bg-webcolor-50 w-[97%] m-auto mb-4" />
-                <div className="h-[10%] flex justify-center overflow-x-auto whitespace-nowrap my-3 ">
+                <div className="h-[8%] md:h-[10%] flex justify-center overflow-x-auto whitespace-nowrap my-3 ">
 
-                    <Button type="button" disabled={selectedSpaceIndex === 0} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex - 1))} className="rounded-3xl  disabled:bg-gray-200">
+                    <Button type="button" disabled={selectedSpaceIndex === 0} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex - 1))} className="flex items-center justify-center rounded-3xl disabled:bg-gray-200 p-2 md:px-6 w-[90px] md:w-auto">
                         Anterior
                     </Button>
-                    <Button type="button" onClick={() => alert('Proximamente...')} className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl">
+                    <Button type="button" onClick={() => alert('Proximamente...')} className="flex items-center justify-center bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl p-2 md:px-6 w-[30px] md:w-auto">
                         Chat
                     </Button>
-                    <Button type="button" disabled={selectedSpaceIndex + 1 === spaces.length} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex + 1))} className="rounded-3xl disabled:bg-gray-200">
+                    <Button type="button" disabled={selectedSpaceIndex + 1 === spaces.length} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex + 1))} className="flex items-center justify-center rounded-3xl disabled:bg-gray-200 p-2 md:px-6 w-[90px] md:w-auto">
                         Siguiente
                     </Button>
 

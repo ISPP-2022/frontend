@@ -69,21 +69,21 @@ export default function Space(props) {
                 <div className='flex flex-col h-[90%] lg:h-full'>
                     {/* Title */}
                     <div className='basis-[56px] flex flex-row justify-center'>
-                        <h2 className='font-bold text-[40px] py-2 text-blue-bondi text-center'>{props.space.name} ({props.space?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1)} m²)</h2>
+                        <h2 className='font-bold text-[20px] md:text-[40px] py-2 text-blue-bondi text-center'>{props.space.name} ({props.space?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1)} m²)</h2>
                     </div>
 
                     {/* Caroussel and price */}
                     <div className=' basis-1/2 relative w-full h-full'>
                         <SpacesCarousel slides={props.space.images} />
                         <div className='flex flex-row justify-center absolute bottom-2 left-2'>
-                            <div className="text-white font-bold bg-blue-bondi rounded-full p-5 py-2">
-                                {props.space.priceHour && type === 'hours' && <h2 className="text-2xl">{props.space.priceHour} €/hora</h2>}
-                                {props.space.priceDay && type === 'days' && <h2 className="text-2xl">{props.space.priceDay} €/día</h2>}
-                                {props.space.priceMonth && type === 'months' && <h2 className="text-2xl">{props.space.priceMonth} €/mes</h2>}
+                            <div className="text-white font-bold bg-blue-bondi rounded-full p-2 xl:p-5 py-2">
+                                {props.space.priceHour && type === 'hours' && <h2 className="text-sm xl:text-2xl">{props.space.priceHour} €/hora</h2>}
+                                {props.space.priceDay && type === 'days' && <h2 className="text-sm xl:text-2xl">{props.space.priceDay} €/día</h2>}
+                                {props.space.priceMonth && type === 'months' && <h2 className="text-sm xl:text-2xl">{props.space.priceMonth} €/mes</h2>}
                             </div>
                             {props.space.shared ?
-                                <div className="text-white font-bold bg-blue-bondi rounded-full p-5 py-2">
-                                    <h2 className="text-2xl">Espacio compartido</h2>
+                                <div className="text-white font-bold bg-blue-bondi rounded-full p-2 xl:p-5 py-2">
+                                    <h2 className="text-sm xl:text-2xl">Espacio compartido</h2>
                                 </div> : null
                             }
                         </div>
@@ -94,7 +94,7 @@ export default function Space(props) {
 
                         {/* User and price selector */}
                         <div className='basis-1/3 flex flex-col'>
-                            <div className="basis-1/2 md:basis-5/6 xl:basis-[40%] relative flex flex-col xl:flex-row items-center">
+                            <div className="basis-[60%] md:basis-5/6 xl:basis-[40%] relative flex flex-col xl:flex-row items-center">
                                 <div className="basis-[55%] md:basis-1/2 xl:basis-1/4 relative justify-center w-1/2 xl:h-[80%]">
                                     <Image src={props.owner?.avatar ? `data:${props.owner.avatar.mimetype};base64, ${props.owner.avatar.image}` : '/spacePlaceholder.jpg'} className="rounded-full bg-white" layout="fill" objectFit="cover" alt={`spaceImage`}></Image>
                                 </div>
@@ -108,11 +108,11 @@ export default function Space(props) {
                                     <Rating value={props.rating || 0} readOnly />
                                 </div>
                             </div>
-                            <div className='basis-1/2 md:basis-1/6 xl:basis-[60%]'>
-                                <div className='flex flex-col md:flex-row justify-evenly xl:justify-center items-center lg:items-end xl:items-center h-full w-full'>
-                                    <Button type="button" onClick={() => setType('hours')} disabled={!props.space.priceHour || type === 'hours'} color={type === 'hours' ? 'secondary' : 'primary'} className="rounded-3xl w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
-                                    <Button type="button" onClick={() => setType('days')} disabled={!props.space.priceDay || type === 'days'} color={type === 'days' ? 'secondary' : 'primary'} className="rounded-3xl w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">D</Button>
-                                    <Button type="button" onClick={() => setType('months')} disabled={!props.space.priceMonth || type === 'months'} color={type === 'months' ? 'secondary' : 'primary'} className="rounded-3xl w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">M</Button>
+                            <div className='basis-[30%] md:basis-1/6 xl:basis-[60%]'>
+                                <div className='flex flex-col justify-center md:flex-row md:justify-evenly xl:justify-center items-center lg:items-end xl:items-center h-full w-full'>
+                                    <Button type="button" onClick={() => setType('hours')} disabled={!props.space.priceHour || type === 'hours'} color={type === 'hours' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
+                                    <Button type="button" onClick={() => setType('days')} disabled={!props.space.priceDay || type === 'days'} color={type === 'days' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">D</Button>
+                                    <Button type="button" onClick={() => setType('months')} disabled={!props.space.priceMonth || type === 'months'} color={type === 'months' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">M</Button>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +123,7 @@ export default function Space(props) {
                                 <p className='text-blue-bondi h-full'><b>Descripci&oacute;n:&nbsp;</b>{props.space.description}</p>
                             </div>
                             <hr className=" bg-webcolor-50 w-full mx-auto my-1" />
-                            <div className='basis-1/2 md:basis-[28%] xl:basis-1/2 line-clamp-4 md:line-clamp-2 xl:line-clamp-3 hover:overflow-auto'>
+                            <div className='basis-1/2 md:basis-[28%] xl:basis-1/2 line-clamp-2 md:line-clamp-2 xl:line-clamp-3 hover:overflow-auto'>
                                 {props.space.tags.map(tag => (
                                     <span key={tag.tag} className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl inline-block px-2 py-1 my-2 mr-2">
                                         {enumTranslator.tags[tag.tag]}
