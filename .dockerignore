@@ -7,6 +7,5 @@ node_modules
 *.log
 *.ps1
 *.cmd
-*.sh
 tests
 tasks/*

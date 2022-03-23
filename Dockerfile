@@ -1,18 +1,48 @@
-FROM node:16.13.0-alpine3.14
+# Install dependencies only when needed
+FROM node:16-alpine AS deps
 
-RUN mkdir -p /usr/src/app
-ENV PORT 3000
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY package.json /usr/src/app
+COPY package.json package-lock.json ./
 
-RUN yarn install --production
-RUN yarn add tailwindcss@latest postcss@latest autoprefixer@latest --dev
+RUN npm install
 
-COPY . /usr/src/app
+# Rebuild the source code only when needed
+FROM node:14-alpine AS builder
 
-RUN yarn build
+WORKDIR /app
+
+COPY . .
+COPY --from=deps /app/node_modules ./node_modules
+
+
+ENV NEXT_PUBLIC_MAPBOX_API_KEY MAPBOX_API_KEY
+ENV NEXT_PUBLIC_DATA_API_URL DATA_API_URL
+ENV NEXT_PUBLIC_AUTH_API_URL AUTH_API_URL
+
+RUN npm run build
+
+# Production image, copy all the files and run next
+FROM node:14-alpine AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
 
 EXPOSE 3000
-CMD [ "yarn", "start" ]
+
+RUN npx next telemetry disable
+
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+CMD npm start

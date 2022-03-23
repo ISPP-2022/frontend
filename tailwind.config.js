@@ -1,4 +1,5 @@
 const colors = require('tailwindcss/colors')
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
   content: [
@@ -6,6 +7,10 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      'xs': '475px',
+      ...defaultTheme.screens,
+    },
     colors: {
       'gray-dark': '#273444',
       'gray': '#4a5b6c',
@@ -28,10 +33,11 @@ module.exports = {
       },
       gridTemplateRows: {
         '9': 'repeat(9, minmax(0, 1fr))'
-      },
+      }
     }
   },
   plugins: [
-    require('flowbite/plugin')
+    require('flowbite/plugin'),
+    require('@tailwindcss/line-clamp')
   ],
 }

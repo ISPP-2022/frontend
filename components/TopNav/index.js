@@ -3,20 +3,33 @@ import { useEffect, useState } from "react";
 import Link from "next/link"
 import AuthModal from "../AuthModal";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 function Navbar({ user }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
+  const router = useRouter();
   useEffect(() => {
     setIsLogged(user);
-  }, [user]);
+  }, []);
 
   const handleLogout = () => {
     axios.post(`${process.env.AUTH_API_URL || 'http://localhost:4000'}/api/v1/logout`, {}, { withCredentials: true })
       .then(res => {
-        setIsLogged(false);
+        router.push("/");
+        router.reload()
+        setIsOpen(false);
       })
+  }
+
+  const handlePublish = () => {
+    isLogged.role === 'USER' ? alert('Tienes que verificarte') : router.push("/publish/add");
+    setIsOpen(false);
+  }
+
+  const handleSmart = () => {
+    router.push("/smartSearch")
   }
 
   return (
@@ -48,12 +61,18 @@ function Navbar({ user }) {
 
           {
             isLogged ? (
-              <div className="mr-5 align-middle md:flex hidden">
+              <div className="mr-5 align-middle md:flex hidden space-x-2">
                 <button onClick={handleLogout} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                   </svg>
                   <p>Desconectar</p>
+                </button>
+                <button onClick={handlePublish} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p>Publicar</p>
                 </button>
               </div>) : (
               <div className="mr-5 align-middle md:flex hidden">
@@ -95,17 +114,26 @@ function Navbar({ user }) {
             <div className="mx-6 border-t-2" />
             {/* Botones movil */}
             {
-              isLogged ? (
+              isLogged ? (<>
                 <button onClick={handleLogout} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
                   <p>Desconectar</p>
-                </button>) : (
+                </button>
+                <button onClick={handlePublish} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+                  <p>Publicar</p>
+                </button>
+              </>
+              ) : (
                 <button onClick={() => setShowModal(true)} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
                   <p>Conectar</p>
                 </button>
               )
             }
-
-
+            <button onClick={handleSmart} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl  space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+              Smart Search
+              <svg className="float-right mt-1 ml-1 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </button>
           </section>
           <section className="row-span-4 space-y-0.5">
             <div className="mx-6 border-t-2" />

@@ -23,15 +23,18 @@ export default function SpaceOwner(props) {
                     />
                 </div>
                 <div className='ml-2 mt-2'>
-                    <h1 className='text-base font-bold'>{props.owner.name}</h1>
-                    {/* <Rating
-                        fillColorArray={fillColorArray}
-                        className="px-3"
-                        fullClassName="px-3"
-                        size={20}
-                        ratingValue={4 * 20}
-                        readonly
-                    /> */}
+                    <h1 className='text-base font-bold'>Space O.</h1>
+                    <div className='flex'>
+                        <h2 className='text-sm font-bold mr-1'> 4,2/5 </h2>
+                        {/* <Rating
+                            fillColorArray={fillColorArray}
+                            className="px-3"
+                            fullClassName="px-3"
+                            size={20}
+                            ratingValue={4 * 20}
+                            readonly
+                        /> */}
+                    </div>
                 </div>
 
             </div>
