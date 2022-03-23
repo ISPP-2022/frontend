@@ -8,10 +8,14 @@ on:
     branches: [ main, develop ]
     paths-ignore:
       - '**/*.md'
+      - '.github/codeql'
+      - '.github/workflows/codeql.yaml'
   pull_request:
     branches: [ main, develop ]
     paths-ignore:
       - '**/*.md'
+      - '.github/codeql'
+      - '.github/workflows/codeql.yaml'
 
 jobs:
   buildTest:
