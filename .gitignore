@@ -32,3 +32,12 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# pwa
+**/public/workbox-*.js
+**/public/sw.js
+**/public/fallback-*.js
+
+# local files
+*local*
+.vscode/launch.json
