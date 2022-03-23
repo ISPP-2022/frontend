@@ -29,7 +29,7 @@ export default function Home() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (search.trim().length > 3)
       router.push(`/search?search=${search.trim()}`);
   };
