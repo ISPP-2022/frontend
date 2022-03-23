@@ -73,7 +73,7 @@
 }
 
 .embla__slide__thumbnail {
-  position: absolute;
+  position: relative;
   opacity: 0.25;
   transition: opacity 0.2s;
 }

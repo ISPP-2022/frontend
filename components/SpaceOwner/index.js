@@ -2,7 +2,7 @@ import Image from 'next/image'
 import avatar from '../../public/carouselImages/3.jpg'
 import { Rating } from "react-simple-star-rating";
 
-export default function SpaceOwner() {
+export default function SpaceOwner(props) {
     const fillColorArray = [
         "#f17a45",
         "#f19745",

@@ -1,14 +1,11 @@
 import axios from 'axios';
 import Image  from 'next/image';
 import { Rating } from "@mui/material";
-import SpaceSearchCarousel from '../../../components/SpacesCarousel/searchCarousel';
+import SpaceSearchCarousel from '../../../components/SpacesCarousel';
 import { Button } from '../../../components/Core/Button';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-
-
-const SLIDE_COUNT = 10;
-const slides = Array.from(Array(SLIDE_COUNT).keys());
+import enumTranslator from '../../../public/enumTranslator.json';
 
 export default function SpaceSmartSearch(props) {
     let data;
@@ -29,15 +26,20 @@ export default function SpaceSmartSearch(props) {
 
                         {/* Caroussel and price */}
                         <div className=' basis-1/2 relative w-full h-full'>
-                            <SpaceSearchCarousel slides={slides} />
+                            <SpaceSearchCarousel slides={props.spaces[selectedSpaceIndex].images} />
                             
-                            <div className='flex justify-center absolute text-white font-bold bg-blue-bondi rounded-full p-5 py-2 bottom-2 left-2'>
-                                <div>
-                                    {props.spaces[selectedSpaceIndex].priceHour && type === 'hours' && <h2 className="text-2xl">{props.spaces[selectedSpaceIndex].priceHour} €/hora</h2>}
-                                    {props.spaces[selectedSpaceIndex].priceDay && type === 'days' && <h2 className="text-2xl">{props.spaces[selectedSpaceIndex].priceDay} €/día</h2>}
-                                    {props.spaces[selectedSpaceIndex].priceMonth && type === 'months' && <h2 className="text-2xl">{props.spaces[selectedSpaceIndex].priceMonth} €/mes</h2>}
-                                </div>
+                        <div className='flex flex-row justify-center absolute bottom-2 left-2'>
+                            <div className="text-white font-bold bg-blue-bondi rounded-full p-5 py-2">
+                                {props.spaces[selectedSpaceIndex].priceHour && type === 'hours' && <h2 className="text-2xl">{props.spaces[selectedSpaceIndex].priceHour} €/hora</h2>}
+                                {props.spaces[selectedSpaceIndex].priceDay && type === 'days' && <h2 className="text-2xl">{props.spaces[selectedSpaceIndex].priceDay} €/día</h2>}
+                                {props.spaces[selectedSpaceIndex].priceMonth && type === 'months' && <h2 className="text-2xl">{props.spaces[selectedSpaceIndex].priceMonth} €/mes</h2>}
                             </div>
+                            {props.spaces[selectedSpaceIndex].shared ?
+                                <div className="text-white font-bold bg-blue-bondi rounded-full p-5 py-2">
+                                    <h2 className="text-2xl">Espacio compartido</h2>
+                                </div> : null
+                            }
+                        </div>
                         </div>
 
                         {/* Space data */}
@@ -47,11 +49,11 @@ export default function SpaceSmartSearch(props) {
                             <div className='basis-1/3 flex flex-col'>
                                 <div className="basis-1/2 md:basis-5/6 xl:basis-[40%] relative flex flex-col xl:flex-row items-center">
                                     <div className="basis-[55%] md:basis-1/2 xl:basis-1/4 relative justify-center w-1/2 xl:h-[80%]">
-                                        <Image src={data?.image ? `data:${data.image.mimetipe};base64, ${data.image.image}` : '/spacePlaceholder.jpg'} className="rounded-full bg-white" layout="fill"></Image>
+                                        <Image src={props.spaces[selectedSpaceIndex].owner.avatar ? `data:${props.spaces[selectedSpaceIndex].owner.avatar.mimetipe};base64, ${props.spaces[selectedSpaceIndex].owner.avatar.image}` : '/spacePlaceholder.jpg'} className="rounded-full bg-white" layout="fill"></Image>
                                     </div>
                                     <div className="basis-[45%] md:basis-1/2 xl:basis-3/4 flex flex-col items-center xl:items-start justify-start pl-2 pr-2 w-full mt-2 xl:mt-0">
-                                        <p className="font-bold text-ellipsis whitespace-nowrap">{data?.name || 'SomeUser'}</p>
-                                        <Rating value={data?.rating || 0} readOnly />
+                                        <p className="font-bold text-ellipsis whitespace-nowrap">{props.spaces[selectedSpaceIndex].owner.name || 'SomeUser'}</p>
+                                        <Rating value={props.spaces[selectedSpaceIndex].owner.rating || 0} readOnly />
                                     </div>
                                 </div>
                                 <div className='basis-1/2 md:basis-1/6 xl:basis-[60%]'>
@@ -75,7 +77,7 @@ export default function SpaceSmartSearch(props) {
                                 <div className='basis-1/2 md:basis-[28%] xl:basis-1/2 line-clamp-3 md:line-clamp-2'>
                                     {props.spaces[selectedSpaceIndex].tags.map(tag => (
                                         <span className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl inline-block px-2 py-1 my-3 mr-2">
-                                            {tag.tag}
+                                            {enumTranslator.tags[tag.tag]}
                                         </span>
                                     ))}
                                 </div>
@@ -112,9 +114,22 @@ export async function getServerSideProps() {
         },
     ].sort((min, obj) => min.score - obj.score);
 
-    const res = await Promise.all(scores.map((score) => axios.get(`${process.env.DATA_API_URLDATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${score.id}`)));
+    const spaces = await Promise.all(scores.map((score) =>
+        axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${score.id}`).then(async res => {
+            let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${score.id}/images`).then(imageres => imageres.data).catch(() => { });
+            if (images) res.data.images = images;
 
-    const spaces = res.map((res) => res.data);
+            const owner = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.ownerId}`).then(async resOwner => {
+                let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${resOwner.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { });
+                if (avatar) resOwner.data.avatar = avatar;
+                return resOwner.data;
+            });
+
+            const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.ownerId}/ratings?filter=received`).then(rat => rat.data).catch(() => { });
+            res.data.owner = owner;
+            if(ratings) res.data.owner.rating = ratings.reduce((acc, cur, _idx, arr) => {return acc + cur.rating / arr.length},0);
+            return res.data;
+        })));
 
     return {
         props: {
