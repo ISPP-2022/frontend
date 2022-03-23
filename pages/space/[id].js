@@ -136,31 +136,18 @@ export default function Space(props) {
     )
 }
 
-export async function getStaticPaths() {
-    const spaces = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`);
-    const paths = spaces.data.map(space => ({
-        params: {
-            id: space.id.toString(),
-        }
-    }));
-    return {
-        paths,
-        fallback: true
-    };
-}
-
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params }) {
     const space = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}`).then(async res => {
-        let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/images`).then(imageres => imageres.data).catch(() => {});
+        let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/images`).then(imageres => imageres.data).catch(() => { });
         if (images) res.data.images = images;
         return res.data;
     });
-    const owner = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}`).then(async res => {  
-        let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => {});
+    const owner = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}`).then(async res => {
+        let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { });
         if (avatar) res.data.avatar = avatar;
         return res.data;
     });
-    const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}/ratings?filter=received`).then(res => res.data).catch(() => {});
+    const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}/ratings?filter=received`).then(res => res.data).catch(() => { });
 
     let rentalDates = [];
     await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/rentals`).then(res => {
@@ -178,10 +165,9 @@ export async function getStaticProps({ params }) {
         props: {
             space: space,
             owner: owner,
-            rating: ratings? ratings.reduce((acc, val, _idx, arr) => { return acc + val.rating/arr.length},0): 0,
+            rating: ratings ? ratings.reduce((acc, val, _idx, arr) => { return acc + val.rating / arr.length }, 0) : 0,
             rentalsDates: rentalDates
-        },
-        revalidate: 1000
+        }
     };
 }
 
