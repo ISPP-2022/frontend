@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 
 export async function getServerSideProps({ req, res, query }) {
   const user = req.cookies.authToken ? jwt.decode(req.cookies.authToken) : null;
-  console.log(user);
   if (user?.userId) {
     if (parseInt(query?.userId) === user.userId) {
       return {
