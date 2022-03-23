@@ -172,7 +172,7 @@ export default function AdvertisementForm(props) {
 
         // Realiza las validaciones
         let errorsArray = (PostUpdateVerification(startAvailability, endAvailability, location,
-            shared, type, space));
+            shared, type, space, title, description));
 
 
         // Si no hay errores, hacemos POST/UPDATE
@@ -193,7 +193,7 @@ export default function AdvertisementForm(props) {
                         setErrors(['Ha habido un problema. Inténtelo más tarde.']);
                     });
 
-            // Si no es edit --> POST
+                // Si no es edit --> POST
             } else {
                 axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, newSpace, {
                     withCredentials: true,

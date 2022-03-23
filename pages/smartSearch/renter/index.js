@@ -79,6 +79,9 @@ function Renter({ spaces }) {
 
     return (
         <div className="h-full md:bg-gray-100 flex justify-center items-center">
+            <Head>
+                <title>Buscador de inquilino</title>
+            </Head>
             <div className="md:bg-white mb-4 p-4 w-[80vw] md:w-2/3 h-full md:h-3/4 md:min-h-[548px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
                 <div className="p-5 md:mb-5 ">
                     <h1 className=" text-2xl md:text-3xl flex justify-center items-center text-center font-bold text-[#4aa7c0] ">Elige tu espacio</h1>

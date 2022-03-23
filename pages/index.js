@@ -30,7 +30,8 @@ export default function Home() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/search?search=${search}`);
+    if (search.trim().length > 3)
+      router.push(`/search?search=${search.trim()}`);
   };
 
   const calculateSurface = (dimensions) => {
@@ -65,12 +66,12 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <div className="h-full">
       <Head>
         <title>StackingUp</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
       </Head>
-      <main className="h-screen w-screen">
+      <main className="h-full">
         {/* Seachbar */}
         <div className="w-full h-full hidden md:grid md:grid-rows-2 lg:grid-cols-3 lg:grid-rows-1">
           <div className="imageBackground md:row-span-2 lg:col-span-2 h-full">
@@ -124,10 +125,10 @@ export default function Home() {
                     </a>
                   </Link>
                 </div>
-              )) : <Paragraph>Ha ocurrido un error.</Paragraph>}
+              )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
           </div>
         </div>
-        <div className="block md:hidden">
+        <div className="block md:hidden h-full">
           <div className="p-3 text-blue-bondi-dark">
             <Title>Cerca de ti</Title>
           </div>
@@ -148,7 +149,7 @@ export default function Home() {
                   </a>
                 </Link>
               </div>
-            )) : <Paragraph>Ha ocurrido un error.</Paragraph>}
+            )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
         </div>
       </main>
       <Footer />

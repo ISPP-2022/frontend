@@ -5,7 +5,7 @@ import Image from "next/image"
 import thumbByIndex from "./media/index";
 
 
-const SpaceSearchCarousel = ( {slides} ) => {
+const SpaceSearchCarousel = ({ slides }) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [mainViewportRef, embla] = useEmblaCarousel({});
     const [thumbViewportRef, emblaThumbs] = useEmblaCarousel({
@@ -50,14 +50,14 @@ const SpaceSearchCarousel = ( {slides} ) => {
                                 alt="Imágenes del espacio no encontradas"
                             />
                         </div>
-                    )): <div className="relative min-w-full h-full shadow-lg">
-                    <Image
-                        layout="fill"
-                        className="relative mx-auto block touch-manipulation rounded-lg"
-                        src={`/spacePlaceholder.jpg`}
-                        alt="Imágenes del espacio no encontradas"
-                    />
-                </div>}
+                    )) : <div className="relative min-w-full h-full shadow-lg">
+                        <Image
+                            layout="fill"
+                            className="relative mx-auto block touch-manipulation rounded-lg"
+                            src={`/spacePlaceholder.jpg`}
+                            alt="Imágenes del espacio no encontradas"
+                        />
+                    </div>}
                 </div>
             </div>
             <div className="hidden basis-0 lg:block lg:basis-1/3 relative overflow-hidden" ref={thumbViewportRef}>
@@ -70,11 +70,11 @@ const SpaceSearchCarousel = ( {slides} ) => {
                                 key={index}
                             />
                         </div>
-                    )): <div className="mx-2">
-                    <Thumb
-                        imgSrc={`/spacePlaceholder.jpg`}
-                    />
-                </div>}
+                    )) : <div className="mx-2">
+                        <Thumb
+                            imgSrc={`/spacePlaceholder.jpg`}
+                        />
+                    </div>}
                 </div>
             </div>
         </div>

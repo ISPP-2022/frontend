@@ -42,10 +42,10 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, images })
                 <>
                     <div className="w-full">
                         <div className="w-1/2 float-left">
-                            {tags.slice(tags.length / 2, tags.length).map(e => <Tag key={modelTags[e]}>{modelTags[e]}</Tag>)}
+                            {tags.slice(tags.length / 2, tags.length).map((e, index) => <Tag key={'l' + index}>{modelTags[e]}</Tag>)}
                         </div>
                         <div className="w-1/2 float-left">
-                            {tags.slice(0, tags.length / 2).map(e => <Tag key={modelTags[e]}>{modelTags[e]}</Tag>)}
+                            {tags.slice(0, tags.length / 2).map((e, index) => <Tag key={'r' + index}>{modelTags[e]}</Tag>)}
                         </div>
                     </div>
                 </>
@@ -79,8 +79,8 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, images })
  * Styles for every tag
  * @param  {string} {children}
  */
-export const Tag = ({ children }) => {
-    return (<p className="mt-2 text-gray-600 text-base">{children}</p>)
+export const Tag = ({ children, props }) => {
+    return (<div className="mt-2 text-gray-600 text-base">{children}</div>)
 };
 
 export const CardMobile = ({ title, surface, rating, price, unitPrice, tags, images }) => {

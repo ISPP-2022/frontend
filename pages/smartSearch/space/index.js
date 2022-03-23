@@ -17,10 +17,28 @@ export async function getServerSideProps(ctx) {
 
     let items = [];
     if (user) {
-        let itemsdata = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${user.userId}/items`);
-        items = itemsdata.data || [];
+        let itemsdata = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${user.userId}/items`).then(res => res.data).catch(() => { return [] });
+        items = itemsdata;
     }
+    if (user?.userId) {
+        if (parseInt(ctx.query?.userId) === user.userId) {
+            return {
+                props: {
+                    datadimensions,
+                    dataTypes,
+                    user,
+                    items
+                }
+            }
+        }
 
+        return {
+            redirect: {
+                destination: '/smartSearch/space?userId=' + user.userId,
+                permanent: false,
+            }
+        }
+    }
     return {
         props: {
             datadimensions,
@@ -71,8 +89,8 @@ function Space({ datadimensions, dataTypes, user, items }) {
                 let lon = position.coords.longitude;
                 let result = await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/smartSearch/spaces?latitude=${lat}&longitude=${lon}`, data, {
                     withCredentials: true
-                })
-                sessionStorage.setItem("smartSearch", JSON.stringify(result.data));
+                }).then(res => res.data).catch(() => { return [] });
+                sessionStorage.setItem("smartSearch", JSON.stringify(result));
                 router.push({
                     pathname: `/smartSearch/space/results`,
 
@@ -85,14 +103,17 @@ function Space({ datadimensions, dataTypes, user, items }) {
 
     return (
         <div className="h-full md:bg-gray-100 flex justify-center items-center">
+            <Head>
+                <title>Buscador de espacios</title>
+            </Head>
             <div className="md:bg-white mb-4 p-4 w-80vh md:w-2/3 md:mt-3 md:rounded-xl md:border-2 md:border-[#4aa7c0] ">
                 <div className="p-8 mb-5">
-                    <h1 className=" text-2xl md:text-3xl flex justify-center items-center font-bold text-[#4aa7c0] ">¿Qué quieres guardar?</h1>
+                    <h1 className=" text-2xl md:text-3xl flex justify-center items-center text-center font-bold text-[#4aa7c0] ">¿Qué quieres guardar?</h1>
                 </div>
                 <div className="grid grid-cols-1 justify-items-center">
                     <div className="w-[95vw] md:w-full relative">
                         <div className="has-tooltip absolute -top-4 -left-4 ">
-                            <div class="tooltip rounded shadow-lg p-4 border-[#4aa7c0] border bg-white w-[300px] top-5 left-5">
+                            <div className="tooltip rounded shadow-lg p-4 border-[#4aa7c0] border bg-white w-[300px] top-5 left-5">
                                 <table className="w-full">
                                     <thead>
                                         <tr>
@@ -138,10 +159,10 @@ function Space({ datadimensions, dataTypes, user, items }) {
                                                     <img src="/images/cross.svg" width="14px" ></img>
                                                 </button>
                                             </div>
-                                            <div className="py-4 flex basis-2/5 text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
+                                            <div className="py-4 flex basis-2/5 xs:text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
                                                 {enumTranslator.types[obj.type]}
                                             </div>
-                                            <div className="py-4 flex basis-2/5 text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
+                                            <div className="py-4 flex basis-2/5 xs:text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
                                                 {enumTranslator.dimensions[obj.dimensions]}
                                             </div>
                                         </div>
@@ -156,9 +177,9 @@ function Space({ datadimensions, dataTypes, user, items }) {
                                 </td>
                                 {buttonPlusPressed &&
                                     <div className="grid grid-cols-1 justify-items-center">
-                                        <div id="form" className="w-2/3 md:w-4/5 rounded-xl border mb-8 border-[#4aa7c0] ">
+                                        <div id="form" className="w-2/3 md:w-4/5 min-w-fit rounded-xl border mb-8 border-[#4aa7c0] ">
                                             <form onSubmit={addObject}>
-                                                <div className="flex flex-col sm:flex-row items-center justify-center p-3 space-y-2">
+                                                <div className="flex flex-col sm:flex-row items-center justify-center p-3 sm:space-y-0 space-y-2">
                                                     <select id="type" className="form-select appearance-none border border-solid border-[#4aa7c0] mx-2 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
                                                         {dataTypes.map(obj => { return (<option key={obj} value={obj} >{enumTranslator.types[obj]}</option>) })}
                                                     </select>

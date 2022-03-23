@@ -2,11 +2,15 @@ import AdvertisementForm from '../../../components/forms/AdvertisementForm'
 import axios from 'axios';
 import jwt from 'jsonwebtoken'
 import { useRouter } from "next/router";
+import Head from 'next/head';
 
 function Edit(props) {
   return (
     <>
       <div>
+        <Head>
+          <title>Editor de espacios</title>
+        </Head>
         <AdvertisementForm isEdit={true} userId={props.user.userId} space={props.space} />
       </div>
     </>

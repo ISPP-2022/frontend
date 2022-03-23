@@ -6,6 +6,7 @@ import { Button } from '../../../components/Core/Button';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import enumTranslator from '../../../public/enumTranslator.json';
+import Head from 'next/head';
 
 export default function SpaceSmartSearch(props) {
     let data;
@@ -16,9 +17,10 @@ export default function SpaceSmartSearch(props) {
     const [spaces, setSpaces] = useState([]);
 
     useEffect(() => {
+
         let data = sessionStorage.getItem('smartSearch')
-        if (data) {
-            data = JSON.parse(data);
+        data = JSON.parse(data);
+        if (data.length > 0) {
             Promise.all(
                 data.map((item, index) =>
                     axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${item.id}`).then(async res => {
@@ -37,16 +39,28 @@ export default function SpaceSmartSearch(props) {
                         return res.data;
                     })
                 )).then(resSpaces => {
-                    console.log(resSpaces)
                     setSpaces(resSpaces);
                 })
         } else {
-            router.push('/');
+            alert('No se ha encontrado ningún espacio');
+            router.push('/smartSearch/space');
         }
     }, []);
 
+    useEffect(() => {
+        if (spaces[selectedSpaceIndex]?.priceHour) {
+            setType('hours');
+        } else if (spaces[selectedSpaceIndex]?.priceDay) {
+            setType('days');
+        } else if (spaces[selectedSpaceIndex]?.priceMonth) {
+            setType('months');
+        }
+    }, [selectedSpaceIndex, spaces]);
     return (
         <div className="h-full md:bg-gray-100 flex justify-center items-center">
+            <Head>
+                <title>Espacios</title>
+            </Head>
             <div id="main" className="md:bg-white mb-4 p-5 pl-10 pr-10 md:w-2/3 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
                 {/* Main body */}
                 <div className='flex flex-col h-[90%]'>
@@ -120,13 +134,13 @@ export default function SpaceSmartSearch(props) {
                 <hr className=" bg-webcolor-50 w-[97%] m-auto mb-4" />
                 <div className="h-[10%] flex justify-center overflow-x-auto whitespace-nowrap my-3 ">
 
-                    <Button type="button" disabled={selectedSpaceIndex === 0} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex - 1))} color={type === 'months' ? 'secondary' : 'primary'} className="rounded-3xl  disabled:bg-gray-200">
+                    <Button type="button" disabled={selectedSpaceIndex === 0} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex - 1))} className="rounded-3xl  disabled:bg-gray-200">
                         Anterior
                     </Button>
                     <Button type="button" onClick={() => alert('Proximamente...')} className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl">
                         Chat
                     </Button>
-                    <Button type="button" disabled={selectedSpaceIndex + 1 === spaces.length} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex + 1))} color={type === 'months' ? 'secondary' : 'primary'} className="rounded-3xl disabled:bg-gray-200">
+                    <Button type="button" disabled={selectedSpaceIndex + 1 === spaces.length} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex + 1))} className="rounded-3xl disabled:bg-gray-200">
                         Siguiente
                     </Button>
 
@@ -135,19 +149,6 @@ export default function SpaceSmartSearch(props) {
         </div>
     )
 };
-
-/* export async function getServerSideProps() {
-
-
-    const spaces = await Promise.all(scores.map((score) => { }
-    ));
-
-    return {
-        props: {
-            spaces: spaces
-        }
-    }
-} */
 
 
 

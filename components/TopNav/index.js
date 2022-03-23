@@ -18,9 +18,9 @@ function Navbar({ user }) {
   const handleLogout = () => {
     axios.post(`${process.env.AUTH_API_URL || 'http://localhost:4000'}/api/v1/logout`, {}, { withCredentials: true })
       .then(res => {
+        setIsOpen(false);
         router.push("/");
         router.reload()
-        setIsOpen(false);
       })
   }
 
@@ -31,7 +31,8 @@ function Navbar({ user }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push(`/search?search=${search}`);
+    if (search.trim().length > 3)
+      router.push(`/search?search=${search.trim()}`);
   };
 
   const handleSmart = () => {

@@ -5,9 +5,10 @@ import BookingDiv from "../../components/Booking/div.js";
 import Image from "next/image";
 import { Button } from '../../components/Core/Button';
 import { Rating } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import enumTranslator from "../../public/enumTranslator.json";
+import Head from "next/head";
 
 export default function Space(props) {
     if (props.space == null) {
@@ -16,6 +17,17 @@ export default function Space(props) {
 
     const [showModal, setShowModal] = useState(false);
     const [type, setType] = useState('hours');
+
+    useEffect(() => {
+        if (props.space.priceHour) {
+            setType('hours');
+        } else if (props.space.priceDay) {
+            setType('days');
+        } else if (props.space.priceMonth) {
+            setType('months');
+        }
+    }, []);
+
     const [dateRange, setDateRange] = useState(
         [{
             startDate: new Date(),
@@ -45,25 +57,24 @@ export default function Space(props) {
         return disabledDates;
     };
 
-
-
-
     const [disabledDates, setDisabledDates] = useState(calculateDisabledDates());
 
     return (
         <div className="h-full md:bg-gray-100 flex justify-center items-center">
+            <Head>
+                <title>Informaci&oacute;n del espacio</title>
+            </Head>
             <div id="main" className="md:bg-white mb-4 p-5 pl-10 pr-10 md:w-2/3 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
                 {/* Main body */}
                 <div className='flex flex-col h-[90%] lg:h-full'>
                     {/* Title */}
                     <div className='basis-[56px] flex flex-row justify-center'>
-                        <h2 className='font-bold text-[40px] py-2 text-blue-bondi'>{props.space.name}</h2>
+                        <h2 className='font-bold text-[40px] py-2 text-blue-bondi text-center'>{props.space.name} ({props.space?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1)} m²)</h2>
                     </div>
 
                     {/* Caroussel and price */}
                     <div className=' basis-1/2 relative w-full h-full'>
                         <SpacesCarousel slides={props.space.images} />
-
                         <div className='flex flex-row justify-center absolute bottom-2 left-2'>
                             <div className="text-white font-bold bg-blue-bondi rounded-full p-5 py-2">
                                 {props.space.priceHour && type === 'hours' && <h2 className="text-2xl">{props.space.priceHour} €/hora</h2>}
@@ -85,10 +96,15 @@ export default function Space(props) {
                         <div className='basis-1/3 flex flex-col'>
                             <div className="basis-1/2 md:basis-5/6 xl:basis-[40%] relative flex flex-col xl:flex-row items-center">
                                 <div className="basis-[55%] md:basis-1/2 xl:basis-1/4 relative justify-center w-1/2 xl:h-[80%]">
-                                    <Image src={props.owner?.avatar ? `data:${props.owner.avatar.mimetype};base64, ${props.owner.avatar.image}` : '/spacePlaceholder.jpg'} className="rounded-full bg-white" layout="fill"></Image>
+                                    <Image src={props.owner?.avatar ? `data:${props.owner.avatar.mimetype};base64, ${props.owner.avatar.image}` : '/spacePlaceholder.jpg'} className="rounded-full bg-white" layout="fill" objectFit="cover" alt={`spaceImage`}></Image>
                                 </div>
-                                <div className="basis-[45%] md:basis-1/2 xl:basis-3/4 flex flex-col items-center xl:items-start justify-start pl-2 pr-2 w-full mt-2 xl:mt-0">
+                                <div className="basis-[45%] md:basis-1/2 xl:basis-3/4 flex flex-col items-center xl:items-start justify-start pl-2 pr-2 w-full mt-2 xl:mt-0 space-y-1">
                                     <p className="font-bold text-ellipsis whitespace-nowrap">{props.owner?.name || 'SomeUser'}</p>
+                                    <p className="text-gray-700 text-ellipsis whitespace-nowrap flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
+                                        {props.owner?.phoneNumber || ''}</p>
                                     <Rating value={props.rating || 0} readOnly />
                                 </div>
                             </div>
@@ -109,7 +125,7 @@ export default function Space(props) {
                             <hr className=" bg-webcolor-50 w-full mx-auto my-1" />
                             <div className='basis-1/2 md:basis-[28%] xl:basis-1/2 line-clamp-4 md:line-clamp-2 xl:line-clamp-3 hover:overflow-auto'>
                                 {props.space.tags.map(tag => (
-                                    <span className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl inline-block px-2 py-1 my-2 mr-2">
+                                    <span key={tag.tag} className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl inline-block px-2 py-1 my-2 mr-2">
                                         {enumTranslator.tags[tag.tag]}
                                     </span>
                                 ))}
@@ -160,7 +176,7 @@ export async function getServerSideProps({ params }) {
                 };
             })
     }
-    ).catch(err => console.log(`No rentals found for space ${params.id}`));
+    ).catch(() => { });
     return {
         props: {
             space: space,

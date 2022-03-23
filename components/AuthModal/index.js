@@ -94,7 +94,7 @@ export default function AuthModal({ childerns, ...props }) {
             </div> */}
           </div>
           <footer className="flex justify-end items-center ">
-            <p className="text-xs text-gray-300 w-full text-center">
+            <p className="text-xs text-gray-600 w-full text-center">
               Registrándote aceptas nuestras <br /> <a className="underline" href="#">Condiciones de uso</a> y <a className="underline" href="#">Políticas de privacidad</a>
             </p>
           </footer>
@@ -147,7 +147,7 @@ export default function AuthModal({ childerns, ...props }) {
             </div>
           </div>
           <footer className="flex justify-end items-center ">
-            <p className="text-xs text-gray-300 w-full text-center">
+            <p className="text-xs text-gray-600 w-full text-center">
               Registrándote aceptas nuestras <br /> <a className="underline" href="#">Condiciones de uso</a> y <a className="underline" href="#">Políticas de privacidad</a>
             </p>
           </footer>

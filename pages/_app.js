@@ -26,7 +26,6 @@ MyApp.getInitialProps = async (appContext) => {
     try {
       appProps.pageProps.user = jwt.decode(authToken);
     } catch (error) {
-      console.log('Invalid token');
     }
   }
   return { ...appProps }

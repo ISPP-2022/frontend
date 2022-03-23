@@ -7,7 +7,10 @@ import { addDays, differenceInCalendarMonths, differenceInCalendarDays, differen
 
 export default function BookingModal({ childrens, ...props }) {
   const { handleClose, setIsLogged } = props;
-  const [metros, setMetros] = useState(1);
+
+  const dimensions = props?.space?.dimensions?.split('x').reduce((acc, curr) => acc * curr, 1)
+
+  const [metros, setMetros] = useState(dimensions);
   const [errors, setErrors] = useState({ response: "" });
 
   const rentalValidation = async (initialDate, finalDate) => {
@@ -26,7 +29,6 @@ export default function BookingModal({ childrens, ...props }) {
     // Si hay concurrencia de reservas
     let rentalDates = [];
     await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`).then(res => {
-      console.log(res.data);
       rentalDates = res.data.filter(rental =>
         isAfter(initialDate, new Date(rental.initialDate)) && isBefore(initialDate, new Date(rental.finalDate)) ||
         isAfter(finalDate, new Date(rental.initialDate)) && isBefore(finalDate, new Date(rental.finalDate)) ||
@@ -34,9 +36,8 @@ export default function BookingModal({ childrens, ...props }) {
         isAfter(initialDate, new Date(rental.initialDate)) && isBefore(finalDate, new Date(rental.finalDate))
       )
     }
-    ).catch(() => console.log(`No se ha encontrado concurrencia de fechas para el espacio ${props.space.id}`));
+    ).catch(() => { });
 
-    console.log(rentalDates);
 
     if (rentalDates.length > 0) {
       alert(`La fecha seleccionada está ocupada por la siguiente reserva:
@@ -55,53 +56,64 @@ export default function BookingModal({ childrens, ...props }) {
       { rentalType: 'MONTH', price: (differenceInCalendarMonths(finalDate, initialDate) || 1) * props.space.priceMonth }
     ];
 
-    costs.forEach(cost => console.log(cost.price));
-
     return costs.filter(o => o.price).reduce((min, obj) => min.price < obj.price ? min : obj);
 
   };
 
   const rent = async () => {
-    const initialTime = props.timeRange.initialTime.split(":");
-    const finalTime = props.timeRange.finalTime.split(":");
-    let initialDate = setMinutes(setHours(props.dateRange[0].startDate, ~~initialTime[0] + 1), ~~initialTime[1]);
-    let finalDate = setMinutes(setHours(props.dateRange[0].endDate, ~~finalTime[0] + 1), ~~finalTime[1]);
+    if (props.user) {
+      const initialTime = props.timeRange.initialTime.split(":");
+      const finalTime = props.timeRange.finalTime.split(":");
+      let initialDate = setMinutes(setHours(props.dateRange[0].startDate, ~~initialTime[0] + 1), ~~initialTime[1]);
+      let finalDate = setMinutes(setHours(props.dateRange[0].endDate, ~~finalTime[0] + 1), ~~finalTime[1]);
 
-    if (await rentalValidation(initialDate, finalDate)) {
-      const cost = rentalCost(initialDate, finalDate)
-      confirm(`¿Está seguro que desea reservar el espacio ${props.space.name} por ${cost.price}€?`) &&
-        (await axios.post(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
-          initialDate: initialDate,
-          finalDate: finalDate,
-          cost: cost.price,
-          type: cost.rentalType,
-          meters: metros,
-          spaceId: props.space.id,
-          renterId: props.user.userId,
-        }, {
-          withCredentials: true,
-        }).then(() => {
-          alert("Reserva realizada con éxito");
-          props.setDateRange([{
-            startDate: new Date(),
-            endDate: new Date(),
-            key: 'selection'
-          }]);
+      if (await rentalValidation(initialDate, finalDate)) {
+        const cost = rentalCost(initialDate, finalDate)
+        confirm(`¿Está seguro que desea reservar el espacio ${props.space.name} por ${cost.price}€?`) &&
+          (await axios.post(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
+            initialDate: initialDate,
+            finalDate: finalDate,
+            cost: cost.price,
+            type: cost.rentalType,
+            meters: metros,
+            spaceId: props.space.id,
+            renterId: props.user.userId,
+          }, {
+            withCredentials: true,
+          }).then(() => {
+            alert("Reserva realizada con éxito");
+            props.setDateRange([{
+              startDate: new Date(),
+              endDate: new Date(),
+              key: 'selection'
+            }]);
 
-          props.setTimeRange({
-            initialTime: '00:00',
-            finalTime: '00:00'
-          });
+            props.setTimeRange({
+              initialTime: '00:00',
+              finalTime: '00:00'
+            });
 
-          // La de inicio y fin no se desactiva por si se pudieran alquilar algunas horas de esos días
-          let newDisabledDates = props.disabledDates;
-          let currentDate = addDays(currentDate, 1);
-          while (!isSameDay(currentDate, finalDate)) {
-            newDisabledDates.push(new Date(currentDate));
-            currentDate = addDays(currentDate, 1);
-          }
-          props.setDisabledDates(newDisabledDates);
-        }).catch(err => console.log(err.response.data)));
+            // La de inicio y fin no se desactiva por si se pudieran alquilar algunas horas de esos días
+            let newDisabledDates = props.disabledDates;
+            let currentDate = addDays(currentDate, 1);
+            while (!isSameDay(currentDate, finalDate)) {
+              newDisabledDates.push(new Date(currentDate));
+              currentDate = addDays(currentDate, 1);
+            }
+            props.setDisabledDates(newDisabledDates);
+          }).catch(err => {
+            if (err.response.status === 400)
+              if (err.response.data === 'Bad Request: Missing required attributes')
+                alert('Error: Ingrese todos los atributos requeridos');
+              else {
+                alert(err.response.data);
+              }
+            else
+              alert("Error al realizar la reserva");
+          }));
+      }
+    } else {
+      alert("Por favor, inicie sesión para realizar una reserva");
     }
   };
 
@@ -122,9 +134,9 @@ export default function BookingModal({ childrens, ...props }) {
           <hr className=" bg-webcolor-50 w-[80%] m-auto" />
           <TimeRangeInput timeRange={props.timeRange} setTimeRange={props.setTimeRange} />
           {props.space.shared ?
-                <div className="flex flex-col items-center"><hr className=" bg-webcolor-50 w-[80%] my-4" />
-                <input type="number" placeholder="metros" className="rounded-full" onChange={(e) => setMetros(e.target.value)}/></div> : null
-            }
+            <div className="flex flex-col items-center"><hr className=" bg-webcolor-50 w-[80%] my-4" />
+              <input type="number" placeholder="metros" className="rounded-full" value={metros} max={dimensions} min={0} onChange={(e) => setMetros(e.target.value)} /></div> : null
+          }
           <div className='flex justify-center'>
             <Button onClick={() => rent()} type="button" className="fill-webcolor-50 mt-4">
               Reservar

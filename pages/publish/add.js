@@ -1,9 +1,13 @@
 import AdvertisementForm from '../../components/forms/AdvertisementForm'
 import jwt from 'jsonwebtoken'
+import Head from 'next/head';
 
 export default function index(props) {
   return (
     <div>
+      <Head>
+        <title>Publicar espacio</title>
+      </Head>
       <AdvertisementForm isEdit={false} userId={props.user.userId} />
     </div>
   )

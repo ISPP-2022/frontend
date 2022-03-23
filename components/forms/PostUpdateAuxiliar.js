@@ -1,5 +1,16 @@
-export default function PostUpdateVerification(startAvailability, endAvailability, location, shared, type, space) {
+export default function PostUpdateVerification(startAvailability, endAvailability, location, shared, type, space, title, description) {
     let errorsArray = [];
+
+
+    if (title?.trim().length < 3) {
+        console.log(title);
+        errorsArray.push('El titulo debe tener al menos 3 caracteres');
+    }
+
+    if (description?.trim().length < 3) {
+        errorsArray.push('La descripcion debe tener al menos 3 caracteres');
+    }
+
     if (space == '') {
         errorsArray.push('Escoge un tipo de espacio.');
     }
@@ -12,29 +23,29 @@ export default function PostUpdateVerification(startAvailability, endAvailabilit
         errorsArray.push('Escoge una localización válida.');
     }
 
-    if (endAvailability != '' && startAvailability>endAvailability) {
+    if (endAvailability != '' && startAvailability > endAvailability) {
         errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
     }
 
     const date1 = new Date(startAvailability);
     const today = new Date();
-    if (date1<today) {
+    if (date1 < today) {
         errorsArray.push('La fecha de inicio de disponibilidad debe ser posterior a la fecha actual');
     }
 
-    if (type=='months' && endAvailability != undefined) {
+    if (type == 'months' && endAvailability != undefined) {
         const date2 = new Date(endAvailability);
         const diffTime = Math.abs(date2 - date1);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-        if (diffDays<30) {
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays < 30) {
             errorsArray.push('Si se indica un alquiler de meses, la disponibilidad debe ser al menos de 30 días.');
         }
     }
 
-    if (shared==undefined) {
+    if (shared == undefined) {
         errorsArray.push('Selecciona un valor posible en "Compartido".')
     }
-    
+
     return errorsArray;
 }
 
@@ -47,19 +58,19 @@ export function CreateNewSpaceObject(userId, title, description, startAvailabili
 
     newSpace.initialDate = new Date(startAvailability);
 
-    if (endAvailability!=undefined) {
+    if (endAvailability != undefined) {
         newSpace.finalDate = new Date(endAvailability);
     }
-    
+
     newSpace.location = location;
     newSpace.dimensions = surface1.toString() + 'x' + surface2.toString();
     newSpace.shared = shared;
-    
-    if (type=='hours') {
+
+    if (type == 'hours') {
         newSpace.priceHour = parseFloat(price);
-    } else if (type=='days') {
+    } else if (type == 'days') {
         newSpace.priceDay = parseFloat(price);
-    } else if (type=='months'){
+    } else if (type == 'months') {
         newSpace.priceMonth = parseFloat(price);
     }
 
