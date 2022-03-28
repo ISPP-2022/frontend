@@ -8,9 +8,11 @@ import enumTranslator from "../../../public/enumTranslator.json";
 import jwt from "jsonwebtoken";
 
 export async function getServerSideProps(ctx) {
-    const types = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/items/types`);
+    const types = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/items/types`)
+        .then(res => res).catch(() => { return { data: Object.keys(enumTranslator.types) } });
     const dataTypes = types.data;
-    const dimensions = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/items/dimensions`);
+    const dimensions = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/items/dimensions`)
+        .then(res => res).catch(() => { return { data: Object.keys(enumTranslator.dimensions) } });
     const datadimensions = dimensions.data;
 
     const user = ctx.req.cookies.authToken ? jwt.decode(ctx.req.cookies.authToken) : null;
@@ -81,7 +83,8 @@ function Space({ datadimensions, dataTypes, user, items }) {
             if (user) {
                 axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/items`, data, {
                     withCredentials: true
-                })
+                }).catch(() => {
+                });
             }
 
             navigator.geolocation.getCurrentPosition(async function (position) {
@@ -93,7 +96,6 @@ function Space({ datadimensions, dataTypes, user, items }) {
                 sessionStorage.setItem("smartSearch", JSON.stringify(result));
                 router.push({
                     pathname: `/smartSearch/space/results`,
-
                 });
             }, function (error) {
                 alert('Es necesario activar la geolocalización para poder acceder a esta funcion');
@@ -106,13 +108,13 @@ function Space({ datadimensions, dataTypes, user, items }) {
             <Head>
                 <title>Buscador de espacios</title>
             </Head>
-            <div className="md:bg-white mb-4 p-4 w-80vh md:w-2/3 md:mt-3 md:rounded-xl md:border-2 md:border-[#4aa7c0] ">
-                <div className="p-8 mb-5">
+            <main className="md:bg-white mb-4 p-4 w-80vh md:w-2/3 md:mt-3 md:rounded-xl md:border-2 md:border-[#4aa7c0] ">
+                <header className="p-8 mb-5">
                     <h1 className=" text-2xl md:text-3xl flex justify-center items-center text-center font-bold text-[#4aa7c0] ">¿Qué quieres guardar?</h1>
-                </div>
+                </header>
                 <div className="grid grid-cols-1 justify-items-center">
                     <div className="w-[95vw] md:w-full relative">
-                        <div className="has-tooltip absolute -top-4 -left-4 ">
+                        <menu className="has-tooltip absolute -top-4 -left-4 ">
                             <div className="tooltip rounded shadow-lg p-4 border-[#4aa7c0] border bg-white w-[300px] top-5 left-5">
                                 <table className="w-full">
                                     <thead>
@@ -144,8 +146,8 @@ function Space({ datadimensions, dataTypes, user, items }) {
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-bondi" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                             </svg>
-                        </div>
-                        <div className="md:min-w-full w-[100%]">
+                        </menu>
+                        <section className="md:min-w-full w-[100%]">
                             <div className="items-center justify-between overflow-y-auto w-full" style={{ maxHeight: '30vh' }}>
                                 {data.map((obj, index) => {
                                     return (
@@ -181,11 +183,11 @@ function Space({ datadimensions, dataTypes, user, items }) {
                                             <form onSubmit={addObject}>
                                                 <div className="flex flex-col sm:flex-row items-center justify-center p-3 sm:space-y-0 space-y-2">
                                                     <select id="type" className="form-select appearance-none border border-solid border-[#4aa7c0] mx-2 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-                                                        {dataTypes.map(obj => { return (<option key={obj} value={obj} >{enumTranslator.types[obj]}</option>) })}
+                                                        {dataTypes.map(obj => { return (<option key={obj} value={obj} >{enumTranslator.types[obj] || obj}</option>) })}
                                                     </select>
 
                                                     <select id="dimensions" className="form-select appearance-none border border-solid border-[#4aa7c0] mx-2 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-                                                        {datadimensions.map(obj => { return (<option key={obj} value={obj} >{enumTranslator.dimensions[obj]}</option>) })}
+                                                        {datadimensions.map(obj => { return (<option key={obj} value={obj} >{enumTranslator.dimensions[obj] || obj}</option>) })}
                                                     </select>
 
                                                 </div>
@@ -197,18 +199,18 @@ function Space({ datadimensions, dataTypes, user, items }) {
                                     </div>
                                 }
                             </div>
-                        </div>
+                        </section>
                     </div>
 
                     <br></br>
 
-                    <div className="flex flex-row justify-center items-center">
+                    <footer className="flex flex-row justify-center items-center">
                         <button onClick={() => handleStart()} disabled={data.length === 0} className={`${data.length === 0 ? 'bg-gray-300 text-gray-400' : 'bg-blue-bondi hover:bg-blue-bondi-dark'} text-white font-bold py-2 px-4 rounded`}>
                             Start
                         </button>
-                    </div>
+                    </footer>
                 </div>
-            </div>
+            </main>
         </div>
     )
 }

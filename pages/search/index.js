@@ -72,7 +72,9 @@ const Search = () => {
                 }
                 setData(response.data)
             })
-            .catch(error => { });
+            .catch(error => {
+                setData([])
+            });
     }, []);
 
     useEffect(() => {
@@ -86,7 +88,9 @@ const Search = () => {
                 }
                 setData(response.data)
             })
-            .catch(error => { });
+            .catch(error => {
+                setData([])
+            });
     }, [router.query]);
 
     const calculateSurface = (dimensions) => {
@@ -146,7 +150,7 @@ const Search = () => {
             <Head>
                 <title>B&uacute;squeda</title>
             </Head>
-            <div className='w-full p-5'>
+            <main className='w-full p-5'>
                 {/* Header */}
                 {!data ?
                     <div>
@@ -155,7 +159,7 @@ const Search = () => {
                         <Paragraph>Por favor, inténtelo de nuevo más tarde.</Paragraph>
                     </div>
                     :
-                    <div>
+                    <menu>
                         <Paragraph>{data.length} resultados encontrados</Paragraph>
                         {/* Filter mobile version */}
                         {/* TODO LUCAS: Código duplicado, extraer en un componente y hacer dos llamadas */}
@@ -249,11 +253,11 @@ const Search = () => {
                             </Accordion>
                         </div>
 
-                    </div>}
+                    </menu>}
                 {/* Content */}
                 <div className='mt-4'>
                     {/* Filters */}
-                    <div className='w-1/5 float-left hidden lg:block'>
+                    <menu className='w-1/5 float-left hidden lg:block'>
                         <form className="w-full h-16 py-2 px-4 flex  items-center" onSubmit={enviarDatos}>
                             <input className="bg-transparent focus:outline-none h-full
                                 focus:shadow-outline border border-blue-bondi focus:border-[#4aa7c0] rounded-lg 
@@ -338,7 +342,7 @@ const Search = () => {
                             </Accordion>
                             <Button onClick={enviarDatos}>Aplicar filtros</Button>
                         </FormControl>
-                    </div>
+                    </menu>
                     <form className="w-full h-16 py-2 px-4  justify-center items-center hidden md:flex lg:hidden" onSubmit={enviarDatos}>
                         <input className="bg-transparent focus:outline-none h-full
                                 focus:shadow-outline border border-gray-300 focus:border-[#4aa7c0] rounded-lg 
@@ -346,7 +350,7 @@ const Search = () => {
                                 transition duration-200 ease-in-out  "
                             type="text" placeholder="Search" value={search} onChange={(e) => { setSearch(e.target.value) }} />
                     </form>
-                    <div className='w-full hidden sm:grid sm:w-4/5 mx-auto justify-center lg:grid-cols-2 lg:gap-2 md:grid-cols-1 md:gap-1'>
+                    <section className='w-full hidden sm:grid sm:w-4/5 mx-auto justify-center lg:grid-cols-2 lg:gap-2 md:grid-cols-1 md:gap-1'>
                         {
                             data && data.length > 0 ?
                                 data.map((espacio, index) => {
@@ -369,8 +373,8 @@ const Search = () => {
                                     );
                                 }) : <h1 className="h-full w-full col-span-2 min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>
                         }
-                    </div>
-                    <div className='sm:hidden w-full flex flex-col px-5 justify-center' >
+                    </section>
+                    <section className='sm:hidden w-full flex flex-col px-5 justify-center' >
                         {
                             data && data.length > 0 ?
                                 data.map((espacio, index) => {
@@ -393,9 +397,9 @@ const Search = () => {
                                     );
                                 }) : <h1 className="h-full w-full col-span-2 min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>
                         }
-                    </div>
+                    </section>
                 </div>
-            </div>
+            </main>
         </>
     );
 

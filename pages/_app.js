@@ -10,7 +10,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <TopNav user={pageProps.user} />
-      <div className='pt-16 h-screen'>
+      <div className='pt-16 h-screen min-h-[850px]'>
         <Component {...pageProps} />
       </div>
     </>

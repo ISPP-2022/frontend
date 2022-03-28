@@ -24,12 +24,10 @@ export default function Home() {
         }
         setData(response.data)
       })
-      .catch(error => { });
+      .catch(error => {
+        setData([])
+      });
   }, []);
-
-  const handleChange = (e) => {
-    setSearch(e.target.value);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -42,9 +40,8 @@ export default function Home() {
 
   const calculateSurface = (dimensions) => {
     const [width, height] = dimensions.split('x');
-    return parseInt(width) * parseInt(height);
+    return width * height;
   };
-
 
   const calculateUnitPrice = (priceHour, priceDay, priceMonth) => {
     if (priceHour) {
@@ -67,9 +64,10 @@ export default function Home() {
       return ["empty"];
     }
   };
+
   const handleSmart = () => {
     router.push("/smartSearch");
-  }
+  };
 
   return (
     <div className="h-full">
@@ -78,10 +76,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
       </Head>
       <main className="h-full">
-        {/* Seachbar */}
         <div className="w-full h-full hidden md:grid md:grid-rows-2 lg:grid-cols-3 lg:grid-rows-1">
-          <div className="imageBackground md:row-span-2 lg:col-span-2 h-full">
-            {/* SmartSearch*/}
+          <section className="imageBackground md:row-span-2 lg:col-span-2 h-full">
             <div className="flex justify-end m-3 top-1/5 left-1/5">
               <button
                 onClick={handleSmart}
@@ -98,7 +94,7 @@ export default function Home() {
                   <div className="w-4/5 float-left">
                     {/* Search bar */}
                     <label className="pl-2 font-medium">
-                      <input type="text" name="Search" value={search} onChange={handleChange} placeholder="Ciudad, barrio, zona..." className="bg-gray-200 opacity-90 appearance-none border-2 border-gray-200 rounded w-11/12 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi" ></input>
+                      <input type="text" name="Search" value={search} onChange={(e) => { setSearch(e.target.value); }} placeholder="Ciudad, barrio, zona..." className="bg-gray-200 opacity-90 appearance-none border-2 border-gray-200 rounded w-11/12 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi" ></input>
                     </label>
                   </div>
                   <div className="w-1/5 float-left">
@@ -112,11 +108,11 @@ export default function Home() {
                 </form>
               </div>
             </div>
-          </div>
-          <div className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
+          </section>
+          <section className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
             {data && data.length > 0 ?
               data.map((item, index) => (
-                <div key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
+                <article key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
                   <Link href={`/space/${item.id}`} passHref className="w-full h-full">
                     <a className="w-full h-full">
                       <Card
@@ -130,10 +126,11 @@ export default function Home() {
                       />
                     </a>
                   </Link>
-                </div>
+                </article>
               )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
-          </div>
+          </section>
         </div>
+        {/* Mobile */}
         <div className="block md:hidden h-full">
           <div className="p-3 text-blue-bondi-dark">
             <Title>Cerca de ti</Title>
