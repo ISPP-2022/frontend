@@ -1,4 +1,4 @@
-import { addDAY, isSameDay } from "date-fns";
+import { addDays, isSameDay } from "date-fns";
 import SpacesCarousel from "../../components/SpacesCarousel"
 import Booking from "../../components/Booking";
 import Image from "next/image";
@@ -55,7 +55,7 @@ export default function Space(props) {
                 let currentDate = rental.initialDate;
                 while (currentDate <= rental.finalDate) {
                     disabledDates.push(new Date(currentDate));
-                    currentDate = addDAY(currentDate, 1);
+                    currentDate = addDays(currentDate, 1);
                 }
             });
         }
