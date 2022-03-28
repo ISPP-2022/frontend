@@ -1,4 +1,4 @@
-import AdvertisementForm from '../../components/Forms/AdvertisementForm'
+import AdvertisementForm from '../../components/forms/AdvertisementForm'
 import jwt from 'jsonwebtoken'
 import Head from 'next/head';
 
