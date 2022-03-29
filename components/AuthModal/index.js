@@ -292,29 +292,49 @@ export default function AuthModal({ childerns, ...props }) {
       if (!valid) {
         return
       }
-      /* axios.post(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/register`,
+      axios.post(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/register`,
         {
+          name: nameSub,
+          surname: surnameSub,
           email: emailSub,
           password: passwordSub,
-          name: nameSub,
-          surname: surnameSub
         }, {
         withCredentials: true,
       })
         .then(res => {
-          setIsLogged(res.data)
           handleClose()
           if (router.route === '/') router.reload()
           router.push("/");
         })
         .catch(err => {
+          console.log(err.response)
           if (err.response.status === 400) {
-            setErrors({
-              response: 'El email o la contraseña son incorrectos'
-            })
+            if (err.response.data === "Missing username, surname, email and/or password") {
+              setErrors({
+                response: 'Debes completar todos los campos'
+              })
+            }
+            if (err.response.data === "Name and surname must be at least 3 characters long") {
+              setErrors({
+                response: 'El nombre y el apellido debe tener al menos 3 caracteres'
+              })
+            }
+            if (err.response.data === "Invalid email. Please provide a valid email") {
+              setErrors({
+                email: 'El email no es válido'
+              })
+            }
+            if (err.response.data === "Password must contain at least one number, one lowercase and one uppercase letter, and at least 8 characters long") {
+              setErrors({
+                password: 'La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula y un número'
+              })
+            }
           }
-          console.log(err)
-        }) */
+          else
+            setErrors({
+              response: 'Ha ocurrido un error, revise los campos e intentalo de nuevo'
+            })
+        })
     },
   }
 
