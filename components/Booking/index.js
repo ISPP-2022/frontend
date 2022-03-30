@@ -15,6 +15,10 @@ export default function Booking(props) {
 
   const [cost, setCost] = useState(0)
 
+  let startHourS = new Date(props.space.startHour)?.toLocaleTimeString().split(":");
+  startHourS.pop();
+  let endHourS = new Date(props.space.endHour)?.toLocaleTimeString().split(":");
+  endHourS.pop();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -79,7 +83,6 @@ export default function Booking(props) {
     if (props.user) {
       const initialTime = props.timeRange.initialTime.split(":");
       const finalTime = props.timeRange.finalTime.split(":");
-      console.log(initialTime, finalTime)
       let initialDate = setMinutes(setHours(props.dateRange[0].startDate, ~~initialTime[0]), ~~initialTime[1]);
       let finalDate = setMinutes(setHours(props.dateRange[0].endDate, finalTime[0]), ~~finalTime[1]);
       if (props.type !== 'HOUR') {
@@ -136,9 +139,10 @@ export default function Booking(props) {
   };
 
   useEffect(() => {
+
     props.setTimeRange({
-      initialTime: '00:00',
-      finalTime: '00:00'
+      initialTime: startHourS.join(":"),
+      finalTime: endHourS.join(":")
     })
     props.setDateRange([{
       startDate: tomorrow,
@@ -157,7 +161,6 @@ export default function Booking(props) {
   }, [monthNumber])
 
   useEffect(() => {
-    console.log(props.dateRange[0].startDate, props.dateRange[0].endDate)
     rentalCost(props.dateRange[0].startDate, props.dateRange[0].endDate, props.type)
   }, [props.dateRange[0].startDate, props.dateRange[0].endDate, props.type])
 
@@ -179,7 +182,7 @@ export default function Booking(props) {
             }} />
         </div>
         <hr className=" bg-webcolor-50 w-[80%] m-auto" />
-        <TimeRangeInput timeRange={props.timeRange} setTimeRange={props.setTimeRange} />
+        <TimeRangeInput timeRange={props.timeRange} setTimeRange={props.setTimeRange} min={startHourS.join(":")} max={endHourS.join(":")} />
         {props.space.shared ?
           <div className="flex flex-col items-center"><hr className=" bg-webcolor-50 w-[80%] my-4" />
             <input type="number" placeholder="metros" className="rounded-full" value={metros} max={dimensions} min={0} onChange={(e) => setMetros(e.target.value)} /></div> : null
