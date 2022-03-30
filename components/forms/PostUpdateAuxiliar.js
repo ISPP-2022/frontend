@@ -1,3 +1,5 @@
+import { addDays } from 'date-fns';
+
 export default function PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, shared, type, space, title, description) {
     let errorsArray = [];
 
@@ -66,10 +68,11 @@ export function CreateNewSpaceObject(userId, title, description, startAvailabili
     newSpace.description = description;
 
     newSpace.initialDate = new Date(startAvailability);
+    newSpace.initialDate.setHours(0, 0, 0, 0);
 
-    if (!endAvailability) {
-        console.log(endAvailability);
+    if (endAvailability) {
         newSpace.finalDate = new Date(endAvailability);
+        newSpace.finalDate.setHours(0, 0, 0, 0);
     }
 
     newSpace.location = location;
@@ -81,8 +84,18 @@ export function CreateNewSpaceObject(userId, title, description, startAvailabili
 
     if (type == 'hours') {
         newSpace.priceHour = parseFloat(price);
-        newSpace.startHour = startHourdate;
-        newSpace.endHour = endHourdate;
+        newSpace.startHour = new Date(startHourdate);
+        newSpace.startHour = addDays(newSpace.startHour, 1);
+        newSpace.startHour.setSeconds(0);
+        newSpace.startHour.setMilliseconds(0);
+        newSpace.startHour = newSpace.startHour.getTime();
+
+        newSpace.endHour = new Date(endHourdate);
+        newSpace.endHour = addDays(newSpace.endHour, 1);
+        newSpace.endHour.setSeconds(0);
+        newSpace.endHour.setMilliseconds(0);
+        newSpace.endHour = newSpace.endHour.getTime();
+
     } else if (type == 'days') {
         newSpace.priceDay = parseFloat(price);
     } else if (type == 'months') {

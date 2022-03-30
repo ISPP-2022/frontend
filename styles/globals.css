@@ -43,3 +43,7 @@ body::-webkit-scrollbar {
   visibility: visible;
   z-index: 50;
 }
+
+svg.star-svg {
+  display: inline;
+}
