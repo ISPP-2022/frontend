@@ -65,20 +65,21 @@ export default function Space(props) {
     const [disabledDates, setDisabledDates] = useState(calculateDisabledDates());
 
     return (
-        <div className="h-full md:bg-gray-100 flex justify-center items-center">
+        <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
             <Head>
                 <title>Informaci&oacute;n del espacio</title>
             </Head>
-            <main id="main" className="md:bg-white mb-4 p-5 pl-10 pr-10 md:w-2/3 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
+            <main id="main" className="md:bg-white mb-4 p-5 pl-10 pr-10 md:w-2/3 w-full h-full md:h-3/4 xl:w-1/2 md:min-h-[769px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
                 {/* Main body */}
                 <article className='flex flex-col h-[90%] lg:h-full'>
                     {/* Title */}
-                    <header className='basis-[56px] flex flex-row justify-center'>
-                        <h2 className='font-bold text-[25px] md:text-[40px] py-2 text-blue-bondi text-center'>{props.space.name} ({props.space?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1)} m²)</h2>
+                    <header className='basis-[56px] flex flex-row justify-around'>
+                        <h2 className='font-bold shrink-0 text-[25px] md:text-[40px] py-2 text-blue-bondi text-center'>{props.space.name} ({props.space?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1).toFixed(2)} m²) </h2>
+                        <p className='sm:font-bold text-sm sm:text-lg md:text-xl py-2 text-blue-bondi text-center flex items-end justify-end'>{props.space?.city}, {props.space?.province}</p>
                     </header>
 
                     {/* Caroussel and price */}
-                    <section className=' basis-1/2 relative w-full h-full'>
+                    <section className='basis-1/2 relative w-full h-full min-h-[200px]'>
                         <SpacesCarousel slides={props.space.images} />
                         <div className='flex flex-row justify-center absolute bottom-2 left-2'>
                             <div className="text-white font-bold bg-blue-bondi rounded-full p-2 xl:p-5 py-2">
@@ -95,12 +96,12 @@ export default function Space(props) {
                     </section>
 
                     {/* Space data */}
-                    <data className='basis-1/2 flex flex-row pt-3'>
+                    <data className='basis-1/2 flex flex-col sm:flex-row pt-3'>
 
                         {/* User and price selector */}
                         <section className='basis-1/3 flex flex-col'>
                             <div className="basis-[60%] md:basis-5/6 xl:basis-[40%] relative flex flex-col xl:flex-row items-center">
-                                <div className="basis-[55%] md:basis-1/2 xl:basis-1/4 relative justify-center w-1/2 xl:h-[80%]">
+                                <div className="basis-[55%] md:basis-1/2 xl:basis-1/4 relative justify-center w-1/2 xl:h-[80%] min-h-[50px]">
                                     <Image src={props.owner?.avatar ? `data:${props.owner.avatar.mimetype};base64, ${props.owner.avatar.image}` : '/spacePlaceholder.jpg'} className="rounded-full bg-white" layout="fill" objectFit="cover" alt={`spaceImage`}></Image>
                                 </div>
                                 <div className="basis-[45%] md:basis-1/2 xl:basis-3/4 flex flex-col items-center xl:items-start justify-start pl-2 pr-2 w-full mt-2 xl:mt-0 space-y-1">
@@ -115,9 +116,9 @@ export default function Space(props) {
                             </div>
                             <div className='basis-[30%] md:basis-1/6 xl:basis-[60%]'>
                                 <div className='flex flex-col justify-center md:flex-row md:justify-evenly xl:justify-center items-center lg:items-end xl:items-center h-full w-full'>
-                                    <Button type="button" onClick={() => setType('HOUR')} disabled={!props.space.priceHour || type === 'HOUR'} color={type === 'HOUR' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
-                                    <Button type="button" onClick={() => setType('DAY')} disabled={!props.space.priceDay || type === 'DAY'} color={type === 'DAY' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">D</Button>
-                                    <Button type="button" onClick={() => setType('MONTH')} disabled={!props.space.priceMonth || type === 'MONTH'} color={type === 'MONTH' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-full lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">M</Button>
+                                    <Button type="button" onClick={() => setType('HOUR')} disabled={!props.space.priceHour || type === 'HOUR'} color={type === 'HOUR' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-1/3 lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
+                                    <Button type="button" onClick={() => setType('DAY')} disabled={!props.space.priceDay || type === 'DAY'} color={type === 'DAY' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-1/3 lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">D</Button>
+                                    <Button type="button" onClick={() => setType('MONTH')} disabled={!props.space.priceMonth || type === 'MONTH'} color={type === 'MONTH' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-1/3 lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">M</Button>
                                 </div>
                             </div>
                         </section>
@@ -139,10 +140,9 @@ export default function Space(props) {
                     </data>
                 </article>
                 {/* Rent button */}
-                <hr className="lg:hidden bg-webcolor-50 w-[97%] m-auto mb-4" />
-                <div className="lg:hidden h-[7%] flex justify-center overflow-x-auto whitespace-nowrap my-3 ">
-                    <Button type="button" onClick={() => setShowModal(true)} className="bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl flex items-center">
-                        Reserva
+                <div className="lg:hidden fixed bottom-0 left-0 right-0 h-[7%] flex justify-center overflow-x-auto whitespace-nowrap my-3 ">
+                    <Button type="button" onClick={() => setShowModal(true)} className="bg-webcolor-50 text-white rounded-2xl flex items-center font-bold">
+                        +
                     </Button>
                 </div>
             </main>

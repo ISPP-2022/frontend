@@ -1,4 +1,4 @@
-export default function PostUpdateVerification(startAvailability, endAvailability, location, shared, type, space, title, description) {
+export default function PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, shared, type, space, title, description) {
     let errorsArray = [];
 
 
@@ -27,6 +27,15 @@ export default function PostUpdateVerification(startAvailability, endAvailabilit
         errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
     }
 
+    if (type === 'hours') {
+        if (!endHour || !startHour) {
+            errorsArray.push('Escoge una hora de inicio y fin.');
+        }
+        if (endHour != '' && startHour > endHour) {
+            errorsArray.push('La hora de inicio debe ser anterior a la hora de fin.');
+        }
+    }
+
     const date1 = new Date(startAvailability);
     const today = new Date();
     if (date1 < today) {
@@ -50,7 +59,7 @@ export default function PostUpdateVerification(startAvailability, endAvailabilit
 }
 
 export function CreateNewSpaceObject(userId, title, description, startAvailability, endAvailability, location,
-    surface1, surface2, shared, type, price, tags, space, images) {
+    surface1, surface2, shared, type, price, tags, space, images, startHourdate, endHourdate, city, province, country) {
     let newSpace = {};
     newSpace.ownerId = userId;
     newSpace.name = title;
@@ -58,16 +67,22 @@ export function CreateNewSpaceObject(userId, title, description, startAvailabili
 
     newSpace.initialDate = new Date(startAvailability);
 
-    if (endAvailability != undefined) {
+    if (!endAvailability) {
+        console.log(endAvailability);
         newSpace.finalDate = new Date(endAvailability);
     }
 
     newSpace.location = location;
+    newSpace.city = city;
+    newSpace.province = province;
+    newSpace.country = country;
     newSpace.dimensions = surface1.toString() + 'x' + surface2.toString();
     newSpace.shared = shared;
 
     if (type == 'hours') {
         newSpace.priceHour = parseFloat(price);
+        newSpace.startHour = startHourdate;
+        newSpace.endHour = endHourdate;
     } else if (type == 'days') {
         newSpace.priceDay = parseFloat(price);
     } else if (type == 'months') {

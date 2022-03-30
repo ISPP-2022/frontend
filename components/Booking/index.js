@@ -9,9 +9,11 @@ import { useEffect, useState } from "react";
 
 export default function Booking(props) {
 
-  const dimensions = props?.space?.dimensions?.split('x').reduce((acc, curr) => acc * curr, 1)
+  const dimensions = props?.space?.dimensions?.split('x').reduce((acc, curr) => acc * curr, 1).toFixed(2);
 
   const [monthNumber, setMonthNumber] = useState(1)
+
+  const [cost, setCost] = useState(0)
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -60,12 +62,16 @@ export default function Booking(props) {
 
   //Devuelve el tipo de coste más barato según  
   const rentalCost = (initialDate, finalDate, type) => {
-    console.log(initialDate, finalDate, type)
     const costs = {
       HOUR: (differenceInHours(finalDate, initialDate, { roundingMethod: "ceil" }) || 1) * props.space.priceHour,
       DAY: (differenceInCalendarDays(finalDate, initialDate) || 1) * props.space.priceDay,
       MONTH: (differenceInCalendarMonths(finalDate, initialDate) || 1) * props.space.priceMonth
     };
+    if (props.space.shared) {
+      setCost(costs[type] * (metros / dimensions))
+      return costs[type] * (metros / dimensions);
+    }
+    setCost(costs[type])
     return costs[type];
   };
 
@@ -86,7 +92,6 @@ export default function Booking(props) {
           (await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
             initialDate: initialDate,
             finalDate: finalDate,
-            cost: cost,
             type: props.type,
             meters: metros,
             spaceId: props.space.id,
@@ -143,18 +148,18 @@ export default function Booking(props) {
   }, [props.type])
 
   useEffect(() => {
-    console.log(props.dateRange[0].startDate)
-
-    console.log(getMonth(props.dateRange[0].startDate) + parseInt(monthNumber))
-    console.log(monthNumber)
-
-    props.setDateRange([{
-      startDate: props.dateRange[0].startDate,
-      endDate: setMonth(props.dateRange[0].startDate, getMonth(props.dateRange[0].startDate) + parseInt(monthNumber)),
-      key: 'selection'
-    }])
-
+    if (props.type === 'MONTH')
+      props.setDateRange([{
+        startDate: props.dateRange[0].startDate,
+        endDate: setMonth(props.dateRange[0].startDate, getMonth(props.dateRange[0].startDate) + parseInt(monthNumber)),
+        key: 'selection'
+      }])
   }, [monthNumber])
+
+  useEffect(() => {
+    console.log(props.dateRange[0].startDate, props.dateRange[0].endDate)
+    rentalCost(props.dateRange[0].startDate, props.dateRange[0].endDate, props.type)
+  }, [props.dateRange[0].startDate, props.dateRange[0].endDate, props.type])
 
   const bookingBody = {
     "HOUR": (
@@ -257,6 +262,12 @@ export default function Booking(props) {
           type="button" className="fill-webcolor-50 mt-4">
           Reservar
         </Button>
+      </div>
+      <div>
+        <hr className=" bg-webcolor-50 w-[95%] m-auto mb-6" />
+        <h1 className="text-center text-webcolor-50 text-5xl">
+          Total: <b>{cost.toFixed(2)}€</b>
+        </h1>
       </div>
     </form>
   );

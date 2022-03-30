@@ -77,7 +77,7 @@ export default function Results() {
     const dataTest = [{ type: 'APPLIANCES', dimensions: 'SMALL' }]
 
     return (
-        <div className="h-full md:bg-gray-100 flex justify-center items-center">
+        <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
             <Head>
                 <title>
                     Inquilinos
