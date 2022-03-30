@@ -1,7 +1,7 @@
 import Footer from "../components/Footer";
 import Head from "next/head";
 import { Card, CardMobile } from "../components/Card";
-import { Paragraph, Title } from "../components/Core/Text";
+import { Paragraph, Title, Subtitle } from "../components/Core/Text";
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from 'react';
@@ -13,6 +13,8 @@ export default function Home() {
   const [search, setSearch] = useState("");
 
   const [data, setData] = useState([]);
+
+  const [selector, setSelector] = useState("recent");
 
   useEffect(() => {
     axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`)
@@ -37,7 +39,6 @@ export default function Home() {
       router.push(`/search`);
     }
   };
-
 
   const handleSmart = () => {
     router.push("/smartSearch");
@@ -79,11 +80,47 @@ export default function Home() {
                       </svg>
                     </button>
                   </div>
-                </form>
+                </form>""
               </div>
             </div>
           </section>
           <section className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
+          
+          <div className="grid grid-cols-1 object-cover min-w-[200px] items-center">
+          <div className="flex justify-center transition duration-150 text-blue-bondi">
+            {
+            selector == "recent" ?
+            <Title>Espacios recientes</Title>
+            : selector == "nearyou" ?
+            <Title>Cerca de ti</Title>
+            : null
+            }
+          </div>
+          <form>
+            <menu className="flex justify-center">
+              <fieldset className='p-4 w-full max-w-[250px]'>
+                <ul className='grid grid-cols-2 font-semibold text-webcolor-50'>
+                  <li className='border rounded-l border-webcolor-50'>
+                    <input className='hidden peer' type="radio" id="RECENT" name="selector" value="recent" checked={selector === "recent"} onChange={()=>setSelector("recent")}  />
+                    <label htmlFor="RECENT" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </label>
+                  </li>
+                  <li className='border rounded-r border-webcolor-50 text-center'>
+                    <input className='hidden peer' type="radio" id="NEARYOU" name="selector" value="nearyou" checked={selector === "nearyou"} onChange={()=>setSelector("nearyou")} />
+                    <label htmlFor="NEARYOU" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                      </svg>
+                    </label>
+                  </li>
+                </ul>
+              </fieldset>
+            </menu>
+          </form>
+          </div>
             {data && data.length > 0 ?
               data.map((item, index) => (
                 <article key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
@@ -100,9 +137,39 @@ export default function Home() {
         </div>
         {/* Mobile */}
         <div className="block md:hidden h-full">
-          <div className="p-3 text-blue-bondi-dark">
-            <Title>Cerca de ti</Title>
-          </div>
+          <div className="flex justify-center transition duration-150 text-blue-bondi">
+              {
+              selector == "recent" ?
+              <Subtitle>Espacios recientes</Subtitle>
+              : selector == "nearyou" ?
+              <Subtitle>Cerca de ti</Subtitle>
+              : null
+              }
+            </div>
+            <form>
+              <menu className="flex justify-center">
+                <fieldset className='p-4 w-full max-w-[200px]'>
+                  <ul className='grid grid-cols-2 font-semibold text-webcolor-50'>
+                    <li className='border rounded-l border-webcolor-50'>
+                      <input className='hidden peer' type="radio" id="RECENT" name="selector" value="recent" checked={selector === "recent"} onChange={()=>setSelector("recent")}  />
+                      <label htmlFor="RECENT" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </label>
+                    </li>
+                    <li className='border rounded-r border-webcolor-50 text-center'>
+                      <input className='hidden peer' type="radio" id="NEARYOU" name="selector" value="nearyou" checked={selector === "nearyou"} onChange={()=>setSelector("nearyou")} />
+                      <label htmlFor="NEARYOU" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                        </svg>
+                      </label>
+                    </li>
+                  </ul>
+                </fieldset>
+              </menu>
+            </form>
           {data && data.length > 0 ?
             data.map((item, index) => (
               <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
