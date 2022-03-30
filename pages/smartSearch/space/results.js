@@ -64,7 +64,7 @@ export default function SpaceSmartSearch() {
         }
     }, [selectedSpaceIndex, spaces]);
     return (
-        <div className="h-full md:bg-gray-100 flex justify-center items-center">
+        <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
             <Head>
                 <title>Espacios</title>
             </Head>
@@ -95,7 +95,7 @@ export default function SpaceSmartSearch() {
                     </section>
 
                     {/* Space data */}
-                    <data className='basis-1/2 flex flex-row pt-3'>
+                    <data className='basis-1/2 flex flex-col sm:flex-row pt-3'>
 
                         {/* User and price selector */}
                         <section className='basis-1/3 flex flex-col'>

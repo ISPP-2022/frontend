@@ -18,7 +18,6 @@ export function getServerSideProps(ctx) {
   const cookies = ctx.req.cookies;
   const user = jwt.decode(cookies.authToken);
 
-  console.log(user)
   if (parseInt(ctx.query?.userId) === user.userId) {
     return {
       props: {

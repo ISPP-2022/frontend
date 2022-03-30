@@ -33,6 +33,10 @@ module.exports = {
       },
       gridTemplateRows: {
         '9': 'repeat(9, minmax(0, 1fr))'
+      },
+      height: {
+        'screenC': 'max(600px,calc(100vh - 64px))',
+        'screenC2': 'calc(100vh - 4rem)',
       }
     }
   },

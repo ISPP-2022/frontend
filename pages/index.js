@@ -38,39 +38,13 @@ export default function Home() {
     }
   };
 
-  const calculateSurface = (dimensions) => {
-    const [width, height] = dimensions.split('x');
-    return width * height;
-  };
-
-  const calculateUnitPrice = (priceHour, priceDay, priceMonth) => {
-    if (priceHour) {
-      return { amount: priceHour, unit: "€/h" };
-    } else if (priceDay) {
-      return { amount: priceDay, unit: "€/d" };
-    } else if (priceMonth) {
-      return { amount: priceMonth, unit: "€/m" };
-    } else {
-      return { amount: "-", unit: "" };
-    }
-  };
-
-  const calculateTags = (inputTag) => {
-    if (inputTag.length > 0 && inputTag.length < 3) {
-      return inputTag;
-    } else if (inputTag.length > 2) {
-      return inputTag.slice(0, 2);
-    } else {
-      return ["empty"];
-    }
-  };
 
   const handleSmart = () => {
     router.push("/smartSearch");
   };
 
   return (
-    <div className="h-full">
+    <div className="h-screenC">
       <Head>
         <title>StackingUp</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
@@ -116,13 +90,7 @@ export default function Home() {
                   <Link href={`/space/${item.id}`} passHref className="w-full h-full">
                     <a className="w-full h-full">
                       <Card
-                        title={item.name}
-                        surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
-                        rating={item.rating ? item.rating : undefined}
-                        price={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).amount}
-                        unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).unit}
-                        tags={item.tags ? calculateTags(item.tags) : undefined}
-                        images={item.images ? item.images : undefined}
+                        space={item}
                       />
                     </a>
                   </Link>
@@ -141,13 +109,7 @@ export default function Home() {
                 <Link href={`/space/${item.id}`} passHref className="w-full h-full">
                   <a className="w-full h-full flex justify-center">
                     <CardMobile
-                      title={item.name}
-                      surface={item.dimensions ? calculateSurface(item.dimensions) : undefined}
-                      rating={item.rating ? item.rating : undefined}
-                      price={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).amount}
-                      unitPrice={calculateUnitPrice(item.priceHour, item.priceDay, item.priceMonth).unit}
-                      tags={item.tags ? calculateTags(item.tags) : undefined}
-                      images={item.images ? item.images : undefined}
+                      space={item}
                     />
                   </a>
                 </Link>

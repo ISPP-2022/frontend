@@ -38,7 +38,7 @@ const SpaceSearchCarousel = ({ slides }) => {
     }, [embla, onSelect]);
 
     return (
-        <div className="flex flex-row justify-start w-full h-full">
+        <div className="flex flex-row justify-start w-full h-full min-h-[200px]">
             <div className="basis-full lg:basis-2/3 relative overflow-hidden" ref={mainViewportRef}>
                 <div className="flex select-none h-full">
                     {slides?.length > 0 ? slides.map((image, index) => (

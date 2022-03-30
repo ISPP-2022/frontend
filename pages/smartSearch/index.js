@@ -41,7 +41,7 @@ export async function getServerSideProps({ req, res, query }) {
 function Selection(props) {
   const router = useRouter();
   return (
-    <div className="h-full md:bg-gray-100 flex justify-center items-center">
+    <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
       <Head>
         <title>SmartSearh</title>
       </Head>

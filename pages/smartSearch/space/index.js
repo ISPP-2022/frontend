@@ -61,7 +61,10 @@ function Space({ datadimensions, dataTypes, user, items }) {
         var data1 = {};
         data1.type = event.target.type.value;
         data1.dimensions = event.target.dimensions.value;
-        data.some(element => element.type === data1.type && element.dimensions === data1.dimensions) ? alert("Ya has introducido ese objeto") : setData([...data, data1]);
+        data1.amount = parseInt(event.target.amount.value);
+        data.some(element => element.type === data1.type && element.dimensions === data1.dimensions)
+            ? alert("Ya has introducido ese objeto") :
+            setData([...data, data1]);
     }
 
     const [buttonPlusPressed, setButtonPlusPressed] = useState(false)
@@ -104,7 +107,7 @@ function Space({ datadimensions, dataTypes, user, items }) {
     }
 
     return (
-        <div className="h-full md:bg-gray-100 flex justify-center items-center">
+        <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
             <Head>
                 <title>Buscador de espacios</title>
             </Head>
@@ -152,7 +155,7 @@ function Space({ datadimensions, dataTypes, user, items }) {
                                 {data.map((obj, index) => {
                                     return (
                                         <div key={index} id={index + '-tr'} className="h-16 flex border-b odd:bg-[#d8ecf4] even:bg-white  odd:dark:bg-gray-800 even:dark:bg-gray-700 dark:border-gray-600">
-                                            <div className="py-4 basis-1/5 px-6 text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center">
+                                            <div className="py-1 xs:py-4 basis-1/12 xs:basis-1/5 px-1 xs:px-6 text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center">
                                                 <button onClick={() => {
                                                     let arr = [...data];
                                                     arr.splice(index, 1);
@@ -161,11 +164,14 @@ function Space({ datadimensions, dataTypes, user, items }) {
                                                     <img src="/images/cross.svg" width="14px" ></img>
                                                 </button>
                                             </div>
-                                            <div className="py-4 flex basis-2/5 xs:text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
+                                            <div className="py-4 flex items-center basis-5/12 xs:basis-2/5 text-sm xs:text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
                                                 {enumTranslator.types[obj.type]}
                                             </div>
-                                            <div className="py-4 flex basis-2/5 xs:text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
+                                            <div className="py-4 flex items-center basis-4/12 xs:basis-1/5 text-sm xs:text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
                                                 {enumTranslator.dimensions[obj.dimensions]}
+                                            </div>
+                                            <div className="py-4 flex items-center basis-2/12 xs:basis-1/5 text-sm xs:text-xl font-medium text-gray-900 whitespace-nowrap justify-center">
+                                                {obj.amount}
                                             </div>
                                         </div>
                                     )
@@ -189,7 +195,7 @@ function Space({ datadimensions, dataTypes, user, items }) {
                                                     <select id="dimensions" className="form-select appearance-none border border-solid border-[#4aa7c0] mx-2 rounded transition ease-in-out focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
                                                         {datadimensions.map(obj => { return (<option key={obj} value={obj} >{enumTranslator.dimensions[obj] || obj}</option>) })}
                                                     </select>
-
+                                                    <input id="amount" step="1" className="mx-2 border border-solid border-[#4aa7c0] rounded" type={"number"} defaultValue={1} min={1} />
                                                 </div>
                                                 <div className="flex flex-row items-center justify-center">
                                                     <button type="submit" className="text-white bg-[#4aa7c0] focus:ring-4 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 ">Add</button>
@@ -201,9 +207,7 @@ function Space({ datadimensions, dataTypes, user, items }) {
                             </div>
                         </section>
                     </div>
-
                     <br></br>
-
                     <footer className="flex flex-row justify-center items-center">
                         <button onClick={() => handleStart()} disabled={data.length === 0} className={`${data.length === 0 ? 'bg-gray-300 text-gray-400' : 'bg-blue-bondi hover:bg-blue-bondi-dark'} text-white font-bold py-2 px-4 rounded`}>
                             Start

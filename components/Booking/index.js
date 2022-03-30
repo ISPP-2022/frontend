@@ -9,10 +9,16 @@ import { useEffect, useState } from "react";
 
 export default function Booking(props) {
 
-  const dimensions = props?.space?.dimensions?.split('x').reduce((acc, curr) => acc * curr, 1)
+  const dimensions = props?.space?.dimensions?.split('x').reduce((acc, curr) => acc * curr, 1).toFixed(2);
 
   const [monthNumber, setMonthNumber] = useState(1)
 
+  const [cost, setCost] = useState(0)
+
+  let startHourS = new Date(props.space.startHour)?.toLocaleTimeString().split(":");
+  startHourS.pop();
+  let endHourS = new Date(props.space.endHour)?.toLocaleTimeString().split(":");
+  endHourS.pop();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -60,12 +66,16 @@ export default function Booking(props) {
 
   //Devuelve el tipo de coste más barato según  
   const rentalCost = (initialDate, finalDate, type) => {
-    console.log(initialDate, finalDate, type)
     const costs = {
       HOUR: (differenceInHours(finalDate, initialDate, { roundingMethod: "ceil" }) || 1) * props.space.priceHour,
       DAY: (differenceInCalendarDays(finalDate, initialDate) || 1) * props.space.priceDay,
       MONTH: (differenceInCalendarMonths(finalDate, initialDate) || 1) * props.space.priceMonth
     };
+    if (props.space.shared) {
+      setCost(costs[type] * (metros / dimensions))
+      return costs[type] * (metros / dimensions);
+    }
+    setCost(costs[type])
     return costs[type];
   };
 
@@ -73,7 +83,6 @@ export default function Booking(props) {
     if (props.user) {
       const initialTime = props.timeRange.initialTime.split(":");
       const finalTime = props.timeRange.finalTime.split(":");
-      console.log(initialTime, finalTime)
       let initialDate = setMinutes(setHours(props.dateRange[0].startDate, ~~initialTime[0]), ~~initialTime[1]);
       let finalDate = setMinutes(setHours(props.dateRange[0].endDate, finalTime[0]), ~~finalTime[1]);
       if (props.type !== 'HOUR') {
@@ -86,7 +95,6 @@ export default function Booking(props) {
           (await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
             initialDate: initialDate,
             finalDate: finalDate,
-            cost: cost,
             type: props.type,
             meters: metros,
             spaceId: props.space.id,
@@ -131,9 +139,10 @@ export default function Booking(props) {
   };
 
   useEffect(() => {
+
     props.setTimeRange({
-      initialTime: '00:00',
-      finalTime: '00:00'
+      initialTime: startHourS.join(":"),
+      finalTime: endHourS.join(":")
     })
     props.setDateRange([{
       startDate: tomorrow,
@@ -143,18 +152,17 @@ export default function Booking(props) {
   }, [props.type])
 
   useEffect(() => {
-    console.log(props.dateRange[0].startDate)
-
-    console.log(getMonth(props.dateRange[0].startDate) + parseInt(monthNumber))
-    console.log(monthNumber)
-
-    props.setDateRange([{
-      startDate: props.dateRange[0].startDate,
-      endDate: setMonth(props.dateRange[0].startDate, getMonth(props.dateRange[0].startDate) + parseInt(monthNumber)),
-      key: 'selection'
-    }])
-
+    if (props.type === 'MONTH')
+      props.setDateRange([{
+        startDate: props.dateRange[0].startDate,
+        endDate: setMonth(props.dateRange[0].startDate, getMonth(props.dateRange[0].startDate) + parseInt(monthNumber)),
+        key: 'selection'
+      }])
   }, [monthNumber])
+
+  useEffect(() => {
+    rentalCost(props.dateRange[0].startDate, props.dateRange[0].endDate, props.type)
+  }, [props.dateRange[0].startDate, props.dateRange[0].endDate, props.type])
 
   const bookingBody = {
     "HOUR": (
@@ -174,7 +182,7 @@ export default function Booking(props) {
             }} />
         </div>
         <hr className=" bg-webcolor-50 w-[80%] m-auto" />
-        <TimeRangeInput timeRange={props.timeRange} setTimeRange={props.setTimeRange} />
+        <TimeRangeInput timeRange={props.timeRange} setTimeRange={props.setTimeRange} min={startHourS.join(":")} max={endHourS.join(":")} />
         {props.space.shared ?
           <div className="flex flex-col items-center"><hr className=" bg-webcolor-50 w-[80%] my-4" />
             <input type="number" placeholder="metros" className="rounded-full" value={metros} max={dimensions} min={0} onChange={(e) => setMetros(e.target.value)} /></div> : null
@@ -257,6 +265,12 @@ export default function Booking(props) {
           type="button" className="fill-webcolor-50 mt-4">
           Reservar
         </Button>
+      </div>
+      <div>
+        <hr className=" bg-webcolor-50 w-[95%] m-auto mb-6" />
+        <h1 className="text-center text-webcolor-50 text-5xl">
+          Total: <b>{cost.toFixed(2)}€</b>
+        </h1>
       </div>
     </form>
   );
