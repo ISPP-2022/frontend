@@ -17,7 +17,7 @@ export default function Home() {
   const [selector, setSelector] = useState("recent");
 
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`)
+    axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`+`${selector == 'recent' ? '?orderBy=publishDate-desc':''}`)
       .then(async (response) => {
         for (let i = 0; i < response.data.length; i++) {
           const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
@@ -86,12 +86,13 @@ export default function Home() {
           </section>
           <section className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
           
-          <div className="grid grid-cols-1 object-cover min-w-[200px] items-center">
-          <div className="flex justify-center transition duration-150 text-blue-bondi">
+          <div className="grid grid-cols-1 object-cover min-w-[200px] items-center relative top-2">
+          <div className="flex justify-center transition duration-150 text-blue-bondi text-center">
+            
             {
-            selector == "recent" ?
+            selector === "recent" ?
             <Title>Espacios recientes</Title>
-            : selector == "nearyou" ?
+            : selector === "nearyou" ?
             <Title>Cerca de ti</Title>
             : null
             }
@@ -121,7 +122,7 @@ export default function Home() {
             </menu>
           </form>
           </div>
-            {data && data.length > 0 ?
+            {data && data.length > 0 && selector === "recent" ?
               data.map((item, index) => (
                 <article key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
                   <Link href={`/space/${item.id}`} passHref className="w-full h-full">
@@ -137,11 +138,12 @@ export default function Home() {
         </div>
         {/* Mobile */}
         <div className="block md:hidden h-full">
-          <div className="flex justify-center transition duration-150 text-blue-bondi">
+          <div className="grid grid-cols-1 object-cover min-w-[200px] items-center relative top-2">
+            <div className="flex justify-center transition duration-150 text-blue-bondi">
               {
-              selector == "recent" ?
+              selector === "recent" ?
               <Subtitle>Espacios recientes</Subtitle>
-              : selector == "nearyou" ?
+              : selector === "nearyou" ?
               <Subtitle>Cerca de ti</Subtitle>
               : null
               }
@@ -170,7 +172,8 @@ export default function Home() {
                 </fieldset>
               </menu>
             </form>
-          {data && data.length > 0 ?
+          </div>
+          {data && data.length > 0 && selector === "recent" ?
             data.map((item, index) => (
               <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
                 <Link href={`/space/${item.id}`} passHref className="w-full h-full">
