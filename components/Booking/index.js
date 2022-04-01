@@ -4,6 +4,7 @@ import { Button } from "../Core/Button";
 import axios from "axios";
 import { addDays, differenceInCalendarMonths, differenceInCalendarDays, differenceInHours, setMinutes, setHours, setMonth, getMonth, isSameDay, isAfter, isBefore } from "date-fns";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 
 
@@ -23,7 +24,7 @@ export default function Booking(props) {
   tomorrow.setDate(tomorrow.getDate() + 1);
 
   const [metros, setMetros] = useState(dimensions);
-  const rentalValidation = async (initialDate, finalDate) => {
+  const rentalValidation = async (initialDate, finalDate, renterId) => {
 
     if (!initialDate || !finalDate) {
       alert("Por favor, seleccione un rango de fechas");
@@ -68,8 +69,8 @@ export default function Booking(props) {
   const rentalCost = (initialDate, finalDate, type) => {
     const costs = {
       HOUR: (differenceInHours(finalDate, initialDate, { roundingMethod: "ceil" }) || 1) * props.space.priceHour,
-      DAY: (differenceInCalendarDays(finalDate, initialDate) || 1) * props.space.priceDay,
-      MONTH: (differenceInCalendarMonths(finalDate, initialDate) || 1) * props.space.priceMonth
+      DAY: (differenceInCalendarDays(finalDate, initialDate) + 1) * props.space.priceDay,
+      MONTH: (differenceInCalendarMonths(finalDate, initialDate) + 1) * props.space.priceMonth
     };
     if (props.space.shared) {
       setCost(costs[type] * (metros / dimensions))
@@ -78,6 +79,30 @@ export default function Booking(props) {
     setCost(costs[type])
     return costs[type];
   };
+
+
+  function validateBeforeConfirm(initialDate, finalDate, cost) {
+    
+    // AXIOS PARA COMPROBAR RENTAL
+
+    router.push({
+      pathname: "/payment/confirmation",
+      query: {
+        initialDate: initialDate.toLocaleString(),
+        finalDate: finalDate.toLocaleString(),
+        type: props.type,
+        meters: metros,
+        spaceId: props.space.id,
+        renterId: props.user.userId,
+        city: props.city,
+        province: props.province,
+        cost: cost,
+        name: props.space.name
+      }
+    }, "/payment/confirmation")
+  }
+
+  const router = useRouter();
 
   const rent = async () => {
     if (props.user) {
@@ -88,10 +113,12 @@ export default function Booking(props) {
       if (props.type !== 'HOUR') {
         finalDate.setHours(23, 59, 59, 999);
       }
-      if (await rentalValidation(initialDate, finalDate)) {
-        const cost = rentalCost(initialDate, finalDate, props.type)
-
-        confirm(`¿Está seguro que desea reservar el espacio ${props.space.name} por ${cost}€?`) &&
+      if (await rentalValidation(initialDate, finalDate, props.user.userId)) {
+        const cost2 = rentalCost(initialDate, finalDate, props.type)
+        
+        confirm(`¿Está seguro que desea reservar el espacio ${props.space.name} por ${cost2}€?`) && 
+          validateBeforeConfirm(initialDate, finalDate, cost2)
+          /*
           (await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
             initialDate: initialDate,
             finalDate: finalDate,
@@ -99,6 +126,8 @@ export default function Booking(props) {
             meters: metros,
             spaceId: props.space.id,
             renterId: props.user.userId,
+            cost: cost,
+            renterConfirmation: false
           }, {
             withCredentials: true,
           }).then(() => {
@@ -132,6 +161,7 @@ export default function Booking(props) {
             else
               alert("Error al realizar la reserva");
           }));
+          */
       }
     } else {
       alert("Por favor, inicie sesión para realizar una reserva");

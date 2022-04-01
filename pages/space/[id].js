@@ -148,7 +148,7 @@ export default function Space(props) {
             </main>
             <menu className="">
                 <Booking user={props.user} type={type} setType={setType} space={props.space} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange}
-                    disabledDates={disabledDates} setDisabledDates={setDisabledDates} formStyle={"lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg min-w-[385px]"} />
+                    disabledDates={disabledDates} setDisabledDates={setDisabledDates} city={props.space?.city} province={props.space?.province} rentalUsers={props.rentalUsers} formStyle={"lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg min-w-[385px]"} />
                 {showModal && (
                     <div className="fixed inset-0 z-50">
                         <div onClick={() => setShowModal(false)} className="absolute inset-0 bg-gray-900 opacity-50" />
@@ -158,7 +158,7 @@ export default function Space(props) {
                             </svg>
                         </header>
                         <Booking formStyle={"fixed block top-1/2 left-1/2 w-full h-full pt-10 md:pt-0 md:w-[30rem] md:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 md:border-webcolor-50 md:border-2 md:rounded-md  justify-center"} user={props.user} type={type} setType={setType} space={props.space} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange}
-                            disabledDates={disabledDates} setDisabledDates={setDisabledDates} />
+                            disabledDates={disabledDates} setDisabledDates={setDisabledDates} city={props.space?.city} province={props.space?.province} rentalUsers={props.rentalUsers} />
                     </div>
                 )}
             </menu>
@@ -189,6 +189,7 @@ export async function getServerSideProps({ params }) {
     }
 
     let rentalDates = [];
+    let rentalUsers = [];
     await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/rentals`).then(res => {
         rentalDates = res.data.filter(rental => new Date(rental.finalDate) > new Date() &&
             !isSameDay(new Date(rental.finalDate), new Date(rental.initialDate)))
@@ -198,6 +199,7 @@ export async function getServerSideProps({ params }) {
                     finalDate: new Date(rental.finalDate).getTime()
                 };
             })
+        rentalUsers = res.data.map(rental => {return rental.renterId});
     }
     ).catch(() => { });
     return {
@@ -205,7 +207,8 @@ export async function getServerSideProps({ params }) {
             space: space,
             owner: owner,
             rating: ratings ? ratings.reduce((acc, val, _idx, arr) => { return acc + val.rating / arr.length }, 0) : 0,
-            rentalsDates: rentalDates
+            rentalsDates: rentalDates,
+            rentalUsers: rentalUsers
         }
     };
 }

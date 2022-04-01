@@ -7,12 +7,21 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from "next/link";
+import { withRouter } from "next/router";
 
-export default function Home() {
+function Home(props) {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
   const [data, setData] = useState([]);
+
+
+  useEffect(() => {
+    if (props.router.query.alertMessage) {
+      alert(props.router.query.alertMessage);
+    }
+  }, [])
+  
 
   useEffect(() => {
     axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`)
@@ -121,3 +130,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default withRouter(Home)
