@@ -164,7 +164,7 @@ export const Table = ({
       );
       // Si está en móvil solo se muestra la primera columna
       if (index === 0) {
-        layout += " hidden sm:flex";
+        layout += " hidden md:flex";
       }
     });
     return (
@@ -203,14 +203,14 @@ export const Table = ({
       );
       // Si está en móvil solo se muestra la primera columna
       if (index === 0) {
-        layout += " hidden sm:flex";
+        layout += " hidden md:flex";
       }
     });
     var inputLayout =
       "border-gray-500 focus:ring-transparent focus:ring-offset-0 checked:bg-blue-bondi-dark ";
     var inputDivLayout = layout
       .replace("w-44", "w-8")
-      .replace(" hidden sm:flex", "");
+      .replace(" hidden md:flex", "");
     return (
       <div className="flex ml-1">
         {placeRowData(inputDivLayout, inputLayout, rowId, row)}
