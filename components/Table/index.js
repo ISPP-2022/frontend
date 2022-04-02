@@ -4,6 +4,7 @@ import { DialogText } from "../Core/Dialog";
 /**
  * Crea una tabla. Pensado para la vista de administración en la que se van a mostrar, buscar y editar datos.
  *
+ * @param {string} tableId Necesario si se van a poner varias tablas en la misma vista.
  * @param {string} label Nombre de la tabla.
  * @param {list} data Datos que se van a mostrar en la tabla.
  * @param {string} idAttr El nombre del atributo identificador.
@@ -14,6 +15,7 @@ import { DialogText } from "../Core/Dialog";
  * @param {list} attrSummary Lista con los atributos que resumen el objeto, se mostrarán como aviso antes de borrar.
  */
 export const Table = ({
+  tableId,
   label,
   data,
   idAttr,
@@ -241,7 +243,7 @@ export const Table = ({
           }}
         >
           <input
-            id={"check-" + rowId}
+            id={tableId + "-check-" + rowId}
             className={inputLayout}
             type="checkbox"
             style={{ outline: "none" }}
@@ -264,7 +266,7 @@ export const Table = ({
    * @param {number} rowId
    */
   function checkRow(rowId) {
-    const baseId = "check-";
+    const baseId = tableId + "-check-";
     var id = baseId + rowId;
     if (typeof window !== "undefined") {
       var checkbox = document.getElementById(id);
@@ -301,8 +303,8 @@ export const Table = ({
   }
 
   return (
-    <div className="ml-5 bg-white border-2 border-[#4DD0E1] rounded-lg mb-3 grid justify-items-center  md:justify-items-end shadow-xl p-2">
-      <div className="w-full text-center mb-2">
+    <div className="ml-5 bg-white border-2 border-[#4DD0E1] rounded-lg mb-3 grid justify-items-center content-start md:justify-items-end shadow-xl p-2">
+      <div className="w-full h-fit text-center mb-2">
         <h1 className="text-3xl text-[#00838F]">{label}</h1>
       </div>
       <div className={className}>
