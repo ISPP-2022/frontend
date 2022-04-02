@@ -12,7 +12,7 @@ import { Title } from "../Text";
  * @param  {} onClickClose - The function to be executed when the close button is clicked.
  * @param  {} children - The content of the dialog.
  */
-export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCancel = "Cancelar", width = "medium", height = "small", onClickAccept, onClickCancel, onClickClose, children }) => {
+export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCancel = "Cancelar", width = "medium", height = "small", onClickAccept, onClickCancel, onClickClose, visibleAcceptButton=true, visibleCancelButton=true, children }) => {
     const dialogSize = {
         "small": "1/4",
         "medium": "1/2",
@@ -42,8 +42,8 @@ export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCance
                         </div>
                         {/* Modal footer */}
                         <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
-                            <Button color="primary" onClick={onClickAccept}>{textAccept}</Button>
-                            <Button color="secondary" onClick={onClickCancel}>{textCancel}</Button>
+                            {visibleAcceptButton && <Button color="primary" onClick={onClickAccept}>{textAccept}</Button>}
+                            {visibleCancelButton && <Button color="secondary" onClick={onClickCancel}>{textCancel}</Button>}
                         </div>
                     </div>
                 </div>
