@@ -15,6 +15,7 @@ function confirmation(props) {
   const [city, setCity] = useState(props.router.query.city);
   const [province, setProvince] = useState(props.router.query.province);
   const [name, setName] = useState(props.router.query.name);  
+  const [token, setToken] = useState(props.router.query.token);
 
   return (
     <>
@@ -31,6 +32,7 @@ function confirmation(props) {
       city={city}
       province={province}
       name={name}
+      token={token}
     /> ) : <></>}
 
     </>

@@ -23,6 +23,7 @@
     "mapbox-gl": "^1.13.2",
     "next": "12.0.9",
     "next-pwa": "^5.4.4",
+    "nice-invoice": "^1.1.8",
     "react": "17.0.2",
     "react-date-range": "^1.4.0",
     "react-dom": "17.0.2",

@@ -40,8 +40,9 @@ function Confirmation(props) {
   async function handleRent() {
     let dateRange = parseDates(props.initialDate, props.finalDate);
 
-    (await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.spaceId}/rentals`, {
-      initialDate: dateRange[0],
+    (await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/rentals/confirmation`, {
+      "rentalToken": props.token
+      /*initialDate: dateRange[0],
       finalDate: dateRange[1],
       cost: total,
       type: props.type,
@@ -49,13 +50,15 @@ function Confirmation(props) {
       renterConfirmation: false,
       spaceId: props.spaceId,
       renterId: props.renterId,
+      */
     }, {
       withCredentials: true,
-    }).then(() => {
+    }).then(res => {
+      const rentId = res.data.rentalId;
       router.push({
-        pathname: "/",
+        pathname: "invoice/[id]",   
         query: {
-          alertMessage: "Reserva realizada con éxito."
+          id: rentId
         }
       }, "/" );
     }).catch(err => {      
@@ -115,14 +118,18 @@ function Confirmation(props) {
           <PayPalButton
             options={{
               currency: "EUR",
-              clientId: "sb"
+              clientId: "sb"  //CAMBIAR POR VARIABLE DE ENTORNO
             }}
             amount={total.toString()}
             onSuccess={(details, data) => {
+              console.log(details, "hola");
+              console.log(data);
+
               handleRent();
               return   
             }}
             onError={console.log("Error in the transaction.")}
+            onCancel={console.log("Transaction cancelled")}
           />
           </div>
         </div>

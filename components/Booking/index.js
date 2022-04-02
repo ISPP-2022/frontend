@@ -81,25 +81,57 @@ export default function Booking(props) {
   };
 
 
-  function validateBeforeConfirm(initialDate, finalDate, cost) {
+  async function validateBeforeConfirm(initialDate, finalDate, cost) {
     
-    // AXIOS PARA COMPROBAR RENTAL
+    const rent = {
+      initialDate: initialDate,
+      finalDate: finalDate,
+      type: props.type,
+      meters: metros,
+      spaceId: props.space.id,
+      renterId: props.user.userId,
+      city: props.city,
+      province: props.province,
+      cost: cost,
+      name: props.space.name,
+      renterConfirmation: false
+    }
 
-    router.push({
-      pathname: "/payment/confirmation",
-      query: {
-        initialDate: initialDate.toLocaleString(),
-        finalDate: finalDate.toLocaleString(),
-        type: props.type,
-        meters: metros,
-        spaceId: props.space.id,
-        renterId: props.user.userId,
-        city: props.city,
-        province: props.province,
-        cost: cost,
-        name: props.space.name
-      }
-    }, "/payment/confirmation")
+    // Validación del alquiler
+    const result = await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, 
+      rent,
+      {
+        withCredentials: true,
+      })
+    .then(res => {
+      const token = res.data;
+      router.push({
+        pathname: "/payment/confirmation",
+        query: {
+          initialDate: initialDate.toLocaleString(),
+          finalDate: finalDate.toLocaleString(),
+          type: props.type,
+          meters: metros,
+          spaceId: props.space.id,
+          renterId: props.user.userId,
+          city: props.city,
+          province: props.province,
+          cost: cost,
+          name: props.space.name,
+          token: token,
+          renterConfirmation: false
+        }
+      }, "/payment/confirmation")
+    }).catch(err => {
+      if (err.response.status === 400)
+        if (err.response.data === 'Bad Request: Missing required attributes')
+          alert('Error: Ingrese todos los atributos requeridos');
+        else {
+          alert(err.response.data);
+        }
+      else
+        alert("Error al realizar la reserva");
+   });
   }
 
   const router = useRouter();

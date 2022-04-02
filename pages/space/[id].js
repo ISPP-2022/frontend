@@ -166,7 +166,7 @@ export default function Space(props) {
     )
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({params}) {
     let space, owner, ratings;
     try {
         space = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}`).then(async res => {
