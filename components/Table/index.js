@@ -4,6 +4,7 @@ import { DialogText } from "../Core/Dialog";
 /**
  * Crea una tabla. Pensado para la vista de administración en la que se van a mostrar, buscar y editar datos.
  *
+ * @param {string} label Nombre de la tabla.
  * @param {list} data Datos que se van a mostrar en la tabla.
  * @param {string} idAttr El nombre del atributo identificador.
  * @param {object} labelAttr Objeto con label como clave y nombre del atributo. Sirve para especificar si se muestra o no.
@@ -13,6 +14,7 @@ import { DialogText } from "../Core/Dialog";
  * @param {list} attrSummary Lista con los atributos que resumen el objeto, se mostrarán como aviso antes de borrar.
  */
 export const Table = ({
+  label,
   data,
   idAttr,
   labelAttr,
@@ -299,33 +301,38 @@ export const Table = ({
   }
 
   return (
-    <div className={className}>
-      {header(labelAttr, createLink)}
-      {data.map((item) => {
-        return row(item[idAttr], item, labelAttr, editLink, idAttr);
-      })}
-      {showDialog && (
-        <DialogText
-          title="Confirmar borrado"
-          onClickClose={() => setShowDialog(false)}
-          onClickCancel={() => setShowDialog(false)}
-          onClickAccept={() => deleteElements()}
-          textAccept="Borrar"
-        >
-          {getSummary()}
-        </DialogText>
-      )}
-      {showNoItemsDialog && (
-        <DialogText
-          title="No has seleccionado los datos"
-          onClickClose={() => setShowNoItemsDialog(false)}
-          onClickCancel={() => setShowNoItemsDialog(false)}
-          onClickAccept={() => setShowNoItemsDialog(false)}
-          textAccept="Aceptar"
-        >
-          Para poder borrar filas debes de seleccionarlas.
-        </DialogText>
-      )}
+    <div className="ml-5 bg-white border-2 border-[#4DD0E1] rounded-lg mb-3 grid justify-items-center  md:justify-items-end shadow-xl p-2">
+      <div className="w-full text-center mb-2">
+        <h1 className="text-3xl text-[#00838F]">{label}</h1>
+      </div>
+      <div className={className}>
+        {header(labelAttr, createLink)}
+        {data.map((item) => {
+          return row(item[idAttr], item, labelAttr, editLink, idAttr);
+        })}
+        {showDialog && (
+          <DialogText
+            title="Confirmar borrado"
+            onClickClose={() => setShowDialog(false)}
+            onClickCancel={() => setShowDialog(false)}
+            onClickAccept={() => deleteElements()}
+            textAccept="Borrar"
+          >
+            {getSummary()}
+          </DialogText>
+        )}
+        {showNoItemsDialog && (
+          <DialogText
+            title="No has seleccionado los datos"
+            onClickClose={() => setShowNoItemsDialog(false)}
+            onClickCancel={() => setShowNoItemsDialog(false)}
+            onClickAccept={() => setShowNoItemsDialog(false)}
+            textAccept="Aceptar"
+          >
+            Para poder borrar filas debes de seleccionarlas.
+          </DialogText>
+        )}
+      </div>
     </div>
   );
 };
