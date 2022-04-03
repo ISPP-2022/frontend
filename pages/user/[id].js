@@ -24,7 +24,7 @@ export async function getServerSideProps(context) {
       return res.data;
     }).catch(() => null);
 
-  const spaces = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces?userId=${id}`)
+  const spaces = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/spaces`)
     .then(async res => {
       return await Promise.all(res.data.map(async space => {
         let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.id}/images`).then(imageres => imageres.data).catch(() => { });
@@ -33,16 +33,32 @@ export async function getServerSideProps(context) {
       }));
     }).catch(() => []);
 
-  const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/rentals?userId=${id}`)
+  const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/rentals?limit=3`)
     .then(async res => {
       return await Promise.all(res.data.reverse().map(async rental => {
         return await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${rental.spaceId}`)
-          .then(res => res.data);
+          .then(async space => {
+            let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.data.id}/images`).then(imageres => imageres.data).catch(() => { });
+            if (images) space.data.images = images;
+            return space.data;
+          });
       }))
     }).catch((err) => {
-      console.log(err.response.data);
+      console.log(err);
       return [];
     });
+
+
+  // const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/rentals?userId=${id}`)
+  //   .then(async res => {
+  //     return await Promise.all(res.data.reverse().map(async rental => {
+  //       return await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${rental.spaceId}`)
+  //         .then(res => res.data);
+  //     }))
+  //   }).catch((err) => {
+  //     console.log(err.response.data);
+  //     return [];
+  //   });
 
   const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/ratings?filter=received`).then(res => res.data.map(e => e.rating)).catch(() => []);
 
@@ -164,27 +180,31 @@ export default function User({ user, spaces, ratings, rentals, userSession }) {
         </div>
 
 
-        <hr className="my-4" />
 
-        {/* Lista de espacios que el usuario ha alquilado recientemente */}
-        <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
-          Alquileres recientes
-        </h2>
 
-        <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
-          {rentals && rentals.length > 0 ?
-            rentals.map((space, index) => (
-              <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
-                <Link href={`/space/${space.id}`} passHref className="w-full h-full">
-                  <a className="w-full h-full flex justify-center">
-                    <CardMobile
-                      space={space}
-                    />
-                  </a>
-                </Link>
-              </div>
-            )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
-        </div>
+        {(userSession?.userId === user?.id || userSession?.role === 'ADMIN') &&
+          <>
+            <hr className="my-4" />
+
+            {/* Lista de espacios que el usuario ha alquilado recientemente */}
+            <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
+              Alquileres recientes
+            </h2>
+            <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
+              {rentals && rentals.length > 0 ?
+                rentals.map((space, index) => (
+                  <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
+                    <Link href={`/space/${space.id}`} passHref className="w-full h-full">
+                      <a className="w-full h-full flex justify-center">
+                        <CardMobile
+                          space={space}
+                        />
+                      </a>
+                    </Link>
+                  </div>
+                )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
+            </div>
+          </>}
 
       </main >
     </div >
