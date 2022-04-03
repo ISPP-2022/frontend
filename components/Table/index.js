@@ -61,7 +61,7 @@ export const Table = ({
     selectedItems.forEach(async (value) => {
       var parsedLink = deleteLink.replace("${id}", value);
       try {
-        await axios.delete(parsedLink);
+        await axios.delete(parsedLink, { withCredentials: true });
       } catch (error) {
         console.error();
       }
@@ -202,7 +202,7 @@ export const Table = ({
       var attrName = value[1];
       row.push(
         <div className={layout}>
-          <p>{element[attrName]}</p>
+          <p>{element[attrName].length >15 ? element[attrName].substring(0,15) + "..." : element[attrName]}</p>
         </div>
       );
       // Si está en móvil solo se muestra la primera columna
