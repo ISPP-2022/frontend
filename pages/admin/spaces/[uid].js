@@ -109,7 +109,9 @@ function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
           data={items}
           idAttr="id"
           labelAttr={itemLabelAttr}
-          createLink="/admin/items/new"
+          editLink="user/${id}"
+          createLink="user/new"
+          deleteLink={baseLink + "/api/v1/users/${id}"}
           attrSummary={itemSummary}
         />
         <Table
@@ -118,8 +120,9 @@ function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
           data={ratings}
           idAttr="id"
           labelAttr={ratingsLabelAttr}
-          createLink="/admin/ratings/new"
-          deleteLink={baseLink + "/api/v1/ratings/${id}"}
+          editLink="user/${id}"
+          createLink="user/new"
+          deleteLink={baseLink + "/api/v1/users/${id}"}
           attrSummary={ratingsSummary}
         />
         <Table
@@ -128,9 +131,9 @@ function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
           data={spaces}
           idAttr="id"
           labelAttr={spacesLabelAttr}
-          editLink="/admin/spaces/${id}"
-          createLink="/admin/spaces/new"
-          deleteLink={baseLink + "/api/v1/spaces/${id}"}
+          editLink="user/${id}"
+          createLink="user/new"
+          deleteLink={baseLink + "/api/v1/users/${id}"}
           attrSummary={spacesSummary}
         />
         <Table
@@ -139,6 +142,9 @@ function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
           data={rentals}
           idAttr="id"
           labelAttr={rentalsLabelAttr}
+          editLink="user/${id}"
+          createLink="user/new"
+          deleteLink={baseLink + "/api/v1/users/${id}"}
           attrSummary={rentalsSummary}
         />
         <Table
@@ -147,6 +153,9 @@ function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
           data={avatar}
           idAttr="id"
           labelAttr={avatarLabelAttr}
+          editLink="user/${id}"
+          createLink="user/new"
+          deleteLink={baseLink + "/api/v1/users/${id}"}
           attrSummary={avatarSummary}
         />
       </div>
