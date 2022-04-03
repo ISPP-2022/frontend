@@ -59,11 +59,11 @@ export const FieldDateBox = ({ label, value, placeholder = "", name, onChange })
  * @param  {string} name - Name of the field.
  * @param  {function} onChange - Callback function to be called when field is changed.
  */
-export const FieldCheckBox = ({ label, name, onChange }) => {
+export const FieldCheckBox = ({ label, name, onChange, checked=false}) => {
     return (
         <div className="w-full mx-2 my-2 ">
             <label className="font-medium">{label}
-                <input type="checkbox" name={name} onChange={onChange} className="appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-bondi checked:border-blue-bondi focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" ></input>
+                <input type="checkbox" name={name} onChange={onChange} checked={checked} className="appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-bondi checked:border-blue-bondi focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer" ></input>
             </label>
         </div>
 
@@ -77,11 +77,11 @@ export const FieldCheckBox = ({ label, name, onChange }) => {
  * @param  {string} name - Name of the field.
  * @param  {string} label - Label of the field.
  */
-export const FieldSelectorBox = ({ options, value, onChange, name, label = "" }) => {
+export const FieldSelectorBox = ({ options, value, onChange, name, label = "", multiple=false }) => {
     return (
         <div className="w-full mx-2 my-2">
             <label className="font-medium">{label}
-                <select value={value} onChange={onChange} name={name} className="form-select appearance-none
+                <select multiple={multiple} value={value} onChange={onChange} name={name} className="form-select appearance-none
                     w-full
                     text-base
                     font-normal

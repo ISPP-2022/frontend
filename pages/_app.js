@@ -1,5 +1,7 @@
 import '../styles/globals.css'
 import '../styles/SpacesCarousel.css';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 import TopNav from '../components/TopNav'
 import App from 'next/app'
 import jwt from 'jsonwebtoken';
@@ -8,7 +10,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <TopNav user={pageProps.user} />
-      <div className='mt-16'>
+      <div className='pt-16 min-h-screen'>
         <Component {...pageProps} />
       </div>
     </>
@@ -24,7 +26,6 @@ MyApp.getInitialProps = async (appContext) => {
     try {
       appProps.pageProps.user = jwt.decode(authToken);
     } catch (error) {
-      console.log('Invalid token');
     }
   }
   return { ...appProps }

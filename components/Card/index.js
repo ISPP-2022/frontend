@@ -2,6 +2,24 @@ import { Rating } from "@mui/material";
 import { Paragraph, Title } from "../Core/Text";
 import Image from 'next/image';
 
+
+const calculateSurface = (dimensions) => {
+    const [width, height] = dimensions.split('x');
+    return (width * height).toFixed(2);
+};
+
+const calculateUnitPrice = (priceHour, priceDay, priceMonth) => {
+    if (priceHour) {
+        return { amount: priceHour, unit: "€/h" };
+    } else if (priceDay) {
+        return { amount: priceDay, unit: "€/d" };
+    } else if (priceMonth) {
+        return { amount: priceMonth, unit: "€/m" };
+    } else {
+        return { amount: "-", unit: "" };
+    }
+};
+
 /**
  * Returns the card object for index page
  * @param  {string} title
@@ -12,7 +30,7 @@ import Image from 'next/image';
  * @param  {array<string>} tags
  * @param  {string} URLimage
  */
-export const Card = ({ title, surface, rating, price, unitPrice, tags, URLimage }) => {
+export const Card = ({ space: { name, dimensions, priceHour, priceDay, priceMonth, city, rating, tags, images } }) => {
     const modelTags = {
         enchufe: <><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 float-left" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg> Enchufe</>,
         wifi: <><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 float-left" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" /></svg> Wifi</>,
@@ -29,6 +47,7 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, URLimage 
 
         cerrado: <><svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 float-left" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg> Cerrado</>,
+        empty: <p className="text-white">A</p>
     };
 
     /**
@@ -41,10 +60,10 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, URLimage 
                 <>
                     <div className="w-full">
                         <div className="w-1/2 float-left">
-                            {tags.slice(tags.length / 2, tags.length).map(e => <Tag key={modelTags[e]}>{modelTags[e]}</Tag>)}
+                            {tags.slice(tags.length / 2, tags.length).map((e, index) => <Tag key={'l' + index}>{modelTags[e]}</Tag>)}
                         </div>
                         <div className="w-1/2 float-left">
-                            {tags.slice(0, tags.length / 2).map(e => <Tag key={modelTags[e]}>{modelTags[e]}</Tag>)}
+                            {tags.slice(0, tags.length / 2).map((e, index) => <Tag key={'r' + index}>{modelTags[e]}</Tag>)}
                         </div>
                     </div>
                 </>
@@ -52,21 +71,30 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, URLimage 
         }
     };
 
+    const price = calculateUnitPrice(priceHour, priceDay, priceMonth);
+    const surface = calculateSurface(dimensions);
+
     return (
-        <div className="p-4">
-            <div className="flex w-full m-2 bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="p-4 h-full">
+            <div className="flex w-full h-full m-2 bg-white shadow-lg rounded-lg overflow-hidden">
                 <div className="w-1/3 bg-cover relative">
-                    <Image alt="Image" className="h-full object-cover" src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover"></Image>
+                    <Image src={images?.length > 0 ? `data:${images[0].mimetype};base64, ${images[0].image}` : '/spacePlaceholder.jpg'} layout='fill' objectFit="cover" className="h-full" alt={`${name}`} />
+                    {/*<Image alt="Image" className="h-full object-cover" src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover"></Image>*/}
                 </div>
-                <div className="w-2/3 p-4">
-                    <h1 className="text-gray-900 font-bold sm:text-2xl">{title} | {surface} m²</h1>
+                <div className="w-2/3 p-4 flex flex-col">
+                    <h1 className="text-gray-900 font-bold sm:text-2xl">{name} | {surface} m²</h1>
 
                     <Rating value={rating} readOnly />
-                    <h1 className="text-blue-bondi font-bold text-2xl">{price} {unitPrice}</h1>
+                    <h1 className="text-blue-bondi font-bold text-2xl">{price.amount} {price.unit}</h1>
 
-                    {/* Tags */}
-                    {printTags(tags)}
-                    <div className="flex item-center justify-between mt-3">
+                    <div className="flex items-end justify-end mt-3 h-full text-webcolor-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <p className="flex text-xl text-center items-end h-full">
+                            {city}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -77,22 +105,34 @@ export const Card = ({ title, surface, rating, price, unitPrice, tags, URLimage 
  * Styles for every tag
  * @param  {string} {children}
  */
-export const Tag = ({ children }) => {
-    return (<p className="mt-2 text-gray-600 text-base">{children}</p>)
+export const Tag = ({ children, props }) => {
+    return (<div className="mt-2 text-gray-600 text-base">{children}</div>)
 };
 
-export const CardMobile = ({ title, surface, rating, price, unitPrice, tags, URLimage }) => {
+export const CardMobile = ({ space: { name, dimensions, priceHour, priceDay, priceMonth, city, rating, tags, images } }) => {
+
+    const price = calculateUnitPrice(priceHour, priceDay, priceMonth);
+    const surface = calculateSurface(dimensions);
     return (
         <div className="w-full max-w-[540px] bg-white shadow-lg rounded-xl ">
             {/* Image */}
             <div className="h-52 relative">
-                <Image src={URLimage || '/TrasteroStatic.webp'} layout="fill" objectFit="cover" alt="Image" className="w-96 h-96 rounded-t-xl object-cover p-6 bg-cover" />
+                <Image src={images?.length > 0 ? `data:${images[0].mimetype};base64, ${images[0].image}` : '/spacePlaceholder.jpg'} layout="fill" objectFit="cover" alt={`${name}`} className="w-96 h-96 rounded-t-xl object-cover p-6 bg-cover" />
             </div>
             {/* Body */}
-            <div className="grid grid-cols-2 grid-rows-2 h-20">
-                <h1 className="text-gray-900 font-bold text-xl sm:text-2xl px-6 col-span-2">{title} | {surface} m²</h1>
-                <div className="pl-6 pt-2 float-left"><Rating value={rating} readOnly /></div>
-                <h1 className="text-blue-bondi font-bold sm:text-2xl float-right pr-6 pb-6 align-middle text-right">{price} {unitPrice}</h1>
+            <div className="grid grid-cols-[2fr_1fr] grid-rows-2 h-20 p-2">
+                <h1 className="text-gray-900 font-bold text-lg sm:text-2xl line-clamp-1">{name} | {surface} m²</h1>
+                <h1 className="text-blue-bondi sm:font-bold text-lg sm:text-2xl flex justify-end text-right">{price.amount} {price.unit}</h1>
+                <div className=""><Rating value={rating} readOnly /></div>
+                <div className="flex items-center justify-end h-full text-webcolor-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <p className="flex items-center text-lg text-center h-full">
+                        {city}
+                    </p>
+                </div>
             </div>
         </div>
     );

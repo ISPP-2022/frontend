@@ -4,7 +4,7 @@ export default function Footer() {
     return (
         <footer className="bg-[#DBECF3] text-[#37798F] hidden md:block inset-x-0 bottom-0 w-full">
             <ItemsContainer />
-            <div className="grid grid-cols-1 grid-rows-2 place-items-center
+            <nav className="grid grid-cols-1 grid-rows-2 place-items-center
         text-center pt-2 text-[#37798F] text-md pb-8 border-x-4 border-[#4CA6C4] md:items-center">
                 <span>© 2022 Copyright: Stacking Up</span><br />
                 <div className="flex justify-center place-items-center gap-4">
@@ -111,11 +111,7 @@ export default function Footer() {
                         </svg>
                     </a>
                 </div>
-            </div>
+            </nav>
         </footer>
-
     )
-
-
-
 }

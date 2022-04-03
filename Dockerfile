@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-RUN yarn install
+RUN npm install
 
 # Rebuild the source code only when needed
 FROM node:14-alpine AS builder
@@ -18,7 +18,13 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 
-RUN NEXT_PUBLIC_MAPBOX_API_KEY=MAPBOX_API_KEY yarn build
+
+ENV NEXT_PUBLIC_MAPBOX_API_KEY MAPBOX_API_KEY_TEMP
+ENV NEXT_PUBLIC_DATA_API_URL DATA_API_URL_TEMP
+ENV NEXT_PUBLIC_AUTH_API_URL AUTH_API_URL_TEMP
+ENV NEXT_PUBLIC_CHAT_SOCKET_URL CHAT_SOCKET_URL_URL_TEMP
+
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM node:14-alpine AS runner
@@ -40,4 +46,4 @@ RUN npx next telemetry disable
 RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/app/entrypoint.sh"]
 
-CMD yarn start
+CMD npm start
