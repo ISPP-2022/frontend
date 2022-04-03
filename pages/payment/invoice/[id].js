@@ -20,16 +20,15 @@ export async function getServerSideProps(ctx) {
     const cookies = ctx.req.cookies;
     const user = jwt.decode(cookies.authToken);
     
-    /*
+    // Si no está logueado, redirige a la página principal
     if (user===null) {
-      console.log("AAAAAAAAAAAAAAAAAAA");
         return {
             redirect: {
                 destination: "/",
                 permanent: false,
             }
         }
-    } */
+    }
 
     let rental = null;
     let space = null;
@@ -40,6 +39,7 @@ export async function getServerSideProps(ctx) {
     .then(res => {
         rental = res.data;
     }).catch(err => {
+      // Si no existe el rental, lleva a la página principal
       return {
         redirect: {
           destination: "/",
@@ -62,8 +62,8 @@ export async function getServerSideProps(ctx) {
       console.log("Error retrieving the renter user")
     });
 
+    // Si el usuario que accede no es el mismo que el que alquila, redirige a la página principal.
     if (user.userId!==rental.renterId) {
-      console.log("BBBBBBBBBBBBB");
         return {
             redirect: {
                 destination: "/",
@@ -113,7 +113,7 @@ export async function getServerSideProps(ctx) {
         },
         currency_symbol:"€", 
         date: {
-        billing_date: "No procede",
+        billing_date: new Date().toLocaleDateString(),
         due_date: "No procede",
         }
     };

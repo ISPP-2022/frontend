@@ -42,15 +42,6 @@ function Confirmation(props) {
 
     (await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/rentals/confirmation`, {
       "rentalToken": props.token
-      /*initialDate: dateRange[0],
-      finalDate: dateRange[1],
-      cost: total,
-      type: props.type,
-      meters: props.meters,
-      renterConfirmation: false,
-      spaceId: props.spaceId,
-      renterId: props.renterId,
-      */
     }, {
       withCredentials: true,
     }).then(res => {
@@ -59,17 +50,15 @@ function Confirmation(props) {
         pathname: "invoice/[id]",   
         query: {
           id: rentId
+        }});
+    }).catch(err => {      
+      const alertMessage = "Hubo un error al hacer la reserva. Inténtelo más tarde."
+      router.push({
+        pathname: "/",   
+        query: {
+          alertMessage: alertMessage
         }
       }, "/" );
-    }).catch(err => {      
-      if (err.response.status === 400)
-        if (err.response.data === 'Bad Request: Missing required attributes')
-          alert('Error: Ingrese todos los atributos requeridos');
-        else {
-          alert(err.response.data);
-        }
-      else
-        alert("Error al realizar la reserva");
     }));
   }
 
@@ -118,13 +107,10 @@ function Confirmation(props) {
           <PayPalButton
             options={{
               currency: "EUR",
-              clientId: "sb"  //CAMBIAR POR VARIABLE DE ENTORNO
+              clientId: `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb'}`
             }}
             amount={total.toString()}
             onSuccess={(details, data) => {
-              console.log(details, "hola");
-              console.log(data);
-
               handleRent();
               return   
             }}

@@ -81,6 +81,7 @@ export default function Booking(props) {
   };
 
 
+  // POST del alquiler para validar, obtenemos token y se hace redirect a payment/confirmation
   async function validateBeforeConfirm(initialDate, finalDate, cost) {
     
     const rent = {
@@ -90,10 +91,6 @@ export default function Booking(props) {
       meters: metros,
       spaceId: props.space.id,
       renterId: props.user.userId,
-      city: props.city,
-      province: props.province,
-      cost: cost,
-      name: props.space.name,
       renterConfirmation: false
     }
 
@@ -150,50 +147,6 @@ export default function Booking(props) {
         
         confirm(`¿Está seguro que desea reservar el espacio ${props.space.name} por ${cost2}€?`) && 
           validateBeforeConfirm(initialDate, finalDate, cost2)
-          /*
-          (await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/rentals`, {
-            initialDate: initialDate,
-            finalDate: finalDate,
-            type: props.type,
-            meters: metros,
-            spaceId: props.space.id,
-            renterId: props.user.userId,
-            cost: cost,
-            renterConfirmation: false
-          }, {
-            withCredentials: true,
-          }).then(() => {
-            alert("Reserva realizada con éxito");
-            props.setDateRange([{
-              startDate: new Date(),
-              endDate: new Date(),
-              key: 'selection'
-            }]);
-
-            props.setTimeRange({
-              initialTime: '00:00',
-              finalTime: '00:00'
-            });
-
-            // La de inicio y fin no se desactiva por si se pudieran alquilar algunas horas de esos días
-            let newDisabledDates = props.disabledDates;
-            let currentDate = addDays(currentDate, 1);
-            while (!isSameDay(currentDate, finalDate)) {
-              newDisabledDates.push(new Date(currentDate));
-              currentDate = addDays(currentDate, 1);
-            }
-            props.setDisabledDates(newDisabledDates);
-          }).catch(err => {
-            if (err.response.status === 400)
-              if (err.response.data === 'Bad Request: Missing required attributes')
-                alert('Error: Ingrese todos los atributos requeridos');
-              else {
-                alert(err.response.data);
-              }
-            else
-              alert("Error al realizar la reserva");
-          }));
-          */
       }
     } else {
       alert("Por favor, inicie sesión para realizar una reserva");

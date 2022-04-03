@@ -19,8 +19,8 @@ function confirmation(props) {
 
   return (
     <>
-    {/* name === undefined significa que ha accedido poniendo en la URL /payment/confirmation, no por reserva */}
-    {name != undefined ? (
+    {/* token === undefined significa que ha accedido poniendo en la URL /payment/confirmation, no por reserva */}
+    {token !== undefined ? (
     <Confirmation 
       initialDate={initialDate} 
       finalDate={finalDate}
