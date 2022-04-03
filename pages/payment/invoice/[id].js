@@ -48,37 +48,47 @@ export async function getServerSideProps(ctx) {
       }
     })
     
-    const result2 = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${rental.spaceId}`)
-    .then(res => {
-      space = res.data;
-    }).catch(err => {
-      console.log("Error retrieving the space")
-    });
+    if (rental !== null) {
+      const result2 = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${rental.spaceId}`)
+      .then(res => {
+        space = res.data;
+      }).catch(err => {
+        console.log("Error retrieving the space")
+      });
 
-    const result3 = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${rental.renterId}`)
-    .then(res => {
-      renter = res.data;
-    }).catch(err => {
-      console.log("Error retrieving the renter user")
-    });
+      const result3 = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${rental.renterId}`)
+      .then(res => {
+        renter = res.data;
+      }).catch(err => {
+        console.log("Error retrieving the renter user")
+      });
 
-    // Si el usuario que accede no es el mismo que el que alquila, redirige a la página principal.
-    if (user.userId!==rental.renterId) {
-        return {
-            redirect: {
-                destination: "/",
-                permanent: false,
-            }
+      // Si el usuario que accede no es el mismo que el que alquila, redirige a la página principal.
+      if (user.userId!==rental.renterId) {
+          return {
+              redirect: {
+                  destination: "/",
+                  permanent: false,
+              }
+          }
+      } 
+
+      const result4 = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}`)
+      .then(res => {
+        owner = res.data;
+      }).catch(err => {
+        console.log("Error retrieving the owner user")
+      });
+
+    } else {
+      return {
+        redirect: {
+            destination: "/",
+            permanent: false,
         }
-    } 
-
-    const result4 = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}`)
-    .then(res => {
-      owner = res.data;
-    }).catch(err => {
-      console.log("Error retrieving the owner user")
-    });
-
+      }
+    }
+    
     let costWithoutIva = rental.cost / 1.21;
 
     const invoiceDetail = {
@@ -92,8 +102,8 @@ export async function getServerSideProps(ctx) {
         },
         items: [
         {
-            item: space.name,
-            description: "         Espacio para guardar objetos.",
+            item: "Espacio",
+            description: space.name,
             owner: owner.name + " " + owner.surname,
             price: costWithoutIva , 
             quantity: 1,

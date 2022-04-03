@@ -84,6 +84,11 @@ export default function Booking(props) {
   // POST del alquiler para validar, obtenemos token y se hace redirect a payment/confirmation
   async function validateBeforeConfirm(initialDate, finalDate, cost) {
     
+    if (metros <= 0) {
+      alert("La superficie escogida debe ser superior a 0 metros.")
+      return
+    }
+
     const rent = {
       initialDate: initialDate,
       finalDate: finalDate,
@@ -123,11 +128,27 @@ export default function Booking(props) {
       if (err.response.status === 400)
         if (err.response.data === 'Bad Request: Missing required attributes')
           alert('Error: Ingrese todos los atributos requeridos');
-        else {
-          alert(err.response.data);
+        else if (err.response.data === 'Bad Request: Cannot rent space twice. Please update or delete your previous rental of this space') {
+          alert("No puedes alquilar el mismo espacio dos veces. Edita o elimina el alquiler anterior.");
+        } else if(err.response.data === "Bad Request: Initial date must be between space dates") {
+          alert("La fecha de inicio debe estar en el rango de fechas válidas.")
+        } else if(err.response.data === "Bad Request: Initial hour must be between space hours") {
+          alert("La hora de inicio debe estar en el rango de horas válidas.")
+        } else if(err.response.data === "Bad Request: Final hour must be between space hours") {
+          alert("La hora de fin debe estar en el rango de horas válidas.") 
+        } else if(err.response.data === "Bad Request: Initial date must be a Date after today") {
+          alert("La fecha de inicio debe ser posterior a la fecha de hoy.")
+        } else if(err.response.data === "Bad Request: Final date must be a Date after today") {
+          alert("La fecha de fin debe ser posterior a la fecha de hoy.")
+        } else if (err.response.data === "Bad Request: Space not available or space capacity exceeded") {
+          alert("Se ha excedido la superficie máxima disponible en el espacio")
         }
       else
-        alert("Error al realizar la reserva");
+        if (err.response.data === "Cannot rent your own space") {
+          alert("No puedes alquilar tu propio espacio");
+        } else {
+          alert("Error al realizar la reserva");
+        }
    });
   }
 
@@ -142,6 +163,12 @@ export default function Booking(props) {
       if (props.type !== 'HOUR') {
         finalDate.setHours(23, 59, 59, 999);
       }
+
+      // Soluciona error que evita reservar 2 o más meses
+      if (props.type === 'MONTH' && monthNumber !== 1) {
+        finalDate.setDate(finalDate.getDate() - 1);
+      }
+
       if (await rentalValidation(initialDate, finalDate, props.user.userId)) {
         const cost2 = rentalCost(initialDate, finalDate, props.type)
         

@@ -50,7 +50,8 @@ function Confirmation(props) {
         pathname: "invoice/[id]",   
         query: {
           id: rentId
-        }});
+        }
+      }, "/payment/invoice/[id]");
     }).catch(err => {      
       const alertMessage = "Hubo un error al hacer la reserva. Inténtelo más tarde."
       router.push({
