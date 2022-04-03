@@ -4,15 +4,87 @@ import UserInfo from "../../components/User/index.js";
 import format from "date-fns/format";
 import Link from "next/link";
 import { CardMobile } from "../../components/Card/";
+import jwt from 'jsonwebtoken';
 
-export default function User({ user, spaces, ratings, rentals }) {
+export async function getServerSideProps(context) {
+
+  let userSession;
+  try {
+    userSession = context.req.cookies.authToken ? jwt.decode(context.req.cookies.authToken) : null;
+  } catch (error) {
+    userSession = null;
+  }
+
+  const { id } = context.params;
+
+  const user = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}`)
+    .then(async res => {
+      let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { });
+      if (avatar) res.data.avatar = avatar;
+      return res.data;
+    }).catch(() => null);
+
+  const spaces = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces?userId=${id}`)
+    .then(async res => {
+      return await Promise.all(res.data.map(async space => {
+        let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.id}/images`).then(imageres => imageres.data).catch(() => { });
+        if (images) space.images = images;
+        return space;
+      }));
+    }).catch(() => []);
+
+  const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/rentals?userId=${id}`)
+    .then(async res => {
+      return await Promise.all(res.data.reverse().map(async rental => {
+        return await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${rental.spaceId}`)
+          .then(res => res.data);
+      }))
+    }).catch((err) => {
+      console.log(err.response.data);
+      return [];
+    });
+
+  const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/ratings?filter=received`).then(res => res.data.map(e => e.rating)).catch(() => []);
+
+  return {
+    props: {
+      user: user,
+      spaces: spaces,
+      ratings: ratings,
+      rentals: rentals,
+      userSession: userSession
+    },
+  };
+};
+
+export default function User({ user, spaces, ratings, rentals, userSession }) {
+
+
+  if (!user) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <h1 className="text-6xl font-bold text-gray-500 text-center">Usuario no encontrado</h1>
+      </div>
+    );
+  }
 
   return (
-    <div className="mt-16 h-screenC md:bg-gray-100 flex justify-center items-center">
-      <main id='main' className="md:bg-white mb-4 p-5 pl-10 pr-10 md:w-4/5 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-16 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
+    <div className="md:bg-gray-100 flex justify-center items-center">
+      <main id='main' className="md:bg-white p-5 pl-10 pr-10 md:w-4/5 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-8 md:mb-8 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
 
         <div className="md:flex md:justify-center">
-          <UserInfo user={user} ratings={ratings} />
+          {/* Nombre, foto de perfil, valoración del usuario y botón de chat */}
+          <div>
+            <UserInfo user={user} ratings={ratings} />
+
+            {(userSession?.userId === user?.id || userSession?.role === 'ADMIN') && <div className='flex justify-center'>
+              <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+                <Link href={`/user/edit/${user.id}`} passHref>
+                  <a>Editar</a>
+                </Link>
+              </Button>
+            </div>}
+          </div>
           <div className="flex justify-center mt-4">
             <Button className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2" color="secondary" onClick={() => alert('Iniciando chat')}>
               <div className="flex items-center justify-center">
@@ -25,10 +97,11 @@ export default function User({ user, spaces, ratings, rentals }) {
 
         <hr className="my-4" />
 
+        {/* Información del usuario */}
         <div className="md:flex">
           <div id="UserDetails" className="md:w-1/2 flex-col justify-center text-center">
             <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
-              Más información acerca de {user?.name.split(" ")[0] || SomeUser}
+              Más información acerca de {user?.name || SomeUser}
             </h2>
             {user?.birthDate &&
               <div className="flex items-center justify-center relative">
@@ -46,6 +119,7 @@ export default function User({ user, spaces, ratings, rentals }) {
 
           </div>
 
+          {/* Estadísticas del usuario en la app (número de alquileres y de espacios) */}
           <div id="Stats" className="md:w-1/2 flex-col justify-center text-center">
             <h2 className="text-2xl font-bold mt-4 mb-2 text-webcolor-50 underline"> Estadísticas</h2>
 
@@ -54,7 +128,7 @@ export default function User({ user, spaces, ratings, rentals }) {
             </div>
 
             <div className="flex items-center justify-center">
-              <p className="ml-2" >Alquileres: {rentals}</p>
+              <p className="ml-2" >Alquileres: {rentals.length}</p>
             </div>
 
           </div>
@@ -63,9 +137,11 @@ export default function User({ user, spaces, ratings, rentals }) {
 
         <hr className="my-4" />
 
+        {/* Lista de espacios del usuario */}
         <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
           Espacios
         </h2>
+
         <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
           {spaces && spaces.length > 0 ?
             spaces.map((space, index) => (
@@ -77,41 +153,42 @@ export default function User({ user, spaces, ratings, rentals }) {
                     />
                   </a>
                 </Link>
+
+                {(userSession?.userId === user?.id || userSession?.role === 'ADMIN') && <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+                  <Link href={`/publish/edit/${space.id}`} passHref>
+                    <a>Editar</a>
+                  </Link>
+                </Button>}
               </div>
             )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
         </div>
+
+
+        <hr className="my-4" />
+
+        {/* Lista de espacios que el usuario ha alquilado recientemente */}
+        <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
+          Alquileres recientes
+        </h2>
+
+        <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
+          {rentals && rentals.length > 0 ?
+            rentals.map((space, index) => (
+              <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
+                <Link href={`/space/${space.id}`} passHref className="w-full h-full">
+                  <a className="w-full h-full flex justify-center">
+                    <CardMobile
+                      space={space}
+                    />
+                  </a>
+                </Link>
+              </div>
+            )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
+        </div>
+
       </main >
     </div >
   )
 };
 
-export async function getServerSideProps({ params }) {
-  const { id } = params;
 
-  const user = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}`)
-    .then(res => res.data);
-
-  const spaces = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces?userId=${id}`)
-    .then(res => res.data).catch(() => []);
-
-  const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/rentals?userId=${id}`)
-    .then(res => res.data.length).catch(() => 0);
-
-  // const spacesImages = await Promise.all(
-  //   spaces.map(async space => {
-  //     return await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.id}/images`)
-  //       .then(res => res.data);
-  //   }));
-
-  const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/ratings?filter=received`).then(res => res.data.map(e => e.rating)).catch(() => []);
-
-  return {
-    props: {
-      user: user,
-      spaces: spaces,
-      // spacesImages: spacesImages,
-      ratings: ratings,
-      rentals: rentals
-    },
-  };
-};

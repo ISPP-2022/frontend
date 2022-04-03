@@ -24,11 +24,11 @@ export const Form = ({ onSubmit, className, children }) => {
  * @param  {string} name - Name of the field.
  * @param  {function} onChange - Callback function to be called when field is changed.
  */
-export const FieldTextBox = ({ label, value, placeholder = "", type = "text", name, onChange }) => {
+export const FieldTextBox = ({ label, value, placeholder = "", type = "text", name, onChange, required = false }) => {
     return (
         <div className="w-full">
             <label className="pl-2 font-medium">{label}
-                <input type={type} name={name} value={value} onChange={onChange} placeholder={placeholder} className="mx-2 my-2 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi" ></input>
+                <input type={type} name={name} value={value} onChange={onChange} placeholder={placeholder} className="mx-2 my-2 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi" required={required}></input>
             </label>
         </div>
     );
@@ -59,7 +59,7 @@ export const FieldDateBox = ({ label, value, placeholder = "", name, onChange })
  * @param  {string} name - Name of the field.
  * @param  {function} onChange - Callback function to be called when field is changed.
  */
-export const FieldCheckBox = ({ label, name, onChange, checked=false}) => {
+export const FieldCheckBox = ({ label, name, onChange, checked = false }) => {
     return (
         <div className="w-full mx-2 my-2 ">
             <label className="font-medium">{label}
@@ -77,7 +77,7 @@ export const FieldCheckBox = ({ label, name, onChange, checked=false}) => {
  * @param  {string} name - Name of the field.
  * @param  {string} label - Label of the field.
  */
-export const FieldSelectorBox = ({ options, value, onChange, name, label = "", multiple=false }) => {
+export const FieldSelectorBox = ({ options, value, onChange, name, label = "", multiple = false, required = false }) => {
     return (
         <div className="w-full mx-2 my-2">
             <label className="font-medium">{label}
@@ -91,7 +91,9 @@ export const FieldSelectorBox = ({ options, value, onChange, name, label = "", m
                     rounded
                     transition
                     ease-in-out
-                    focus:text-black focus:bg-white focus:border-blue-bondi focus:outline-none" aria-label="Default select example">
+                    focus:text-black focus:bg-white focus:border-blue-bondi focus:outline-none" aria-label="Default select example"
+                    required={required}>
+
                     {options.map(option => (<option className='bg-gray-200' key={option.value} value={option.value}>{option.label}</option>))}
                 </select>
             </label>
