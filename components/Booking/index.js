@@ -50,7 +50,8 @@ export default function Booking({ user, space, type, setType, formStyle, disable
         costTemp = 0;
         break;
     }
-    setCost(costTemp < 0 ? 0 : costTemp / dimensions * meters);
+    costTemp = costTemp / dimensions * meters
+    setCost(costTemp < 0 ? 0 : costTemp);
   }
 
   const rent = () => {
@@ -205,10 +206,17 @@ export default function Booking({ user, space, type, setType, formStyle, disable
       <hr className=" bg-webcolor-50 w-[95%] m-auto mb-6" />
       {bookingBody[type]}
       {space.shared ?
-        <div className="flex flex-col items-center"><hr className=" bg-webcolor-50 w-[80%] my-4" />
-          <input type="number" placeholder="metros" className="rounded-full" value={meters} max={dimensions} min={0.1} onChange={(e) => {
-            setMeters(parseFloat(e.target.value))
-          }} /></div> : null
+        <>
+
+
+          <div className="flex flex-col items-center">
+            <hr className=" bg-webcolor-50 w-[80%] my-4" />
+            <h3 className='text-webcolor-50 text-2xl text-center mb-4'>Metros alquilados</h3>
+            <input type="number" placeholder="metros" className="rounded-full" value={meters} max={dimensions} min={0.1} onChange={(e) => {
+              setMeters(parseFloat(e.target.value))
+            }} /></div>
+        </>
+        : null
       }
       <div className='flex justify-center'>
         <Button onClick={rent} type="button" className="fill-webcolor-50 mt-4">
@@ -218,7 +226,10 @@ export default function Booking({ user, space, type, setType, formStyle, disable
       <div>
         <hr className=" bg-webcolor-50 w-[95%] m-auto mb-6" />
         <h1 className="text-center text-webcolor-50 text-5xl">
-          {cost > 0 ? <p> Total: <b>{cost.toFixed(2)}€</b></p> : <p className='text-red-500'> Invalido</p>}
+          {cost > 0 ? <>
+            <p> Total: <b>{cost.toFixed(2)}€</b>*</p>
+            <p className='text-base mt-2'>* Coste sin IVA ni comisiones</p>
+          </> : <p className='text-red-500'> Invalido</p>}
         </h1>
       </div>
     </form>
