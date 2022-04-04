@@ -3,8 +3,7 @@ import { useState } from "react";
 import { Button } from "../../../components/Core/Button";
 import jwt from 'jsonwebtoken';
 import { LegalName, Sex, IdCard, PhoneNumber, Avatar } from "../../../components/forms/UserUpdateForm";
-import { string } from "sharp/lib/is";
-import { Email } from "@mui/icons-material";
+import { useRouter } from "next/router";
 
 
 // Page to edit user info stored in db such as name, surname, email, etc.
@@ -41,6 +40,7 @@ export default function UserEdit({ userData, userSession }) {
         );
     }
 
+    const router = useRouter();
     const [errors, setErrors] = useState({});
     const [userDataForm, setUserData] = useState(userData);
 
@@ -94,7 +94,9 @@ export default function UserEdit({ userData, userSession }) {
                 avatar: avatar,
             }, {
                 withCredentials: true,
-            }).then(() => alert("Usuario actualizado correctamente"))
+            }).then(() => {
+                router.push(`/user/${id}`);
+            })
                 .catch(err => {
                     if (err.response.status === 400)
                         if (err.response.data.match(/^Bad Request:/) !== null)
