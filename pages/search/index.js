@@ -359,13 +359,7 @@ const Search = () => {
                                             <Link href={`/space/${espacio.id}`} passHref>
                                                 <a>
                                                     <Card key={index}
-                                                        title={espacio.name}
-                                                        surface={calculateSurface(espacio.dimensions)}
-                                                        rating={espacio.rating}
-                                                        price={calculateUnitPrice(espacio.priceHour, espacio.priceDay, espacio.priceMonth).amount}
-                                                        unitPrice={calculateUnitPrice(espacio.priceHour, espacio.priceDay, espacio.priceMonth).unit}
-                                                        tag={espacio.tags !== undefined ? calculateTags(espacio.tags) : undefined}
-                                                        images={espacio.images ? espacio.images : undefined}
+                                                        space={espacio}
                                                     />
                                                 </a>
                                             </Link>
@@ -383,13 +377,7 @@ const Search = () => {
                                             <Link href={`/space/${espacio.id}`}>
                                                 <a>
                                                     <CardMobile key={index}
-                                                        title={espacio.name}
-                                                        surface={calculateSurface(espacio.dimensions)}
-                                                        rating={espacio.rating}
-                                                        price={calculateUnitPrice(espacio.priceHour, espacio.priceDay, espacio.priceMonth).amount}
-                                                        unitPrice={calculateUnitPrice(espacio.priceHour, espacio.priceDay, espacio.priceMonth).unit}
-                                                        tag={espacio.tags !== undefined ? calculateTags(espacio.tags) : undefined}
-                                                        images={espacio.images ? espacio.images : undefined}
+                                                        space={espacio}
                                                     />
                                                 </a>
                                             </Link>

@@ -1,7 +1,7 @@
 import Footer from "../components/Footer";
 import Head from "next/head";
 import { Card, CardMobile } from "../components/Card";
-import { Paragraph, Title } from "../components/Core/Text";
+import { Paragraph, Title, Subtitle } from "../components/Core/Text";
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from 'react';
@@ -14,8 +14,10 @@ export default function Home() {
 
   const [data, setData] = useState([]);
 
+  const [selector, setSelector] = useState("recent");
+
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`)
+    axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces${selector == 'recent' ? '?orderBy=publishDate-desc&limit=6':''}`)
       .then(async (response) => {
         for (let i = 0; i < response.data.length; i++) {
           const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
@@ -27,7 +29,7 @@ export default function Home() {
       .catch(error => {
         setData([])
       });
-  }, []);
+  }, [selector]);
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -37,7 +39,6 @@ export default function Home() {
       router.push(`/search`);
     }
   };
-
 
   const handleSmart = () => {
     router.push("/smartSearch");
@@ -79,11 +80,61 @@ export default function Home() {
                       </svg>
                     </button>
                   </div>
-                </form>
+                </form>""
               </div>
             </div>
           </section>
           <section className="h-full bg-gray-100 overflow-y-scroll flex md:flex-row lg:flex-col md:overflow-y-hidden lg:overflow-y-scroll">
+          
+          <div className="grid md:grid-cols-1 lg:grid-cols-2 object-cover min-w-[200px] items-center relative top-2">
+          <div className="flex justify-center transition duration-150 text-blue-bondi text-center">
+            {
+            selector === "recent" ?
+            <Title>Recientes</Title>
+            : selector === "nearyou" ?
+            <Title>Cerca de ti</Title>
+            : selector === "rating" ?
+            <Title>Destacados</Title>
+            : null
+            }
+          </div>
+          <form>
+            <menu className="flex justify-center">
+              <fieldset className='p-4 w-full max-w-[250px]'>
+                <ul className='grid grid-cols-3 font-semibold text-webcolor-50'>
+                  <li className='border rounded-l border-webcolor-50'>
+                    <input className='hidden peer' type="radio" id="RECENT" name="selector" value="recent" checked={selector === "recent"} onChange={()=>setSelector("recent")}  />
+                    <label htmlFor="RECENT" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </label>
+                  </li>
+                  <li className='border-y border-webcolor-50 text-center'>
+                    <input className='hidden peer' type="radio" id="RATING" name="type" value="rating" checked={selector === "rating"} onChange={() => setSelector("rating")} />
+                    <label htmlFor="RATING" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    </label>
+                  </li>
+                  <li className='border rounded-r border-webcolor-50 text-center'>
+                    <input className='hidden peer' type="radio" id="NEARYOU" name="selector" value="nearyou" checked={selector === "nearyou"} onChange={()=>setSelector("nearyou")} />
+                    <label htmlFor="NEARYOU" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                      </svg>
+                    </label>
+                  </li>
+                </ul>
+              </fieldset>
+            </menu>
+          </form>
+          </div>
+          <div className="md:hidden lg:block relative flex py-2 items-center">
+            <div className="flex-grow border-t-[2px] border-gray-400"></div>
+          </div>
+
             {data && data.length > 0 ?
               data.map((item, index) => (
                 <article key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
@@ -100,8 +151,50 @@ export default function Home() {
         </div>
         {/* Mobile */}
         <div className="block md:hidden h-full">
-          <div className="p-3 text-blue-bondi-dark">
-            <Title>Cerca de ti</Title>
+          <div className="grid grid-cols-1 object-cover min-w-[200px] items-center relative top-2">
+            <div className="flex justify-center transition duration-150 text-blue-bondi">
+              {
+              selector === "recent" ?
+              <Title>Recientes</Title>
+              : selector === "nearyou" ?
+              <Title>Cerca de ti</Title>
+              : selector === "rating" ?
+              <Title>Destacados</Title>
+              : null
+              }
+            </div>
+            <form>
+              <menu className="flex justify-center">
+                <fieldset className='p-4 w-full max-w-[300px]'>
+                  <ul className='grid grid-cols-3 font-semibold text-webcolor-50'>
+                    <li className='border rounded-l border-webcolor-50'>
+                      <input className='hidden peer' type="radio" id="RECENT" name="selector" value="recent" checked={selector === "recent"} onChange={()=>setSelector("recent")}  />
+                      <label htmlFor="RECENT" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </label>
+                    </li>
+                    <li className='border-y border-webcolor-50 text-center'>
+                      <input className='hidden peer' type="radio" id="RATING" name="type" value="rating" checked={selector === "rating"} onChange={() => setSelector("rating")} />
+                      <label htmlFor="RATING" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      </label>
+                    </li>
+                    <li className='border rounded-r border-webcolor-50 text-center'>
+                      <input className='hidden peer' type="radio" id="NEARYOU" name="selector" value="nearyou" checked={selector === "nearyou"} onChange={()=>setSelector("nearyou")} />
+                      <label htmlFor="NEARYOU" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                        </svg>
+                      </label>
+                    </li>
+                  </ul>
+                </fieldset>
+              </menu>
+            </form>
           </div>
           {data && data.length > 0 ?
             data.map((item, index) => (

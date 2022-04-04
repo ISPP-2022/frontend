@@ -30,23 +30,6 @@ export default function Space(props) {
         }
     }, []);
 
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const [dateRange, setDateRange] = useState(
-        [{
-            startDate: tomorrow,
-            endDate: tomorrow,
-            key: 'selection'
-        }]
-    );
-
-    const [timeRange, setTimeRange] = useState(
-        {
-            initialTime: '00:00',
-            finalTime: '00:00'
-        }
-    );
-
     const calculateDisabledDates = () => {
         let disabledDates = [];
         if (props.rentalsDates) {
@@ -74,7 +57,7 @@ export default function Space(props) {
                     {/* Title */}
                     <header className='basis-[56px] flex flex-row justify-around'>
                         <h2 className='font-bold shrink-0 text-[25px] md:text-[40px] py-2 text-blue-bondi text-center'>{props.space.name} ({props.space?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1).toFixed(2)} m²) </h2>
-                        <p className='sm:font-bold text-sm sm:text-lg md:text-xl py-2 text-blue-bondi text-center flex items-end justify-end'>{props.space?.city}, {props.space?.province}</p>
+                        <p className='sm:font-bold text-sm sm:text-lg md:text-xl py-2 text-blue-bondi text-center flex items-end justify-end'>{props.space?.city}</p>
                     </header>
 
                     {/* Caroussel and price */}
@@ -133,8 +116,7 @@ export default function Space(props) {
                 </div>
             </main>
             <menu className="">
-                <Booking user={props.user} type={type} setType={setType} space={props.space} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange}
-                    disabledDates={disabledDates} setDisabledDates={setDisabledDates} formStyle={"lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg min-w-[385px]"} />
+                <Booking user={props.user} type={type} setType={setType} disabledDates={disabledDates} space={props.space} formStyle={"lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg min-w-[385px]"} />
                 {showModal && (
                     <div className="fixed inset-0 z-50">
                         <div onClick={() => setShowModal(false)} className="absolute inset-0 bg-gray-900 opacity-50" />
@@ -143,8 +125,7 @@ export default function Space(props) {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </header>
-                        <Booking formStyle={"fixed block top-1/2 left-1/2 w-full h-full pt-10 md:pt-0 md:w-[30rem] md:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 md:border-webcolor-50 md:border-2 md:rounded-md  justify-center"} user={props.user} type={type} setType={setType} space={props.space} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange}
-                            disabledDates={disabledDates} setDisabledDates={setDisabledDates} />
+                        <Booking formStyle={"fixed block top-1/2 left-1/2 w-full h-full pt-10 md:pt-0 md:w-[30rem] md:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 md:border-webcolor-50 md:border-2 md:rounded-md  justify-center"} disabledDates={disabledDates} user={props.user} type={type} setType={setType} space={props.space} />
                     </div>
                 )}
             </menu>

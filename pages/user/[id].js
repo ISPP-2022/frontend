@@ -5,6 +5,39 @@ import format from "date-fns/format";
 import Link from "next/link";
 import { CardMobile } from "../../components/Card/";
 import jwt from 'jsonwebtoken';
+import Comments from "../../components/Comments/";
+import { useState } from "react";
+
+
+async function getRatingComponentData({ query }) {
+  const ratings = await axios
+    .get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${query.id}/ratings`)
+    .catch(() => {
+      return { data: [] };
+    });
+
+  const reviewers = {};
+
+  ratings.data = ratings.data.filter((value) => {
+    return value.reviewerId !== parseInt(query.id);
+  });
+
+  for (var id in ratings.data) {
+    const rating = ratings.data[id];
+
+    const user = await axios
+      .get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${rating.reviewerId}`)
+      .catch(() => {
+        return { data: { id: -1, name: "Usuario", surname: "Anónimo" } };
+      });
+
+    const ratingId = rating.rating;
+    reviewers[ratingId] = {};
+    reviewers[ratingId].userName = user.data.name + " " + user.data.surname;
+    reviewers[ratingId].userId = user.data.id;
+  }
+  return { ratingsData: ratings.data || [], reviewers: reviewers || [] };
+}
 
 export async function getServerSideProps(context) {
 
@@ -48,7 +81,7 @@ export async function getServerSideProps(context) {
     });
 
   const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/ratings?filter=received`).then(res => res.data.map(e => e.rating)).catch(() => []);
-
+  const prp = await getRatingComponentData(context);
   return {
     props: {
       id: id,
@@ -56,13 +89,16 @@ export async function getServerSideProps(context) {
       spaces: spaces,
       ratings: ratings,
       rentals: rentals,
-      userSession: userSession
+      userSession: userSession,
+      ratingsData: prp.ratingsData,
+      reviewers: prp.reviewers
     },
   };
 };
 
-export default function User({ id, userData, spaces, ratings, rentals, userSession }) {
+export default function User({ id, userData, spaces, ratings, rentals, userSession, ratingsData, reviewers }) {
 
+  const [infoState, setInfoState] = useState('resume');
 
   if (!userData) {
     return (
@@ -97,104 +133,126 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
               </div>
             </Button>
           </div>
+
+          <menu className="flex justify-center">
+            <fieldset className='p-4 w-full max-w-[250px]'>
+              <ul className='grid px-3 w-fit grid-cols-2 font-semibold text-webcolor-50'>
+                <li className='border rounded-l border-webcolor-50'>
+                  <input className='hidden peer' type="radio" id="RESUME" name="selector" value="resume" checked={infoState === "resume"} onChange={() => setInfoState("resume")} />
+                  <label htmlFor="RESUME" className='flex justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                    Resumen
+                  </label>
+                </li>
+                <li className='border w-fit rounded-r border-webcolor-50 text-center'>
+                  <input className='hidden peer' type="radio" id="COMMENTS" name="type" value="comments" checked={infoState === "comments"} onChange={() => setInfoState("comments")} />
+                  <label htmlFor="COMMENTS" className='flex px-3 justify-center cursor-pointer transition duration-150 peer-checked:bg-blue-bondi peer-checked:text-white'>
+                    Comentarios
+                  </label>
+                </li>
+              </ul>
+            </fieldset>
+          </menu>
         </div>
 
         <hr className="my-4" />
+        {
+          infoState === 'resume' ?
+            <>
+              {/* Información del usuario */}
+              <div className="md:flex md:justify-center">
+                {(userData?.birthDate || userData?.location) &&
+                  <div id="UserDetails" className="md:w-1/2 flex-col justify-center text-center">
+                    <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
+                      Más información acerca de {userData?.name || 'SomeUser'}
+                    </h2>
+                    {userData?.birthDate &&
+                      <div className="flex items-center justify-center relative">
 
-        {/* Información del usuario */}
-        <div className="md:flex md:justify-center">
-          {(userData?.birthDate || userData?.location) &&
-            <div id="UserDetails" className="md:w-1/2 flex-col justify-center text-center">
-              <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
-                Más información acerca de {userData?.name || 'SomeUser'}
-              </h2>
-              {userData?.birthDate &&
-                <div className="flex items-center justify-center relative">
+                        <p>Fecha de nacimiento: {format(new Date(userData.birthDate), "dd/MM/yyyy")}</p>
 
-                  <p>Fecha de nacimiento: {format(new Date(userData.birthDate), "dd/MM/yyyy")}</p>
+                      </div>
+                    }
 
-                </div>
-              }
+                    {userData?.location &&
+                      <div className="flex items-center justify-center">
+                        <p className="ml-2" >Ubicación: {userData.location}</p>
+                      </div>
+                    }
 
-              {userData?.location &&
-                <div className="flex items-center justify-center">
-                  <p className="ml-2" >Ubicación: {userData.location}</p>
-                </div>
-              }
+                  </div>}
 
-            </div>}
+                {/* Estadísticas del usuario en la app (número de alquileres y de espacios) */}
+                <div id="Stats" className="md:w-1/2 flex-col justify-center text-center">
+                  <h2 className="text-2xl font-bold mt-4 mb-2 text-webcolor-50 underline"> Estadísticas</h2>
 
-          {/* Estadísticas del usuario en la app (número de alquileres y de espacios) */}
-          <div id="Stats" className="md:w-1/2 flex-col justify-center text-center">
-            <h2 className="text-2xl font-bold mt-4 mb-2 text-webcolor-50 underline"> Estadísticas</h2>
-
-            <div className="flex items-center justify-center">
-              <p className="ml-2" >Espacios: {spaces.length}</p>
-            </div>
-
-            <div className="flex items-center justify-center">
-              <p className="ml-2" >Alquileres: {rentals.length}</p>
-            </div>
-
-          </div>
-
-        </div>
-
-        <hr className="my-4" />
-
-        {/* Lista de espacios del usuario */}
-        <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
-          Espacios
-        </h2>
-
-        <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
-          {spaces && spaces.length > 0 ?
-            spaces.map((space, index) => (
-              <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
-                <Link href={`/space/${space.id}`} passHref className="w-full h-full">
-                  <a className="w-[420px] h-full flex justify-center">
-                    <CardMobile
-                      space={space}
-                    />
-                  </a>
-                </Link>
-
-                {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') && <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
-                  <Link href={`/publish/edit/${space.id}`} passHref>
-                    <a>Editar</a>
-                  </Link>
-                </Button>}
-              </div>
-            )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center text-gray-500">Sin resultados</h1>}
-        </div>
-
-
-
-
-        {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') &&
-          <>
-            <hr className="my-4" />
-
-            {/* Lista de espacios que el usuario ha alquilado recientemente */}
-            <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
-              Alquileres recientes
-            </h2>
-            <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
-              {rentals && rentals.length > 0 ?
-                rentals.map((space, index) => (
-                  <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
-                    <Link href={`/space/${space.id}`} passHref className="w-full h-full">
-                      <a className="w-full h-full flex justify-center">
-                        <CardMobile
-                          space={space}
-                        />
-                      </a>
-                    </Link>
+                  <div className="flex items-center justify-center">
+                    <p className="ml-2" >Espacios: {spaces.length}</p>
                   </div>
-                )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-500">Sin resultados</h1>}
-            </div>
-          </>}
 
+                  <div className="flex items-center justify-center">
+                    <p className="ml-2" >Alquileres: {rentals.length}</p>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <hr className="my-4" />
+
+              {/* Lista de espacios del usuario */}
+              <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
+                Espacios
+              </h2>
+
+              <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
+                {spaces && spaces.length > 0 ?
+                  spaces.map((space, index) => (
+                    <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
+                      <Link href={`/space/${space.id}`} passHref className="w-full h-full">
+                        <a className="w-[420px] h-full flex justify-center">
+                          <CardMobile
+                            space={space}
+                          />
+                        </a>
+                      </Link>
+
+                      {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') && <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+                        <Link href={`/publish/edit/${space.id}`} passHref>
+                          <a>Editar</a>
+                        </Link>
+                      </Button>}
+                    </div>
+                  )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center text-gray-500">Sin resultados</h1>}
+              </div>
+
+              {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') &&
+                <>
+                  <hr className="my-4" />
+
+                  {/* Lista de espacios que el usuario ha alquilado recientemente */}
+                  <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
+                    Alquileres recientes
+                  </h2>
+                  <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
+                    {rentals && rentals.length > 0 ?
+                      rentals.map((space, index) => (
+                        <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
+                          <Link href={`/space/${space.id}`} passHref className="w-full h-full">
+                            <a className="w-full h-full flex justify-center">
+                              <CardMobile
+                                space={space}
+                              />
+                            </a>
+                          </Link>
+                        </div>
+                      )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-500">Sin resultados</h1>}
+                  </div>
+                </>}
+            </> :
+            <>
+              <Comments userId={id} loggedUserId={userSession ? userSession.userId : -1} ratings={ratingsData} reviewers={reviewers} userUrl="/user/${id}" loggedIn={!!userSession} />
+            </>
+        }
       </main >
     </div >
   )
