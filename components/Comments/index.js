@@ -102,9 +102,9 @@ export default function Comments({
       errors.title = "El título tiene que medir entre 3 y 50 carácteres";
     }
 
-    if (description.length <= 2 || 50 < description.length) {
+    if (description.length <= 2 || 100 < description.length) {
       errors.description =
-        "La descripción tiene que medir entre 3 y 50 carácteres";
+        "La descripción tiene que medir entre 3 y 100 carácteres";
     }
 
     if (rating <= 0 || 5 < rating) {
@@ -196,11 +196,9 @@ export default function Comments({
                   name="title"
                   className="pl-2 ml-2 bg-gray-200 shadow-sm rounded-md"
                   onChange={(event) => handleInputChange(event)}
-                  onClick={() => checkLogged(loggedIn)}
                 />
               }
               onChange={(event) => handleInputChange(event)}
-              onClick={() => checkLogged(loggedIn)}
             ></TextArea>
             {showDialog && (
               <DialogText
