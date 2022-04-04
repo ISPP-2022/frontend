@@ -12,7 +12,7 @@ import { Title } from "../Text";
  * @param  {} onClickClose - The function to be executed when the close button is clicked.
  * @param  {} children - The content of the dialog.
  */
-export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCancel = "Cancelar", width = "medium", height = "small", onClickAccept, onClickCancel, onClickClose, visibleAcceptButton=true, visibleCancelButton=true, children }) => {
+export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCancel = "Cancelar", width = "medium", height = "small", onClickAccept, onClickCancel, onClickClose, visibleAcceptButton = true, visibleCancelButton = true, children }) => {
     const dialogSize = {
         "small": "1/4",
         "medium": "1/2",
@@ -20,9 +20,9 @@ export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCance
 
     return (
         <>
-            <div className="fixed inset-0 bg-gray-900 opacity-50 w-full h-full">
+            <div className="fixed inset-0 z-40 bg-gray-900 opacity-50 w-full h-full">
             </div>
-            <div className="fixed inset-0 flex items-center justify-center z-10">
+            <div className="fixed inset-0 flex items-center justify-center z-50">
                 {/* Main modal */}
                 <div className="relative px-4 w-full max-w-2xl h-auto">
                     {/* Modal content */}

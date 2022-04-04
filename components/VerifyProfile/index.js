@@ -3,15 +3,18 @@ import { useState } from "react";
 import { DialogText } from "../Core/Dialog";
 import { FieldTextBox } from "../Core/Form";
 import { Paragraph } from "../Core/Text";
+import { useRouter } from "next/router";
 
 /**
  * Return a modal to verify the profile with phone number.
  * @param  {string} phoneNumber - Phone number of the user.
  */
-export const VerifyProfile = ({ phoneNumber }) => {
+export const VerifyProfile = ({ phoneNumber, setOpen }) => {
+    const router = useRouter();
     const [isOpenConfirmPhoneNumber, setIsOpenConfirmPhoneNumber] = useState(true);
     const [isOpenInsertCode, setIsOpenInsertCode] = useState(false);
     const [isOpenResponseDialog, setIsOpenResponseDialog] = useState(false);
+    const [reload, setReload] = useState(false);
     const [messageResponseDialog, setMessageResponseDialog] = useState("");
     const [code, setCode] = useState("");
 
@@ -39,12 +42,13 @@ export const VerifyProfile = ({ phoneNumber }) => {
             })
     };
 
-    const onAcceptInsertCode = () => {
-        axios.put(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/verify`, { code: code }, { withCredentials: true })
+    const onAcceptInsertCode = async () => {
+        await axios.put(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/verify`, { code: code }, { withCredentials: true })
             .then(res => {
                 setIsOpenInsertCode(false);
-                setMessageResponseDialog("El teléfono ha sido verificado con éxito. Vuelve a iniciar sesión.");
+                setMessageResponseDialog("El teléfono ha sido verificado con éxito.");
                 setIsOpenResponseDialog(true);
+                setReload(true);
             })
             .catch(err => {
                 if (err.response.data === "Error when verifying this number. Wrong code.") {
@@ -52,12 +56,8 @@ export const VerifyProfile = ({ phoneNumber }) => {
                 } else {
                     setMessageResponseDialog("Error al enviar el código. Por favor, inténtalo más tarde. Si el error persiste, contacta con soporte técnico.");
                 }
-                
-                setMessageResponseDialog(err.response.data);
                 setIsOpenResponseDialog(true);
             })
-
-        setIsOpenInsertCode(false);
     };
 
     return (
@@ -71,8 +71,8 @@ export const VerifyProfile = ({ phoneNumber }) => {
                     width="medium"
                     height="small"
                     onClickAccept={() => { onAcceptConfirmPhoneNumber() }}
-                    onClickCancel={() => { setIsOpenConfirmPhoneNumber(false) }}
-                    onClickClose={() => { setIsOpenConfirmPhoneNumber(false) }}
+                    onClickCancel={() => { setIsOpenConfirmPhoneNumber(false); setOpen(false); }}
+                    onClickClose={() => { setIsOpenConfirmPhoneNumber(false); setOpen(false); }}
                     visibleAcceptButton={!(phoneNumber === undefined || phoneNumber === null || phoneNumber === "")}
                     visibleCancelButton={!(phoneNumber === undefined || phoneNumber === null || phoneNumber === "")}>
                     {
@@ -97,8 +97,8 @@ export const VerifyProfile = ({ phoneNumber }) => {
                     width="medium"
                     height="small"
                     onClickAccept={() => { onAcceptInsertCode() }}
-                    onClickCancel={() => { setIsOpenInsertCode(false) }}
-                    onClickClose={() => { setIsOpenInsertCode(false) }}
+                    onClickCancel={() => { setIsOpenInsertCode(false); setOpen(false); }}
+                    onClickClose={() => { setIsOpenInsertCode(false); setOpen(false); }}
                     visibleAcceptButton={true}
                     visibleCancelButton={true}>
                     <div className="pr-4">
@@ -123,9 +123,27 @@ export const VerifyProfile = ({ phoneNumber }) => {
                     textCancel="Cancelar"
                     width="medium"
                     height="small"
-                    onClickAccept={() => { setIsOpenResponseDialog(false) }}
-                    onClickCancel={() => { setIsOpenResponseDialog(false) }}
-                    onClickClose={() => { setIsOpenResponseDialog(false) }}
+                    onClickAccept={() => {
+                        setIsOpenResponseDialog(false);
+                        if (reload) {
+                            setOpen(false);
+                            window.location.reload();
+                        } setReload(false);
+                    }}
+                    onClickCancel={() => {
+                        setIsOpenResponseDialog(false);
+                        if (reload) {
+                            setOpen(false);
+                            window.location.reload();
+                        } setReload(false);
+                    }}
+                    onClickClose={() => {
+                        setIsOpenResponseDialog(false);
+                        if (reload) {
+                            setOpen(false);
+                            window.location.reload();
+                        } setReload(false);
+                    }}
                     visibleAcceptButton={true}
                     visibleCancelButton={false}>
                     <Paragraph>{messageResponseDialog}</Paragraph>

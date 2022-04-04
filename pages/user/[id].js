@@ -7,6 +7,7 @@ import { CardMobile } from "../../components/Card/";
 import jwt from 'jsonwebtoken';
 import Comments from "../../components/Comments/";
 import { useState } from "react";
+import { VerifyProfile } from "../../components/VerifyProfile";
 
 
 async function getRatingComponentData({ query }) {
@@ -99,6 +100,7 @@ export async function getServerSideProps(context) {
 export default function User({ id, userData, spaces, ratings, rentals, userSession, ratingsData, reviewers }) {
 
   const [infoState, setInfoState] = useState('resume');
+  const [openVerified, setOpenVerified] = useState(false);
 
   if (!userData) {
     return (
@@ -112,7 +114,26 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
     <div className="md:bg-gray-100 flex justify-center items-center">
       <main id='main' className="md:bg-white p-5 pl-10 pr-10 md:w-4/5 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-8 md:mb-8 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
 
-        <div className="md:flex md:justify-center">
+        <div className="md:flex md:justify-between">
+          {
+            userSession && userSession.userId === userData.id && userSession.role === 'USER' ?
+              <>
+                <Button disabled={!userData.phoneNumber}
+                  className={`px-5 py-1 text-xl my-auto rounded transition-colors duration-100 font-semibold flex 
+                  items-center space-x-2 border ${userData.phoneNumber ? 'border-blue-bondi text-blue-bondi' : 'border-gray-500 text-gray-500'}`} color="none"
+                  onClick={() => {
+                    if (userData.phoneNumber)
+                      setOpenVerified(true)
+                  }}>
+                  Verificarse
+                </Button>
+                {
+                  openVerified ?
+                    <VerifyProfile phoneNumber={userData.phoneNumber} setOpen={setOpenVerified} /> : null
+                }
+              </> : null
+          }
+
           {/* Nombre, foto de perfil, valoración del usuario y botón de chat */}
           <div>
             <UserInfo id={id} user={userData} ratings={ratings} />
@@ -126,7 +147,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
             </div>}
           </div>
           <div className="flex justify-center mt-4">
-            <Button className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2" color="secondary" onClick={() => alert('Iniciando chat')}>
+            <Button className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2" color="secondary" onClick={() => alert('Proximamente...')}>
               <div className="flex items-center justify-center">
                 <img src="/images/paperplane.svg" className="w-5 h-5" />
                 <p className="ml-2"> Chat</p>
