@@ -47,18 +47,6 @@ export async function getServerSideProps(context) {
       return [];
     });
 
-
-  // const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/rentals?userId=${id}`)
-  //   .then(async res => {
-  //     return await Promise.all(res.data.reverse().map(async rental => {
-  //       return await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${rental.spaceId}`)
-  //         .then(res => res.data);
-  //     }))
-  //   }).catch((err) => {
-  //     console.log(err.response.data);
-  //     return [];
-  //   });
-
   const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/ratings?filter=received`).then(res => res.data.map(e => e.rating)).catch(() => []);
 
   return {
@@ -114,26 +102,27 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
         <hr className="my-4" />
 
         {/* Información del usuario */}
-        <div className="md:flex">
-          <div id="UserDetails" className="md:w-1/2 flex-col justify-center text-center">
-            <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
-              Más información acerca de {userData?.name || 'SomeUser'}
-            </h2>
-            {userData?.birthDate &&
-              <div className="flex items-center justify-center relative">
+        <div className="md:flex md:justify-center">
+          {(userData?.birthDate || userData?.location) &&
+            <div id="UserDetails" className="md:w-1/2 flex-col justify-center text-center">
+              <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
+                Más información acerca de {userData?.name || 'SomeUser'}
+              </h2>
+              {userData?.birthDate &&
+                <div className="flex items-center justify-center relative">
 
-                <p>Fecha de nacimiento: {format(new Date(userData.birthDate), "dd/MM/yyyy")}</p>
+                  <p>Fecha de nacimiento: {format(new Date(userData.birthDate), "dd/MM/yyyy")}</p>
 
-              </div>
-            }
+                </div>
+              }
 
-            {userData?.location &&
-              <div className="flex items-center justify-center">
-                <p className="ml-2" >Ubicación: {userData.location}</p>
-              </div>
-            }
+              {userData?.location &&
+                <div className="flex items-center justify-center">
+                  <p className="ml-2" >Ubicación: {userData.location}</p>
+                </div>
+              }
 
-          </div>
+            </div>}
 
           {/* Estadísticas del usuario en la app (número de alquileres y de espacios) */}
           <div id="Stats" className="md:w-1/2 flex-col justify-center text-center">
@@ -176,7 +165,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
                   </Link>
                 </Button>}
               </div>
-            )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
+            )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center text-gray-500">Sin resultados</h1>}
         </div>
 
 
@@ -202,7 +191,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
                       </a>
                     </Link>
                   </div>
-                )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
+                )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-500">Sin resultados</h1>}
             </div>
           </>}
 
