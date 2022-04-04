@@ -8,14 +8,14 @@ import { Link } from "@mui/material";
 import { Loading } from "../Core/Loading";
 import axios from "axios";
 
-export const Comments = ({
+export default function Comments({
   userId,
   loggedUserId,
   ratings,
   reviewers,
   userUrl,
   loggedIn = false,
-}) => {
+}) {
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -42,43 +42,47 @@ export const Comments = ({
   const sendData = (event) => {
     event.preventDefault();
     checkLogged(loggedIn);
-    var errors = checkForm(dataForm);
-    if (Object.values(errors).length !== 0) {
-      var errorsInput = document.getElementById("errors");
-      errorsInput.className = errorsInput.className.replace(
-        "hidden",
-        "border-2 border-[#E57373] rounded-md"
-      );
-      var elements = Object.values(errors).map((value) => {
-        return value + "</br>";
-      });
-      errorsInput.innerHTML = elements.join("");
-
-      setLoading(false);
-    } else {
-      axios
-        .post(
-          `${process.env.NEXT_PUBLIC_DATA_API_URL || "http://localhost:4100"
-          }/api/v1/users/${userId}/rate`,
-          dataForm,
-          { withCredentials: true }
-        )
-        .then((res) => {
-          location.reload();
-        })
-        .catch((err) => {
-          var errorsInput = document.getElementById("errors");
-          errorsInput.className = errorsInput.className.replace(
-            "hidden",
-            "border-2 border-[#E57373] rounded-md"
-          );
-          errorsInput.innerHTML =
-            err.response.data === "Can not rate yourself"
-              ? "¡No puedes valorarte a ti mismo!"
-              : err.response.data;
-
-          setLoading(false);
+    if (loggedIn) {
+      var errors = checkForm(dataForm);
+      if (Object.values(errors).length !== 0) {
+        var errorsInput = document.getElementById("errors");
+        errorsInput.className = errorsInput.className.replace(
+          "hidden",
+          "border-2 border-[#E57373] rounded-md"
+        );
+        var elements = Object.values(errors).map((value) => {
+          return value + "</br>";
         });
+        errorsInput.innerHTML = elements.join("");
+
+        setLoading(false);
+      } else {
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_DATA_API_URL || "http://localhost:4100"
+            }/api/v1/users/${userId}/rate`,
+            dataForm,
+            { withCredentials: true }
+          )
+          .then((res) => {
+            location.reload();
+          })
+          .catch((err) => {
+            var errorsInput = document.getElementById("errors");
+            errorsInput.className = errorsInput.className.replace(
+              "hidden",
+              "border-2 border-[#E57373] rounded-md"
+            );
+            errorsInput.innerHTML =
+              err.response.data === "Can not rate yourself"
+                ? "¡No puedes valorarte a ti mismo!"
+                : err.response.data;
+
+            setLoading(false);
+          });
+      }
+    } else {
+      setLoading(false);
     }
   };
 
@@ -98,9 +102,9 @@ export const Comments = ({
       errors.title = "El título tiene que medir entre 3 y 50 carácteres";
     }
 
-    if (description.length <= 2 || 50 < description.length) {
+    if (description.length <= 2 || 100 < description.length) {
       errors.description =
-        "La descripción tiene que medir entre 3 y 50 carácteres";
+        "La descripción tiene que medir entre 3 y 100 carácteres";
     }
 
     if (rating <= 0 || 5 < rating) {
@@ -120,7 +124,7 @@ export const Comments = ({
 
   function checkLogged(loggedIn) {
     if (!loggedIn) {
-      setShowDialog(true);
+      alert("¡Debes estar conectado para poder valorar!")
     }
   }
 
@@ -192,11 +196,9 @@ export const Comments = ({
                   name="title"
                   className="pl-2 ml-2 bg-gray-200 shadow-sm rounded-md"
                   onChange={(event) => handleInputChange(event)}
-                  onClick={() => checkLogged(loggedIn)}
                 />
               }
               onChange={(event) => handleInputChange(event)}
-              onClick={() => checkLogged(loggedIn)}
             ></TextArea>
             {showDialog && (
               <DialogText
