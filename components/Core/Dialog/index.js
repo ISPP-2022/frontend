@@ -24,7 +24,7 @@ export const DialogText = ({ title = "Titulo", textAccept = "Aceptar", textCance
             </div>
             <div className="fixed inset-0 flex items-center justify-center z-10">
                 {/* Main modal */}
-                <div className="relative px-4 w-full max-w-2xl h-full md:h-auto">
+                <div className="relative px-4 w-full max-w-2xl h-auto">
                     {/* Modal content */}
                     <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                         {/* Modal header */}
