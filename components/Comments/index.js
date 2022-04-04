@@ -58,8 +58,7 @@ export const Comments = ({
     } else {
       axios
         .post(
-          `${
-            process.env.NEXT_PUBLIC_DATA_API_URL || "http://localhost:4100"
+          `${process.env.NEXT_PUBLIC_DATA_API_URL || "http://localhost:4100"
           }/api/v1/users/${userId}/rate`,
           dataForm,
           { withCredentials: true }

@@ -14,7 +14,7 @@ import jwt from "jsonwebtoken";
  */
 async function getRatingComponentData({ query }) {
   const ratings = await axios
-    .get(`${process.env.DATA_API_URL}/api/v1/users/${query.id}/ratings`)
+    .get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${query.id}/ratings`)
     .catch(() => {
       return { data: [] };
     });
@@ -27,11 +27,13 @@ async function getRatingComponentData({ query }) {
 
   for (var id in ratings.data) {
     const rating = ratings.data[id];
+
     const user = await axios
-      .get(`${process.env.DATA_API_URL}/api/v1/users/${rating.reviewerId}`)
+      .get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${rating.reviewerId}`)
       .catch(() => {
         return { data: { id: -1, name: "Usuario", surname: "Anónimo" } };
       });
+
     const ratingId = rating.rating;
     reviewers[ratingId] = {};
     reviewers[ratingId].userName = user.data.name + " " + user.data.surname;
@@ -54,11 +56,8 @@ export async function getServerSideProps(context) {
 }
 
 function User(props) {
-  const { ratings } = props;
-  const { reviewers } = props;
-  const { loggedIn } = props;
-  const { userId } = props;
-  const { loggedUserId } = props;
+  const { ratings, reviewers, loggedIn, userId, loggedUserId } = props;
+
   return (
     <div>
       <Head>
