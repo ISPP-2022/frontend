@@ -73,7 +73,7 @@ export function IdCard({ userData, setUserData, error }) {
                 onChange={(e) => setUserData({ ...userData, idCard: e.target.value })}
                 placeholder="00000000A"
                 className="mx-2 my-2 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi"
-                required>
+            >
             </input>
             <span className='text-gray-600'> {error} </span>
         </div>
@@ -90,7 +90,7 @@ export function PhoneNumber({ userData, setUserData, error }) {
                 onChange={(e) => setUserData({ ...userData, phoneNumber: e.target.value })}
                 placeholder="+34XXXXXXXXX"
                 className="mx-2 my-2 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi"
-                required>
+            >
             </input>
             <span className='text-gray-600'> {error} </span>
         </div>

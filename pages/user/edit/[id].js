@@ -25,15 +25,15 @@ export async function getServerSideProps(context) {
 
     return {
         props: {
-            user: user,
+            userData: user,
             userSession: userSession
         },
     };
 };
 
-export default function UserEdit({ user, userSession }) {
+export default function UserEdit({ userData, userSession }) {
 
-    if (userSession?.userId !== user?.id && userSession?.role !== 'ADMIN') {
+    if (userSession?.userId !== userData?.id && userSession?.role !== 'ADMIN') {
         return (
             <div className="h-full flex justify-center items-center">
                 <h1 className="text-6xl font-bold text-gray-500 text-center">Usuario no encontrado</h1>
@@ -42,13 +42,13 @@ export default function UserEdit({ user, userSession }) {
     }
 
     const [errors, setErrors] = useState({});
-    const [userData, setUserData] = useState(user);
+    const [userDataForm, setUserData] = useState(userData);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { id, name, surname, sex, phoneNumber, idCard } = userData;
-        let { avatar } = userData;
-
+        const { id, name, surname, sex, phoneNumber, idCard } = userDataForm;
+        let { avatar } = userDataForm;
+        console.log(id, name, surname, sex, phoneNumber, idCard)
         setErrors({});
         let validations = []
 
@@ -62,17 +62,17 @@ export default function UserEdit({ user, userSession }) {
             validations.push(false);
         }
 
-        if (!sex || (sex !== 'MALE' && sex !== 'FEMALE' && sex !== 'OTHER')) {
+        if (sex && (sex !== 'MALE' && sex !== 'FEMALE' && sex !== 'OTHER')) {
             setErrors({ ...errors, sex: `El género debe ser Hombre, Mujer u Otro` })
             validations.push(false);
         }
 
-        if (!phoneNumber || phoneNumber.match(/\+34[0-9]{9}/) === null) {
+        if (phoneNumber && phoneNumber.match(/\+34[0-9]{9}/) === null) {
             setErrors({ ...errors, phoneNumber: `El número de teléfono debe seguir el formato +34XXXXXXXXX` })
             validations.push(false);
         }
 
-        if (!idCard || idCard.match(/[0-9]{8}[A-Z]{1}/) === null) {
+        if (idCard && idCard.match(/[0-9]{8}[A-Z]{1}/) === null) {
             setErrors({ ...errors, idCard: `El DNI debe seguir el formato XXXXXXXXA` })
             validations.push(false);
         }
@@ -80,7 +80,7 @@ export default function UserEdit({ user, userSession }) {
         if (!avatar) {
             await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/avatar`)
                 .then(res => avatar = res.data.image)
-                .catch();
+                .catch(() => avatar = null);
         }
 
 
@@ -114,14 +114,13 @@ export default function UserEdit({ user, userSession }) {
     return (
         <div className="md:bg-gray-100 flex justify-center items-center">
             <main id='main' className="md:bg-white p-5 pl-10 pr-10 md:w-4/5 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-8 md:mb-8 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
-
                 <h2 className="text-2xl font-bold text-gray-500 text-center">Información personal</h2>
                 <form onSubmit={handleSubmit}>
-                    <LegalName userData={userData} setUserData={setUserData} error={errors.name ?? ''} />
-                    <Sex userData={userData} setUserData={setUserData} error={errors.sex ?? ''} />
-                    <IdCard userData={userData} setUserData={setUserData} error={errors.idCard ?? ''} />
-                    <PhoneNumber userData={userData} setUserData={setUserData} error={errors.phoneNumber ?? ''} />
-                    <Avatar userData={userData} setUserData={setUserData} error={errors.avatar ?? ''} />
+                    <LegalName userData={userDataForm} setUserData={setUserData} error={errors.name ?? ''} />
+                    <Sex userData={userDataForm} setUserData={setUserData} error={errors.sex ?? ''} />
+                    <IdCard userData={userDataForm} setUserData={setUserData} error={errors.idCard ?? ''} />
+                    <PhoneNumber userData={userDataForm} setUserData={setUserData} error={errors.phoneNumber ?? ''} />
+                    <Avatar userData={userDataForm} setUserData={setUserData} error={errors.avatar ?? ''} />
 
                     <div className="flex justify-center mt-4">
                         <Button
@@ -134,14 +133,8 @@ export default function UserEdit({ user, userSession }) {
                         </Button>
                     </div>
                 </form>
-
                 <hr className="my-4" />
-
             </main >
         </div >
     );
-
-
-
-
 };

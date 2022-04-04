@@ -17,7 +17,7 @@ export async function getServerSideProps(context) {
 
   const { id } = context.params;
 
-  const user = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}`)
+  const userData = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}`)
     .then(async res => {
       let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { });
       if (avatar) res.data.avatar = avatar;
@@ -41,10 +41,9 @@ export async function getServerSideProps(context) {
             let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.data.id}/images`).then(imageres => imageres.data).catch(() => { });
             if (images) space.data.images = images;
             return space.data;
-          });
+          }).catch(() => []);
       }))
     }).catch((err) => {
-      console.log(err);
       return [];
     });
 
@@ -64,7 +63,8 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      user: user,
+      id: id,
+      userData: userData,
       spaces: spaces,
       ratings: ratings,
       rentals: rentals,
@@ -73,10 +73,10 @@ export async function getServerSideProps(context) {
   };
 };
 
-export default function User({ user, spaces, ratings, rentals, userSession }) {
+export default function User({ id, userData, spaces, ratings, rentals, userSession }) {
 
 
-  if (!user) {
+  if (!userData) {
     return (
       <div className="h-full flex justify-center items-center">
         <h1 className="text-6xl font-bold text-gray-500 text-center">Usuario no encontrado</h1>
@@ -91,11 +91,11 @@ export default function User({ user, spaces, ratings, rentals, userSession }) {
         <div className="md:flex md:justify-center">
           {/* Nombre, foto de perfil, valoración del usuario y botón de chat */}
           <div>
-            <UserInfo user={user} ratings={ratings} />
+            <UserInfo id={id} user={userData} ratings={ratings} />
 
-            {(userSession?.userId === user?.id || userSession?.role === 'ADMIN') && <div className='flex justify-center'>
+            {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') && <div className='flex justify-center'>
               <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
-                <Link href={`/user/edit/${user.id}`} passHref>
+                <Link href={`/user/edit/${userData.id}`} passHref>
                   <a>Editar</a>
                 </Link>
               </Button>
@@ -117,19 +117,19 @@ export default function User({ user, spaces, ratings, rentals, userSession }) {
         <div className="md:flex">
           <div id="UserDetails" className="md:w-1/2 flex-col justify-center text-center">
             <h2 className="text-2xl font-bold mt-4 text-webcolor-50 underline mb-2">
-              Más información acerca de {user?.name || SomeUser}
+              Más información acerca de {userData?.name || 'SomeUser'}
             </h2>
-            {user?.birthDate &&
+            {userData?.birthDate &&
               <div className="flex items-center justify-center relative">
 
-                <p>Fecha de nacimiento: {format(new Date(user.birthDate), "dd/MM/yyyy")}</p>
+                <p>Fecha de nacimiento: {format(new Date(userData.birthDate), "dd/MM/yyyy")}</p>
 
               </div>
             }
 
-            {user?.location &&
+            {userData?.location &&
               <div className="flex items-center justify-center">
-                <p className="ml-2" >Ubicación: {user.location}</p>
+                <p className="ml-2" >Ubicación: {userData.location}</p>
               </div>
             }
 
@@ -170,7 +170,7 @@ export default function User({ user, spaces, ratings, rentals, userSession }) {
                   </a>
                 </Link>
 
-                {(userSession?.userId === user?.id || userSession?.role === 'ADMIN') && <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+                {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') && <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
                   <Link href={`/publish/edit/${space.id}`} passHref>
                     <a>Editar</a>
                   </Link>
@@ -182,7 +182,7 @@ export default function User({ user, spaces, ratings, rentals, userSession }) {
 
 
 
-        {(userSession?.userId === user?.id || userSession?.role === 'ADMIN') &&
+        {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') &&
           <>
             <hr className="my-4" />
 
