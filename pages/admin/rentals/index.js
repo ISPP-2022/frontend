@@ -7,7 +7,7 @@ export async function getServerSideProps(ctx) {
   // const cookies = ctx.req.cookies;
   // const user = jwt.decode(cookies.authToken);
 
-  var data = await axios.get(`${process.env.DATA_API_URL}/api/v1/spaces`);
+  var data = await axios.get(`${process.env.DATA_API_URL}/api/v1/rentals`);
   return {
     props: {
       data: data.data,
@@ -16,16 +16,16 @@ export async function getServerSideProps(ctx) {
   };
 }
 
-function Spaces(props) {
+function Rentals(props) {
   var data = props.data;
   var labelAttr = {
-    Name: "name",
-    City: "city",
-    Dimensions: "dimensions",
-    StartHour: "startHour",
-    EndHour: "endHour",
+    "Initial date": "initialDate",
+    "Dinal date": "finalDate",
+    Type: "type",
+    Meters: "meters",
+    "Space ID": "spaceId",
   };
-  var summary = ["city", "name"];
+  var summary = ["type", "spaceId"];
   return (
     <div>
       <Head>
@@ -38,13 +38,11 @@ function Spaces(props) {
       <div className="md:flex">
         <NavbarAdmin />
         <Table
-          label="Spaces"
+          label="Rentals"
           className=""
           data={data}
           idAttr="id"
           labelAttr={labelAttr}
-          editLink="/publish/edit/${id}"
-          deleteLink={props.baseLink + "/api/v1/spaces/${id}"}
           attrSummary={summary}
         />
       </div>
@@ -52,4 +50,4 @@ function Spaces(props) {
   );
 }
 
-export default Spaces;
+export default Rentals;

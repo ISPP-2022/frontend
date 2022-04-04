@@ -1,6 +1,7 @@
 import { Table } from "../../../components/Table";
 import { NavbarAdmin } from "../../../components/NavbarAdmin";
 import axios from "axios";
+import Head from 'next/head';
 
 export async function getServerSideProps(ctx) {
   // const cookies = ctx.req.cookies;
@@ -27,6 +28,13 @@ function Users(props) {
   var summary = ["idCard", "name"];
   return (
     <div className="md:flex">
+      <Head>
+        <title>Administration Page</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0"
+        ></meta>
+      </Head>
       <NavbarAdmin />
       <Table
         label="Users"

@@ -2,6 +2,7 @@ import { Table } from "../../../components/Table";
 import { NavbarAdmin } from "../../../components/NavbarAdmin";
 import { AdminForm } from "../../../components/forms/AdminForm";
 import axios from "axios";
+import Head from 'next/head';
 
 async function sendRequest(url) {
   try {
@@ -44,16 +45,15 @@ export async function getServerSideProps({ query }) {
   };
 }
 function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
-
-  var labelAttr={
-    "Name*": {"attr": "name", "type": "text"},
-    "Surname*": {"attr": "surname", "type": "text"},
-    "BirthDate": {"attr": "birthDate", "type": "date"},
-    "Sex": {"attr": "sex", "type": "select", "options":["MALE", "FEMALE", "OTHER"]},
-    "Id Card": {"attr": "idCard", "type": "text"},
-    "Phone Number": {"attr": "phoneNumber", "type": "text"},
-    "Location": {"attr": "location", "type": "text"}
-  }
+  var labelAttr = {
+    "Name*": { attr: "name", type: "text" },
+    "Surname*": { attr: "surname", type: "text" },
+    BirthDate: { attr: "birthDate", type: "date" },
+    Sex: { attr: "sex", type: "select", options: ["MALE", "FEMALE", "OTHER"] },
+    "Id Card": { attr: "idCard", type: "text" },
+    "Phone Number": { attr: "phoneNumber", type: "text" },
+    Location: { attr: "location", type: "text" },
+  };
 
   var itemLabelAttr = {
     Id: "id",
@@ -89,27 +89,37 @@ function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
   var avatarSummary = ["mimetype"];
   return (
     <div className="md:flex">
+      <Head>
+        <title>Administration Page</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0"
+        ></meta>
+      </Head>
       <NavbarAdmin />
       <div>
-      <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
-        <main className="md:bg-white mb-4 p-4 w-80vh md:w-2/3 md:mt-3 md:rounded-xl md:border-2 md:border-[#4aa7c0] ">
-          <div className="grid grid-cols-1 justify-items-center">
-            <AdminForm 
-            data={user} 
-            mainTable="users" 
-            labelAttr={labelAttr} 
-            updateLink={`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${user["id"]}`} 
-            nuevo={false}/>
-          </div>
-      </main>
-    </div>
+        <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
+          <main className="md:bg-white mb-4 p-4 w-80vh md:w-2/3 md:mt-3 md:rounded-xl md:border-2 md:border-[#4aa7c0] ">
+            <div className="grid grid-cols-1 justify-items-center">
+              <AdminForm
+                data={user}
+                mainTable="users"
+                labelAttr={labelAttr}
+                updateLink={`${
+                  process.env.NEXT_PUBLIC_DATA_API_URL ||
+                  "http://localhost:4100"
+                }/api/v1/users/${user["id"]}`}
+                nuevo={false}
+              />
+            </div>
+          </main>
+        </div>
         <Table
           tableId="items"
           label="Items"
           data={items}
           idAttr="id"
           labelAttr={itemLabelAttr}
-          createLink="/admin/items/new"
           attrSummary={itemSummary}
         />
         <Table
@@ -118,7 +128,6 @@ function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
           data={ratings}
           idAttr="id"
           labelAttr={ratingsLabelAttr}
-          createLink="/admin/ratings/new"
           deleteLink={baseLink + "/api/v1/ratings/${id}"}
           attrSummary={ratingsSummary}
         />
@@ -128,26 +137,17 @@ function User({ user, items, ratings, spaces, rentals, avatar, baseLink }) {
           data={spaces}
           idAttr="id"
           labelAttr={spacesLabelAttr}
-          editLink="/admin/spaces/${id}"
-          createLink="/admin/spaces/new"
+          editLink="/publish/edit/${id}"
           deleteLink={baseLink + "/api/v1/spaces/${id}"}
           attrSummary={spacesSummary}
         />
         <Table
           tableId="rentals"
-          label="Precios"
+          label="Rentals"
           data={rentals}
           idAttr="id"
           labelAttr={rentalsLabelAttr}
           attrSummary={rentalsSummary}
-        />
-        <Table
-          tableId="avatar"
-          label="Avatar"
-          data={avatar}
-          idAttr="id"
-          labelAttr={avatarLabelAttr}
-          attrSummary={avatarSummary}
         />
       </div>
     </div>

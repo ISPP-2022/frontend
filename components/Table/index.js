@@ -62,11 +62,11 @@ export const Table = ({
       var parsedLink = deleteLink.replace("${id}", value);
       try {
         await axios.delete(parsedLink, { withCredentials: true });
+        location.reload();
       } catch (error) {
         console.error();
       }
     });
-    location.reload();
   }
 
   /**
@@ -202,7 +202,7 @@ export const Table = ({
       var attrName = value[1];
       row.push(
         <div className={layout}>
-          <p>{element[attrName].length >15 ? element[attrName].substring(0,15) + "..." : element[attrName]}</p>
+          <p>{element[attrName]?.length >15 ? element[attrName].substring(0,15) + "..." : element[attrName]}</p>
         </div>
       );
       // Si está en móvil solo se muestra la primera columna

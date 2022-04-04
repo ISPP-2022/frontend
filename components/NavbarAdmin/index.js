@@ -48,34 +48,6 @@ export const NavbarAdmin = () => {
                                     <p className="text-sm leading-5 uppercase text-white ">Rentals</p>                    
                             </button>
                             </Link>
-                            <Link href="/admin/spaceTags">
-                            <button className={responsiveLayout}>
-                                    <p className="text-sm leading-5 uppercase text-white">SpaceTags</p>                    
-                            </button>
-                            </Link>
-                            <Link href="/admin/smartSearch">
-                            <button className={responsiveLayout}>
-                                    <p className="text-sm leading-5 uppercase text-white ">SmartSearch</p>                    
-                            </button>
-                            </Link>
-                            
-                            <button onClick={() => {setButtonPlusPressed(!buttonPlusPressed)}} className={responsiveLayout}>
-                                <p className="text-sm leading-5 text-white uppercase">Items</p>                
-                            </button>
-                         
-                            {buttonPlusPressed &&
-                            <div className="flex justify-start flex-col items-start w-[100vw]">
-                                <Link href="/admin/types">
-                                <button className={responsiveLayout.replace("pl-6", "pl-12").replace("py-5", "py-3")}>
-                                    <p className="text-sm leading-5 text-white">Types</p>                        
-                                </button>
-                                </Link>
-                                <Link href="/admin/dimension">
-                                <button className={responsiveLayout.replace("pl-6", "pl-12").replace("py-5", "py-3")}>
-                                    <p className="text-sm leading-5 text-white ">Dimension</p>                        
-                                </button>
-                                </Link>
-                            </div>}
                         </div>
                     </div>}
                 </div>
@@ -97,35 +69,6 @@ export const NavbarAdmin = () => {
                                 <p className="text-sm leading-5 uppercase ">Rentals</p>                    
                         </button>
                         </Link>
-                        <Link href="/admin/spaceTags">
-                        <button className={layout}>
-                                <p className="text-sm leading-5 uppercase ">SpaceTags</p>                    
-                        </button>
-                        </Link>
-                        <Link href="/admin/smartSearch">
-                        <button className={layout}>
-                                <p className="text-sm leading-5 uppercase ">SmartSearch</p>                    
-                        </button>
-                        </Link>
-                        
-                        <button onClick={() => {setButtonPlusPressed(!buttonPlusPressed)}} className={layout}>
-                            <p className="text-sm leading-5  uppercase">Items</p>                
-                        </button>
-                        
-                        {buttonPlusPressed &&
-                        <div className="flex justify-start flex-col w-full md:w-full items-start">
-                            
-                            <Link href="/admin/types">
-                            <button className={layout.replace("pl-6", "pl-12").replace("py-5", "py-3")}>
-                                <p className="text-sm leading-5 ">Types</p>                        
-                            </button>
-                            </Link>
-                            <Link href="/admin/dimension">
-                            <button className={layout.replace("pl-6", "pl-12").replace("py-5", "py-3")}>
-                                <p className="text-sm leading-5 ">Dimension</p>                        
-                            </button>
-                            </Link>
-                        </div>}
                     </div>
                 </div>
             </div>

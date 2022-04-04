@@ -154,7 +154,7 @@ function isSelect(text, text1,nuevo){
       </select>
       );
     else if(text[1]["type"] == "date"){
-        var date = text1[text[1]["attr"]].split("T")[0];
+        var date = text1[text[1]["attr"]]?.split("T")[0];
         return(
           <input id={text[1]["attr"]} type={text[1]["type"]} defaultValue={date}></input>
         )
