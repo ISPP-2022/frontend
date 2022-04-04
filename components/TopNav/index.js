@@ -145,7 +145,7 @@ function Navbar({ user }) {
                 </button>
                 <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
                   <Link href={`/user/${isLogged.userId}`} passHref>
-                    <a>Mi perfil</a>
+                    <a onClick={() => { setIsOpen(false) }} >Mi perfil</a>
                   </Link>
                 </button>
               </>

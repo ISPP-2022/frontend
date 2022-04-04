@@ -152,7 +152,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
             spaces.map((space, index) => (
               <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
                 <Link href={`/space/${space.id}`} passHref className="w-full h-full">
-                  <a className="w-full h-full flex justify-center">
+                  <a className="w-[420px] h-full flex justify-center">
                     <CardMobile
                       space={space}
                     />
