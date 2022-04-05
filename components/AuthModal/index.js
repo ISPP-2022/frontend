@@ -74,7 +74,6 @@ export default function AuthModal({ childerns, ...props }) {
                 className={`bg-white rounded border border-gray-400 px-4 py-2 focus:outline-none w-full focus:border-gray-500 ${errors.password || errors.response ? 'border-red-500 placeholder:text-red-500' : ''} `}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                er
               />
               <span
                 className={`border-red-500 text-red-500`}>

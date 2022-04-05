@@ -1,9 +1,8 @@
 import { addDays, isSameDay } from "date-fns";
+import UserInfo from "../../components/User";
 import SpacesCarousel from "../../components/SpacesCarousel"
 import Booking from "../../components/Booking";
-import Image from "next/image";
 import { Button } from '../../components/Core/Button';
-import { Rating } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import enumTranslator from "../../public/enumTranslator.json";
@@ -30,23 +29,6 @@ export default function Space(props) {
             setType('MONTH');
         }
     }, []);
-
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const [dateRange, setDateRange] = useState(
-        [{
-            startDate: tomorrow,
-            endDate: tomorrow,
-            key: 'selection'
-        }]
-    );
-
-    const [timeRange, setTimeRange] = useState(
-        {
-            initialTime: '00:00',
-            finalTime: '00:00'
-        }
-    );
 
     const calculateDisabledDates = () => {
         let disabledDates = [];
@@ -75,7 +57,7 @@ export default function Space(props) {
                     {/* Title */}
                     <header className='basis-[56px] flex flex-row justify-around'>
                         <h2 className='font-bold shrink-0 text-[25px] md:text-[40px] py-2 text-blue-bondi text-center'>{props.space.name} ({props.space?.dimensions.split('x').reduce((acc, cur) => acc * cur, 1).toFixed(2)} m²) </h2>
-                        <p className='sm:font-bold text-sm sm:text-lg md:text-xl py-2 text-blue-bondi text-center flex items-end justify-end'>{props.space?.city}, {props.space?.province}</p>
+                        <p className='sm:font-bold text-sm sm:text-lg md:text-xl py-2 text-blue-bondi text-center flex items-end justify-end'>{props.space?.city}</p>
                     </header>
 
                     {/* Caroussel and price */}
@@ -88,7 +70,7 @@ export default function Space(props) {
                                 {props.space.priceMonth && type === 'MONTH' && <h2 className="text-sm xl:text-2xl">{props.space.priceMonth} €/mes</h2>}
                             </div>
                             {props.space.shared ?
-                                <div className="text-white font-bold bg-blue-bondi rounded-full p-2 xl:p-5 py-2">
+                                <div className="text-white font-bold bg-blue-bondi rounded-full p-2 xl:p-5 py-2 ml-1">
                                     <h2 className="text-sm xl:text-2xl">Espacio compartido</h2>
                                 </div> : null
                             }
@@ -100,20 +82,7 @@ export default function Space(props) {
 
                         {/* User and price selector */}
                         <section className='basis-1/3 flex flex-col'>
-                            <div className="basis-[60%] md:basis-5/6 xl:basis-[40%] relative flex flex-col xl:flex-row items-center">
-                                <div className="basis-[55%] md:basis-1/2 xl:basis-1/4 relative justify-center w-1/2 xl:h-[80%] min-h-[50px]">
-                                    <Image src={props.owner?.avatar ? `data:${props.owner.avatar.mimetype};base64, ${props.owner.avatar.image}` : '/spacePlaceholder.jpg'} className="rounded-full bg-white" layout="fill" objectFit="cover" alt={`spaceImage`}></Image>
-                                </div>
-                                <div className="basis-[45%] md:basis-1/2 xl:basis-3/4 flex flex-col items-center xl:items-start justify-start pl-2 pr-2 w-full mt-2 xl:mt-0 space-y-1">
-                                    <p className="font-bold text-ellipsis whitespace-nowrap">{props.owner?.name || 'SomeUser'}</p>
-                                    <p className="text-gray-700 text-ellipsis whitespace-nowrap flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                        </svg>
-                                        {props.owner?.phoneNumber || ''}</p>
-                                    <Rating value={props.rating || 0} readOnly />
-                                </div>
-                            </div>
+                            <UserInfo user={props.owner} ratings={props.ratings} />
                             <div className='basis-[30%] md:basis-1/6 xl:basis-[60%]'>
                                 <div className='flex flex-col justify-center md:flex-row md:justify-evenly xl:justify-center items-center lg:items-end xl:items-center h-full w-full'>
                                     <Button type="button" onClick={() => setType('HOUR')} disabled={!props.space.priceHour || type === 'HOUR'} color={type === 'HOUR' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-1/3 lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
@@ -147,8 +116,7 @@ export default function Space(props) {
                 </div>
             </main>
             <menu className="">
-                <Booking user={props.user} type={type} setType={setType} space={props.space} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange}
-                    disabledDates={disabledDates} setDisabledDates={setDisabledDates} city={props.space?.city} province={props.space?.province} rentalUsers={props.rentalUsers} formStyle={"lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg min-w-[385px]"} />
+                <Booking user={props.user} type={type} setType={setType} disabledDates={disabledDates} space={props.space} formStyle={"lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg min-w-[385px]"} />
                 {showModal && (
                     <div className="fixed inset-0 z-50">
                         <div onClick={() => setShowModal(false)} className="absolute inset-0 bg-gray-900 opacity-50" />
@@ -157,8 +125,7 @@ export default function Space(props) {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </header>
-                        <Booking formStyle={"fixed block top-1/2 left-1/2 w-full h-full pt-10 md:pt-0 md:w-[30rem] md:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 md:border-webcolor-50 md:border-2 md:rounded-md  justify-center"} user={props.user} type={type} setType={setType} space={props.space} dateRange={dateRange} setDateRange={setDateRange} timeRange={timeRange} setTimeRange={setTimeRange}
-                            disabledDates={disabledDates} setDisabledDates={setDisabledDates} city={props.space?.city} province={props.space?.province} rentalUsers={props.rentalUsers} />
+                        <Booking formStyle={"fixed block top-1/2 left-1/2 w-full h-full pt-10 md:pt-0 md:w-[30rem] md:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 md:border-webcolor-50 md:border-2 md:rounded-md  justify-center"} disabledDates={disabledDates} user={props.user} type={type} setType={setType} space={props.space} />
                     </div>
                 )}
             </menu>
@@ -166,7 +133,7 @@ export default function Space(props) {
     )
 }
 
-export async function getServerSideProps({params}) {
+export async function getServerSideProps({ params }) {
     let space, owner, ratings;
     try {
         space = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}`).then(async res => {
@@ -181,7 +148,7 @@ export async function getServerSideProps({params}) {
             return res.data;
         });
 
-        ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}/ratings?filter=received`).then(res => res.data).catch(() => { });
+        ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}/ratings?filter=received`).then(res => res.data.map(e => e.rating)).catch(() => []);
     } catch (e) {
         space = "not found";
         owner = {};
@@ -199,16 +166,15 @@ export async function getServerSideProps({params}) {
                     finalDate: new Date(rental.finalDate).getTime()
                 };
             })
-        rentalUsers = res.data.map(rental => {return rental.renterId});
+        rentalUsers = res.data.map(rental => { return rental.renterId });
     }
     ).catch(() => { });
     return {
         props: {
             space: space,
             owner: owner,
-            rating: ratings ? ratings.reduce((acc, val, _idx, arr) => { return acc + val.rating / arr.length }, 0) : 0,
-            rentalsDates: rentalDates,
-            rentalUsers: rentalUsers
+            ratings: ratings,
+            rentalsDates: rentalDates
         }
     };
 }

@@ -194,8 +194,8 @@ export default function AdvertisementForm(props) {
             // Crea un objeto con los atributos adecuados
             let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, location,
                 surface1, surface2, shared, type, price, tags, space, images, startHourdate, endHourdate, city, province, country);
-            console.log(newSpace);
             // Si es edit --> PUT
+
             if (props.isEdit) {
                 axios.put(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}`, newSpace, {
                     withCredentials: true,

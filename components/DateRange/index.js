@@ -8,12 +8,12 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 export default function DateRangeInput(props) {
 
     let minDate = tomorrow > new Date(props.space.initialDate) ? tomorrow : new Date(props.space.initialDate);
-
+    console.log(props.dateRange)
     return (
         <div className='flex justify-center'>
             <DateRange
                 editableDateInputs={false}
-                onChange={item => props.setDateRange([item.selection])}
+                onChange={item => { console.log([item.selection]); props.setDateRange([item.selection]) }}
                 ranges={props.dateRange}
                 locale={locales.es}
                 minDate={minDate}
