@@ -41,3 +41,6 @@ yarn-error.log*
 # local files
 *local*
 .vscode/launch.json
+
+# invoices
+/public/invoices/**

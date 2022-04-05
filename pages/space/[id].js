@@ -47,7 +47,7 @@ export default function Space(props) {
     const [disabledDates, setDisabledDates] = useState(calculateDisabledDates());
 
     return (
-        <div className="mt-16 h-screenC md:bg-gray-100 flex justify-center items-center">
+        <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
             <Head>
                 <title>Informaci&oacute;n del espacio</title>
             </Head>
@@ -156,6 +156,7 @@ export async function getServerSideProps({ params }) {
     }
 
     let rentalDates = [];
+    let rentalUsers = [];
     await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/rentals`).then(res => {
         rentalDates = res.data.filter(rental => new Date(rental.finalDate) > new Date() &&
             !isSameDay(new Date(rental.finalDate), new Date(rental.initialDate)))
@@ -165,6 +166,7 @@ export async function getServerSideProps({ params }) {
                     finalDate: new Date(rental.finalDate).getTime()
                 };
             })
+        rentalUsers = res.data.map(rental => { return rental.renterId });
     }
     ).catch(() => { });
     return {
