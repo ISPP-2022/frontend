@@ -55,6 +55,8 @@ export default function Booking({ user, space, type, setType, formStyle, disable
   }
 
   const rent = async () => {
+
+    console.log(initialDate, finalDate);
     let initialDateBody = new Date(initialDate);
     initialDateBody.setHours(startHour[0]);
     initialDateBody.setMinutes(startHour[1]);
@@ -72,6 +74,7 @@ export default function Booking({ user, space, type, setType, formStyle, disable
       finalDateBody = addSeconds(finalDateBody, -1);
     }
 
+    console.log(initialDateBody, finalDateBody);
     let rentBody = {
       renterId: parseInt(user.userId),
       spaceId: parseInt(space.id),
@@ -166,6 +169,7 @@ export default function Booking({ user, space, type, setType, formStyle, disable
     calcCost(initialDateBody, finalDateBody, type);
   }, [initialDate, finalDate, meters, type, startHour, endHour])
 
+
   const bookingBody = {
     "HOUR": (
       <>
@@ -213,12 +217,12 @@ export default function Booking({ user, space, type, setType, formStyle, disable
       <>
         <h3 className='text-webcolor-50 text-2xl text-center mt-4'>D&iacute;a de Inicio</h3>
         <div className="flex justify-center my-3">
-          <input type={'date'} value={initialDate.toISOString().split('T')[0]} onChange={(e) => { setInitialDate(new Date(e.target.value)); setFinalDate(addMonths(new Date(e.target.value), months)) }} />
+          <input type={'date'} value={initialDate.toISOString().split('T')[0]} onChange={(e) => { setInitialDate(new Date(e.target.value)); setFinalDate(addDays(new Date(e.target.value), 30 * months)) }} />
         </div>
         <hr className=" bg-webcolor-50 w-[80%] m-auto" />
         <h3 className='text-webcolor-50 text-2xl text-center mt-4'>N&uacute;mero de meses</h3>
         <div className="flex justify-center my-3">
-          <input type={'number'} value={months} min={1} onChange={e => { setMonths(e.target.value); setFinalDate(addMonths(initialDate, e.target.value)) }} />
+          <input type={'number'} value={months} min={1} onChange={e => { setMonths(e.target.value); setFinalDate(addDays(initialDate, 30 * e.target.value)) }} />
         </div>
       </>
     ),

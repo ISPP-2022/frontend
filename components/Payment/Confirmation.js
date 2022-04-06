@@ -14,7 +14,7 @@ function Confirmation(props) {
 
   useEffect(() => {
     let coste = parseFloat(props.cost).toFixed(2);
-    let comisions = (+coste * 0.06).toFixed(2); 
+    let comisions = (+coste * 0.06).toFixed(2);
     let iva = ((+coste + +comisions) * 0.21).toFixed(2);
 
     setComisions(comisions);
@@ -47,80 +47,80 @@ function Confirmation(props) {
     }).then(res => {
       const rentId = res.data.rentalId;
       router.push({
-        pathname: "invoice/[id]",   
+        pathname: "/payment/invoice/[id]",
         query: {
           id: rentId
         }
       }, "/payment/invoice/[id]");
-    }).catch(err => {      
+    }).catch(err => {
       const alertMessage = "Hubo un error al hacer la reserva. Inténtelo más tarde."
       router.push({
-        pathname: "/",   
+        pathname: "/",
         query: {
           alertMessage: alertMessage
         }
-      }, "/" );
+      }, "/");
     }));
   }
 
 
   return (
     <>
-    <main className='grid grid-cols-1 md:grid-cols-2 gap-4 py-10 px-4 '>      
-        {/* Datos de la reserva */}  
+      <main className='grid grid-cols-1 md:grid-cols-2 gap-4 py-10 px-4 '>
+        {/* Datos de la reserva */}
         <div className='border border-blue-bondi bg-white shadow-lg rounded-lg'>
           <h2 className='font-bold py-2 text-3xl text-blue-bondi text-center'>Confirmación de reserva</h2>
 
           <div className='grid grid-cols-1 lg:grid-cols-2 space-y-3'>
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Nombre del espacio:</h2>            
+            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Nombre del espacio:</h2>
             <p className='text-blue-bondi text-xl pl-2 my-0'>{props.name}</p>
 
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Dirección:</h2>            
+            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Dirección:</h2>
             <p className='text-blue-bondi text-xl pl-2'>{props.city + "," + props.province}</p>
 
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Periodo de tiempo:</h2>            
+            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Periodo de tiempo:</h2>
             <p className='text-blue-bondi text-xl pl-2'>{props.initialDate + " - " + props.finalDate}</p>
 
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Superficie:</h2>            
+            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Superficie:</h2>
             <p className='text-blue-bondi text-xl pl-2'>{props.meters + " metros cuadrados"}</p>
-            
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Precio inicial:</h2>            
+
+            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Precio inicial:</h2>
             <p className='text-blue-bondi text-xl pl-2'>{props.cost + " euros"}</p>
 
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Comisiones (6%):</h2>            
+            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Comisiones (6%):</h2>
             <p className='text-blue-bondi text-xl pl-2'>{comisions + " euros"}</p>
 
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">IVA (21%):</h2>            
+            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">IVA (21%):</h2>
             <p className='text-blue-bondi text-xl pl-2'>{iva + " euros"}</p>
 
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">PRECIO TOTAL:</h2>            
+            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">PRECIO TOTAL:</h2>
             <p className='text-blue-bondi text-xl pl-2 pb-10 font-bold'>{total + " euros"}</p>
 
           </div>
 
         </div>
-        
+
         {/* Métodos de pago */}
         <div className='border border-blue-bondi bg-white shadow-lg rounded-lg '>
           <h2 className='font-bold py-2 text-3xl text-blue-bondi text-center'>Selecciona un método de pago</h2>
 
           <div className='px-[10%] py-[5%] align-center '>
-          <PayPalButton
-            options={{
-              currency: "EUR",
-              clientId: `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb'}`
-            }}
-            amount={total.toString()}
-            onSuccess={(details, data) => {
-              handleRent();
-              return   
-            }}
-            onError={console.log("Error in the transaction.")}
-            onCancel={console.log("Transaction cancelled")}
-          />
+            <PayPalButton
+              options={{
+                currency: "EUR",
+                clientId: `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb'}`
+              }}
+              amount={total.toString()}
+              onSuccess={(details, data) => {
+                handleRent();
+                return
+              }}
+              onError={console.log("Error in the transaction.")}
+              onCancel={console.log("Transaction cancelled")}
+            />
           </div>
         </div>
-    </main>
+      </main>
 
     </>
   )
