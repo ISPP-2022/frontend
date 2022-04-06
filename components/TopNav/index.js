@@ -16,11 +16,12 @@ function Navbar({ user }) {
   }, []);
 
   const handleLogout = () => {
-    axios.post(`${process.env.AUTH_API_URL || 'http://localhost:4000'}/api/v1/logout`, {}, { withCredentials: true })
+    axios.post(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/logout`, {}, { withCredentials: true })
       .then(res => {
+        setIsLogged(undefined)
         setIsOpen(false);
+        if (router.route === '/') router.reload()
         router.push("/");
-        router.reload()
       })
   }
 
@@ -40,12 +41,14 @@ function Navbar({ user }) {
 
   const handleSmart = () => {
     router.push("/smartSearch")
+    setIsOpen(false);
   }
 
   return (
-    <nav className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50 w-screen">
+
+    <header className="bg-gray-100 fixed top-0 inset-x-0 h-16 z-50 w-screen">
       <section className="shadow-lg mx-auto px-4">
-        <div className="flex justify-between">
+        <nav className="flex justify-between">
           {/* Logos */}
           <Link href="/" passHref>
             <a className="h-16 w-16 cursor-pointer mr-4 shrink-0 relative md:hidden">
@@ -73,7 +76,14 @@ function Navbar({ user }) {
 
           {
             isLogged ? (
+
               <div className="mr-5 align-middle md:flex hidden space-x-2">
+                <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" enableBackground="new 0 0 612 612" viewBox="0 0 612 612"><path d="M273.053,273.046c75.399,0,136.524-61.124,136.524-136.523S348.454,0,273.053,0c-75.4,0-136.522,61.124-136.522,136.523   S197.654,273.046,273.053,273.046z M338.347,191.161c-6.209,20.535-32.814,35.971-64.698,35.971   c-31.885,0-58.489-15.437-64.699-35.971H338.347z M566.878,582.625l-52.115-52.102c16.502-18.348,26.629-42.539,26.629-69.158   c0-57.199-46.369-103.568-103.57-103.568c-57.199,0-103.568,46.369-103.568,103.568c0,57.201,46.369,103.57,103.568,103.57   c16.871,0,32.748-4.119,46.824-11.275l55.605,55.594c3.662,3.662,9.654,3.66,13.314,0l13.312-13.312   C570.54,592.279,570.54,586.287,566.878,582.625z M437.823,527.273c-36.4,0-65.908-29.508-65.908-65.908   c0-36.398,29.508-65.906,65.908-65.906c36.398,0,65.908,29.508,65.908,65.906C503.731,497.766,474.222,527.273,437.823,527.273z    M310.716,461.363c0,16.277,3.188,31.795,8.787,46.113c-14.46,0.613-29.923,0.955-46.45,0.955   c-131.637,0-196.056-21.51-219.673-32.02c-6.094-2.711-11.004-10.463-11.004-17.133v-45.002   c0-67.436,51.344-123.381,116.86-130.874c1.991-0.228,4.943,0.624,6.565,1.799c30.208,21.87,67.191,34.92,107.25,34.92   c40.06,0,77.042-13.051,107.251-34.92c1.621-1.175,4.574-2.027,6.564-1.799c39.754,4.547,74.201,26.995,95.215,58.962   c-13.807-5.154-28.68-8.109-44.262-8.109C367.735,334.256,310.716,391.271,310.716,461.363z" fill="#ffffff" className="color000 svgShape" /></svg>
+                  <Link href={`/user/${isLogged.userId}`} passHref>
+                    <a>Mi perfil</a>
+                  </Link>
+                </button>
                 <button onClick={handleLogout} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -88,7 +98,7 @@ function Navbar({ user }) {
                 </button>
               </div>) : (
               <div className="mr-5 align-middle md:flex hidden">
-                <button onClick={() => setShowModal(true)} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
+                <button onClick={() => setShowModal(true)} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2 connectButton">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                   </svg>
@@ -111,10 +121,10 @@ function Navbar({ user }) {
               }
             </button>
           </div>
-        </div>
+        </nav>
       </section>
       {/* Modal menu movil */}
-      <section className={`mobile-menu transition ${isOpen ? '' : 'translate-x-full'}  absolute inset-0 md:hidden flex`} >
+      <menu className={`mobile-menu transition ${isOpen ? '' : 'translate-x-full'}  absolute inset-0 md:hidden flex`} >
         <div onClick={() => setIsOpen(!isOpen)} className="backdrop basis-1/3 bg-black opacity-25 h-screen ">
 
         </div>
@@ -122,7 +132,7 @@ function Navbar({ user }) {
           <header className=" text-center w-full py-1 my-auto">
             <Image className="shrink-0" src="/logolargo.png" alt="StackingUp Logo" width={180} height={65} layout="intrinsic" />
           </header>
-          <section className="row-span-4 text-center space-y-5">
+          <nav className="row-span-4 text-center space-y-5">
             <div className="mx-6 border-t-2" />
             {/* Botones movil */}
             {
@@ -133,6 +143,11 @@ function Navbar({ user }) {
                 <button onClick={handlePublish} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
                   <p>Publicar</p>
                 </button>
+                <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+                  <Link href={`/user/${isLogged.userId}`} passHref>
+                    <a onClick={() => { setIsOpen(false) }} >Mi perfil</a>
+                  </Link>
+                </button>
               </>
               ) : (
                 <button onClick={() => setShowModal(true)} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
@@ -142,11 +157,11 @@ function Navbar({ user }) {
             }
             <button onClick={handleSmart} className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl  space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
               Smart Search
-              <svg className="float-right mt-1 ml-1 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="hidden xs:block float-right mt-1 ml-1 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
             </button>
-          </section>
+          </nav>
           <section className="row-span-4 space-y-0.5">
             <div className="mx-6 border-t-2" />
             <div className="h-2/6 text-center">
@@ -154,13 +169,13 @@ function Navbar({ user }) {
               <button className="text-white bg-[#4aa7c0] px-5 py-3 text-2xl my-2 rounded hover:bg-[#34778a] transition-colors duration-100">Contactanos</button>
             </div>
             <div className="mx-6 border-t-2" />
-            <div className="mx-3 h-3/6 space-y-2">
+            <article className="mx-3 h-3/6 space-y-2">
               <p className="text-[#4aa7c0] underline">Preguntas frecuentes</p>
               <p className="text-[#4aa7c0] underline">Términos y condiciones</p>
               <p className="text-[#4aa7c0] underline">Política de privacidad</p>
               <p className="text-[#4aa7c0] underline">Sobre nosotros</p>
               <p className="text-[#4aa7c0] underline">Sitemap</p>
-            </div>
+            </article>
             <div className="flex justify-end text-[#4aa7c0] space-x-3 mx-3">
               <a href="https://twitter.com/StackingUp_">
                 <svg className="fill-[#4aa7c0]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" /></svg>
@@ -172,11 +187,11 @@ function Navbar({ user }) {
             </div>
           </section>
         </div>
-      </section>
+      </menu>
       {showModal && (
         <AuthModal setIsLogged={setIsLogged} handleClose={() => setShowModal(false)} />
       )}
-    </nav >
+    </header >
   );
 }
 

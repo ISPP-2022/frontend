@@ -77,17 +77,17 @@ export default function Results() {
     const dataTest = [{ type: 'APPLIANCES', dimensions: 'SMALL' }]
 
     return (
-        <div className="h-full md:bg-gray-100 flex justify-center items-center">
+        <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
             <Head>
                 <title>
                     Inquilinos
                 </title>
             </Head>
-            <div className="md:bg-white mb-4 p-5 md:w-2/3 w-full h-full md:h-3/4 md:min-h-[500px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
+            <main className="md:bg-white mb-4 p-5 md:w-2/3 w-full h-full md:h-3/4 md:min-h-[500px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
                 {/* Main box */}
-                <div className="flex lg:flex-row flex-col md:h-3/4 h-5/6">
+                <article className="flex lg:flex-row flex-col md:h-3/4 h-5/6">
                     {/* User data */}
-                    <div className="flex basis-1/3 sm:basis-1/4 md:basis-1/3 lg:basis-1/2 xl:basis-1/3 flex-col sm:flex-row lg:flex-col h-full">
+                    <section className="flex basis-1/3 sm:basis-1/4 md:basis-1/3 lg:basis-1/2 xl:basis-1/3 flex-col sm:flex-row lg:flex-col h-full">
                         <div className="relative flex flex-row items-center h-full lg:h-[29%] w-full sm:w-2/3 lg:w-full min-h-[100px]">
                             <div className="relative basis-1/3 h-full">
                                 <Image src={data?.image ? `data:${data.image.mimetipe};base64, ${data.image.image}` : '/spacePlaceholder.jpg'} className="rounded-full bg-white" layout="fill"></Image>
@@ -122,10 +122,10 @@ export default function Results() {
                             </div>
                         </div>
 
-                    </div>
+                    </section>
 
                     {/* User items table */}
-                    <div className="flex basis-2/3 sm:basis-3/4 md:basis-2/3 pt-4 lg:pt-0 items-start justify-center h-full">
+                    <section className="flex basis-2/3 sm:basis-3/4 md:basis-2/3 pt-4 lg:pt-0 items-start justify-center h-full">
                         <table className="w-full border-collapse rounded-t-2xl">
                             <thead>
                                 <tr>
@@ -153,11 +153,11 @@ export default function Results() {
                                 </div>
                             </tbody>
                         </table>
-                    </div>
-                </div>
+                    </section>
+                </article>
 
                 {/* Buttons */}
-                <div className="flex flex-col md:h-1/4 h-1/6">
+                <nav className="flex flex-col md:h-1/4 h-1/6">
                     <div className="flex basis-1/2 justify-center">
                         <button onClick={() => alert('Proximamente...')} className="rounded-full bg-white w-36 border border-[#4aa7c0] text-blue-bondi font-bold inline-flex items-center justify-center hover:bg-blue-bondi hover:text-white">
                             <p className="mr-2">Chat</p>
@@ -175,8 +175,8 @@ export default function Results() {
                             <p>Siguiente</p>
                         </button>
                     </div>
-                </div>
-            </div>
+                </nav>
+            </main>
         </div>
     );
 }

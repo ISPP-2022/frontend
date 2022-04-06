@@ -9,6 +9,8 @@ class MyDocument extends Document {
           <link rel="apple-touch-icon" href='/logo.png' />
           <link rel="icon" href='/logo.png' />
           <meta name="theme-color" content="#f0f0f0" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         </Head>
         <body>
           <Main />

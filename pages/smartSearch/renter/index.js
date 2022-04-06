@@ -10,14 +10,9 @@ export async function getServerSideProps({ req, res, query }) {
     const cookies = req.cookies;
     const user = jwt.decode(cookies.authToken);
     const userId = user.userId;
-    let spaces
-    try {
-        let spacesres = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${userId}/spaces`);
-        spaces = spacesres.data
-    }
-    catch (error) {
-        spaces = []
-    }
+    let spaces = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${userId}/spaces`)
+        .then(res => res.data)
+        .catch(() => { return [] });
 
     if (parseInt(query?.userId) === userId) {
         return {
@@ -78,16 +73,16 @@ function Renter({ spaces }) {
 
 
     return (
-        <div className="h-full md:bg-gray-100 flex justify-center items-center">
+        <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
             <Head>
                 <title>Buscador de inquilino</title>
             </Head>
-            <div className="md:bg-white mb-4 p-4 w-[80vw] md:w-2/3 h-full md:h-3/4 md:min-h-[548px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
-                <div className="p-5 md:mb-5 ">
+            <main className="md:bg-white mb-4 p-4 w-[80vw] md:w-2/3 h-full md:h-3/4 md:min-h-[548px] md:mt-3 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg">
+                <header className="p-5 md:mb-5 ">
                     <h1 className=" text-2xl md:text-3xl flex justify-center items-center text-center font-bold text-[#4aa7c0] ">Elige tu espacio</h1>
-                </div>
+                </header>
                 {
-                    scroll ? <></> : <div>
+                    scroll ? <></> : <nav>
                         <button onClick={() => pageN > 0 ? setPageN(pageN - 1) : ''} className={`absolute top-[44%] -left-8 text-white rounded-full ${pageN > 0 ? 'bg-blue-bondi hover:bg-blue-bondi-dark' : 'bg-gray-400'} p-3 z-40 `}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -98,10 +93,10 @@ function Renter({ spaces }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                             </svg>
                         </button>
-                    </div>
+                    </nav>
                 }
 
-                <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 md:grid-rows-2 gap-4 grid-flow-row overflow-y-auto justify-items-center h-4/6">
+                <section className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 md:grid-rows-2 gap-4 grid-flow-row overflow-y-auto justify-items-center h-4/6">
                     {page.map((obj, index) => {
                         return (
                             <div key={index} onClick={() => setSelected(index)} id={index} className={`rounded-md max-h-[120px] overflow-hidden min-h-[150px] w-full border  border-[#4aa7c0] ${selected === index ? 'bg-[#4aa7c0] text-white font-bold' : 'hover:bg-gray-200'}`}>
@@ -119,15 +114,15 @@ function Renter({ spaces }) {
                             </div>
                         )
                     })}
-                </div>
-                <div className="flex flex-row justify-center items-center mt-5">
+                </section>
+                <nav className="flex flex-row justify-center items-center mt-5">
                     <Link href={{ pathname: '/smartSearch/renter/results', query: { space: page[selected]?.id } }}>
                         <button disabled={!page[selected]?.id} className={`text-white font-bold py-2 px-4 rounded ${!page[selected]?.id ? 'bg-gray-300 text-gray-500' : 'bg-[#4aa7c0] hover:bg-blue-bondi-dark'}`}>
                             Start
                         </button>
                     </Link>
-                </div>
-            </div>
+                </nav>
+            </main>
         </div>
     )
 }

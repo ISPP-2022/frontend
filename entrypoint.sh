@@ -4,6 +4,7 @@ find /app/.next \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 se
 find /app/.next \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 sed -i "s#DATA_API_URL_TEMP#$DATA_API_URL_PUBLIC#g"
 find /app/.next \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 sed -i "s#AUTH_API_URL_TEMP#$AUTH_API_URL_PUBLIC#g"
 find /app/.next \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 sed -i "s#CHAT_SOCKET_URL_TEMP#$CHAT_SOCKET_URL_PUBLIC#g"
+find /app/.next \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 sed -i "s#PAYPAL_CLIENT_ID_TEMP#$PAYPAL_CLIENT_ID_PUBLIC#g"
 
 echo "Starting Nextjs"
 exec "$@"

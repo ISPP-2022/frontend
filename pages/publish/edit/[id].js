@@ -1,7 +1,6 @@
 import AdvertisementForm from '../../../components/forms/AdvertisementForm'
 import axios from 'axios';
 import jwt from 'jsonwebtoken'
-import { useRouter } from "next/router";
 import Head from 'next/head';
 
 function Edit(props) {
@@ -27,7 +26,7 @@ export async function getServerSideProps(ctx) {
   const result = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${spaceId}`)
     .then(res => {
       space = res.data;
-      if (space.ownerId !== user.userId || space === null) {
+      if ((space.ownerId !== user.userId && user.role !== 'ADMIN') || space === null) {
         return {
           redirect: {
             destination: "/",

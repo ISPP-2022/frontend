@@ -24,11 +24,15 @@ export default function AdvertisementForm(props) {
     const [space, setSpace] = useState('');
 
     const [type, setType] = useState('');
-
+    const [startHour, setStartHour] = useState('00:00');
+    const [endHour, setEndHour] = useState('00:00');
     const [price, setPrice] = useState(1);
     const [surface1, setSurface1] = useState(1);
     const [surface2, setSurface2] = useState(1);
     const [location, setLocation] = useState('');
+    const [city, setCity] = useState('');
+    const [province, setProvince] = useState('');
+    const [country, setCountry] = useState('');
 
     const [startAvailability, setStartAvailability] = useState('');
     const [endAvailability, setEndAvailability] = useState('');
@@ -87,6 +91,7 @@ export default function AdvertisementForm(props) {
     function setGeocoder(query) {
         const geocoder = new MapboxGeocoder({
             countries: 'es',
+            types: 'address',
             accessToken: process.env.NEXT_PUBLIC_MAPBOX_API_KEY,
             reverseGeocode: true
         });
@@ -99,11 +104,18 @@ export default function AdvertisementForm(props) {
         // Add geocoder result to container.
         geocoder.on('result', (e) => {
             if (e.result.geometry.coordinates[0].toString() != null && e.result.geometry.coordinates[1].toString() != null) {
+                let placeName = e.result.place_name;
+                let placeNameArray = placeName.split(',');
+                let cityS = placeNameArray[1].trim().split(' ').splice(1).join(' ');
+                let provinceS = placeNameArray[2].trim();
+                let countryS = placeNameArray[3].trim();
+                setCity(cityS);
+                setProvince(provinceS);
+                setCountry(countryS);
                 setLocation(e.result.geometry.coordinates[1].toString() + ',' + e.result.geometry.coordinates[0].toString());
             }
         });
     }
-
 
     // Se usa al editar para rellenar los campos del formulario automáticamente
     function fillForm(space) {
@@ -127,6 +139,9 @@ export default function AdvertisementForm(props) {
             setType('hours');
             setPrice(space.priceHour);
             document.getElementById('hours').checked = true;
+            setStartHour(new Date(space.startHour).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+            setEndHour(new Date(space.endHour).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
         } else if ('priceDay' in space) {
             setType('days');
             setPrice(space.priceDay);
@@ -157,7 +172,7 @@ export default function AdvertisementForm(props) {
         // Da 404 si no tiene imágenes o el id no existe
         axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/images`)
             .then(res => {
-                setImages(res.data);
+                setImages(res.data.map(x => x.image));
             }).catch(err => {
                 setImages([]);
             })
@@ -170,23 +185,29 @@ export default function AdvertisementForm(props) {
         // Vacía los errores al hacer un nuevo submit
         setErrors([]);
 
+        let startHourdate = (new Date()).setHours(startHour.split(':')[0], startHour.split(':')[1]);
+        let endHourdate = (new Date()).setHours(endHour.split(':')[0], endHour.split(':')[1]);
         // Realiza las validaciones
-        let errorsArray = (PostUpdateVerification(startAvailability, endAvailability, location,
+        let errorsArray = (PostUpdateVerification(startHourdate, endHourdate, startAvailability, endAvailability, location,
             shared, type, space, title, description));
-
 
         // Si no hay errores, hacemos POST/UPDATE
         if (errorsArray.length == 0) {
             // Crea un objeto con los atributos adecuados
-            let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, location,
-                surface1, surface2, shared, type, price, tags, space, images);
-
+            let userId = props.userId
+            if (props.isEdit) {
+                userId = props.space.ownerId
+            }
+            let newSpace = CreateNewSpaceObject(userId, title, description, startAvailability, endAvailability, location,
+                surface1, surface2, shared, type, price, tags, space, images, startHourdate, endHourdate, city, province, country);
             // Si es edit --> PUT
+
             if (props.isEdit) {
                 axios.put(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}`, newSpace, {
                     withCredentials: true,
                 })
                     .then(res => {
+                        alert('Espacio actualizado correctamente');
                         setSuccess(true);
                         router.push('/');
                     }).catch(err => {
@@ -199,6 +220,7 @@ export default function AdvertisementForm(props) {
                     withCredentials: true,
                 })
                     .then(res => {
+                        alert('Espacio creado correctamente');
                         setSuccess(true);
                         router.push('/')
                     }).catch(err => {
@@ -233,7 +255,7 @@ export default function AdvertisementForm(props) {
             <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css"></link>
 
             <div>
-                <main className='grid bg-[#e6f6fa]  place-items-center md:py-4 '>
+                <main className='grid bg-gray-100  place-items-center md:py-4 '>
                     <form onSubmit={handleSubmit} className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
                         <p className='text-center'>INFORMACIÓN DE TU ESPACIO</p>
 
@@ -309,6 +331,17 @@ export default function AdvertisementForm(props) {
                                 </li>
                             </ul>
                         </fieldset>
+
+                        {type === 'hours' ? (
+                            <fieldset className='pt-4 flex space-x-2'>
+                                <div className='basis-1/2 flex justify-end'>
+                                    <input type="time" value={startHour} onChange={(e) => { setStartHour(e.target.value) }} />
+                                </div>
+                                <div className='basis-1/2'>
+                                    <input type="time" value={endHour} onChange={(e) => { setEndHour(e.target.value) }} />
+                                </div>
+                            </fieldset>
+                        ) : <></>}
 
                         {/* Precio y Superficie */}
                         <fieldset className='pt-4 flex'>

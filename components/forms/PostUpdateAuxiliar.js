@@ -1,4 +1,6 @@
-export default function PostUpdateVerification(startAvailability, endAvailability, location, shared, type, space, title, description) {
+import { addDays } from 'date-fns';
+
+export default function PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, shared, type, space, title, description) {
     let errorsArray = [];
 
 
@@ -27,6 +29,15 @@ export default function PostUpdateVerification(startAvailability, endAvailabilit
         errorsArray.push('La fecha de inicio de disponibilidad debe ser anterior a la fecha de fin.');
     }
 
+    if (type === 'hours') {
+        if (!endHour || !startHour) {
+            errorsArray.push('Escoge una hora de inicio y fin.');
+        }
+        if (endHour != '' && startHour > endHour) {
+            errorsArray.push('La hora de inicio debe ser anterior a la hora de fin.');
+        }
+    }
+
     const date1 = new Date(startAvailability);
     const today = new Date();
     if (date1 < today) {
@@ -50,24 +61,41 @@ export default function PostUpdateVerification(startAvailability, endAvailabilit
 }
 
 export function CreateNewSpaceObject(userId, title, description, startAvailability, endAvailability, location,
-    surface1, surface2, shared, type, price, tags, space, images) {
+    surface1, surface2, shared, type, price, tags, space, images, startHourdate, endHourdate, city, province, country) {
     let newSpace = {};
     newSpace.ownerId = userId;
     newSpace.name = title;
     newSpace.description = description;
 
     newSpace.initialDate = new Date(startAvailability);
+    newSpace.initialDate.setHours(0, 0, 0, 0);
 
-    if (endAvailability != undefined) {
+    if (endAvailability) {
         newSpace.finalDate = new Date(endAvailability);
+        newSpace.finalDate.setHours(0, 0, 0, 0);
     }
 
     newSpace.location = location;
+    newSpace.city = city;
+    newSpace.province = province;
+    newSpace.country = country;
     newSpace.dimensions = surface1.toString() + 'x' + surface2.toString();
     newSpace.shared = shared;
 
     if (type == 'hours') {
         newSpace.priceHour = parseFloat(price);
+        newSpace.startHour = new Date(startHourdate);
+        newSpace.startHour = addDays(newSpace.startHour, 1);
+        newSpace.startHour.setSeconds(0);
+        newSpace.startHour.setMilliseconds(0);
+        newSpace.startHour = newSpace.startHour.getTime();
+
+        newSpace.endHour = new Date(endHourdate);
+        newSpace.endHour = addDays(newSpace.endHour, 1);
+        newSpace.endHour.setSeconds(0);
+        newSpace.endHour.setMilliseconds(0);
+        newSpace.endHour = newSpace.endHour.getTime();
+
     } else if (type == 'days') {
         newSpace.priceDay = parseFloat(price);
     } else if (type == 'months') {
@@ -82,7 +110,6 @@ export function CreateNewSpaceObject(userId, title, description, startAvailabili
     newSpace.tags = tagsArray;
 
     newSpace.images = images;
-
     return newSpace;
 }
 
