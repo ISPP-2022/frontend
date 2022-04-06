@@ -30,6 +30,20 @@ export async function getServerSideProps(context) {
     };
 };
 
+const checkIdCard = (idCard) => {
+    const dniChars = ['T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'];
+
+    if (!idCard.match(/^\d{8}[A-Z]$/)) {
+        return false;
+    } else {
+        const rest = parseInt(idCard.slice(0, 8)) % 23;
+        if (idCard[8] !== dniChars[rest]) {
+            return false;
+        }
+    }
+    return true;
+};
+
 export default function UserEdit({ userData, userSession }) {
 
     if (userSession?.userId !== userData?.id && userSession?.role !== 'ADMIN') {
@@ -67,13 +81,13 @@ export default function UserEdit({ userData, userSession }) {
             validations.push(false);
         }
 
-        if (phoneNumber && phoneNumber.match(/\+34[0-9]{9}/) === null) {
+        if (phoneNumber && phoneNumber.match(/^\+?([0-9]{2})\d{9}$/) === null) {
             setErrors({ ...errors, phoneNumber: `El número de teléfono debe seguir el formato +34XXXXXXXXX` })
             validations.push(false);
         }
 
-        if (idCard && idCard.match(/[0-9]{8}[A-Z]{1}/) === null) {
-            setErrors({ ...errors, idCard: `El DNI debe seguir el formato XXXXXXXXA` })
+        if (idCard && !checkIdCard(idCard)) {
+            setErrors({ ...errors, idCard: `El DNI debe seguir el formato XXXXXXXXA o es invalido` })
             validations.push(false);
         }
 
