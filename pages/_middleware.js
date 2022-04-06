@@ -45,6 +45,12 @@ export async function middleware(req) {
     }
   }
 
+  if (req.url.includes('/admin')) {
+    if (!user || user.role !== 'ADMIN') {
+      return NextResponse.redirect('/')
+    }
+  }
+
   if (req.url.includes('/smartSearch/renter')) {
     if (!user) {
       return NextResponse.redirect('/')
