@@ -24,11 +24,11 @@ export const Form = ({ onSubmit, className, children }) => {
  * @param  {string} name - Name of the field.
  * @param  {function} onChange - Callback function to be called when field is changed.
  */
-export const FieldTextBox = ({ label, value, placeholder = "", type = "text", name, onChange, required = false }) => {
+export const FieldTextBox = ({ label, value, placeholder = "", min = null, pattern = null, type = "text", name, onChange, required = false }) => {
     return (
         <div className="w-full">
             <label className="pl-2 font-medium">{label}
-                <input type={type} name={name} value={value} onChange={onChange} placeholder={placeholder} className="mx-2 my-2 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi" required={required}></input>
+                <input type={type} name={name} value={value} min={min} pattern={pattern} onChange={onChange} placeholder={placeholder} className="mx-2 my-2 bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-black leading-tight focus:outline-none focus:bg-white focus:border-blue-bondi" required={required}></input>
             </label>
         </div>
     );

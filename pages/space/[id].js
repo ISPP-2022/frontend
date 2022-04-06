@@ -30,22 +30,6 @@ export default function Space(props) {
         }
     }, []);
 
-    const calculateDisabledDates = () => {
-        let disabledDates = [];
-        if (props.rentalsDates) {
-            props.rentalsDates.forEach(rental => {
-                let currentDate = rental.initialDate;
-                while (currentDate <= rental.finalDate) {
-                    disabledDates.push(new Date(currentDate));
-                    currentDate = addDays(currentDate, 1);
-                }
-            });
-        }
-        return disabledDates;
-    };
-
-    const [disabledDates, setDisabledDates] = useState(calculateDisabledDates());
-
     return (
         <div className="h-screenC md:bg-gray-100 flex justify-center items-center">
             <Head>
@@ -116,7 +100,7 @@ export default function Space(props) {
                 </div>
             </main>
             <menu className="">
-                <Booking user={props.user} type={type} setType={setType} disabledDates={disabledDates} space={props.space} formStyle={"lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg min-w-[385px]"} />
+                <Booking user={props.user} type={type} setType={setType} rentals={props.rentals} space={props.space} formStyle={"lg:bg-white hidden ml-4 lg:block lg:h-3/4 lg:min-h-[769px] mb-4 p-5 pl-6 pr-6 lg:mt-3 lg:rounded-xl lg:border lg:border-[#4aa7c0] relative lg:shadow-lg min-w-[385px]"} />
                 {showModal && (
                     <div className="fixed inset-0 z-50">
                         <div onClick={() => setShowModal(false)} className="absolute inset-0 bg-gray-900 opacity-50" />
@@ -125,7 +109,7 @@ export default function Space(props) {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </header>
-                        <Booking formStyle={"fixed block top-1/2 left-1/2 w-full h-full pt-10 md:pt-0 md:w-[30rem] md:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 md:border-webcolor-50 md:border-2 md:rounded-md  justify-center"} disabledDates={disabledDates} user={props.user} type={type} setType={setType} space={props.space} />
+                        <Booking formStyle={"fixed block top-1/2 left-1/2 w-full h-full pt-10 md:pt-0 md:w-[30rem] md:h-3/4 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 md:border-webcolor-50 md:border-2 md:rounded-md  justify-center"} rentals={props.rentals} user={props.user} type={type} setType={setType} space={props.space} />
                     </div>
                 )}
             </menu>
@@ -134,47 +118,41 @@ export default function Space(props) {
 }
 
 export async function getServerSideProps({ params }) {
-    let space, owner, ratings;
+    let space, owner, ratings, rentals;
     try {
         space = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}`).then(async res => {
-            let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/images`).then(imageres => imageres.data).catch(() => { });
+            let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/images`).then(imageres => imageres.data).catch(() => { return "not found" });
             if (images) res.data.images = images;
             return res.data;
         });
 
         owner = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}`).then(async res => {
-            let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { });
+            let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { return {} });
             if (avatar) res.data.avatar = avatar;
             return res.data;
         });
 
-        ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}/ratings?filter=received`).then(res => res.data.map(e => e.rating)).catch(() => []);
+        ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}/ratings?filter=received`).then(res => res.data).catch(() => []);
+
+        rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/rentals`).then(res => {
+            let rentals = res.data;
+            rentals = rentals.filter(rental => new Date(rental.finalDate) > new Date())
+            return rentals
+        }).catch(() => { return [] });
+
     } catch (e) {
         space = "not found";
         owner = {};
         ratings = [];
+        rentals = [];
     }
 
-    let rentalDates = [];
-    let rentalUsers = [];
-    await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/rentals`).then(res => {
-        rentalDates = res.data.filter(rental => new Date(rental.finalDate) > new Date() &&
-            !isSameDay(new Date(rental.finalDate), new Date(rental.initialDate)))
-            .map(rental => {
-                return {
-                    initialDate: new Date(rental.initialDate).getTime(),
-                    finalDate: new Date(rental.finalDate).getTime()
-                };
-            })
-        rentalUsers = res.data.map(rental => { return rental.renterId });
-    }
-    ).catch(() => { });
     return {
         props: {
             space: space,
             owner: owner,
             ratings: ratings,
-            rentalsDates: rentalDates
+            rentals: rentals
         }
     };
 }

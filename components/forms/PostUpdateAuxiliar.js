@@ -110,7 +110,6 @@ export function CreateNewSpaceObject(userId, title, description, startAvailabili
     newSpace.tags = tagsArray;
 
     newSpace.images = images;
-
     return newSpace;
 }
 

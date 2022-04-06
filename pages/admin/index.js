@@ -13,6 +13,7 @@ export default function Admin() {
     'HOUR': 'Por horas',
     "DAY": 'Por días',
   }
+
   const header = {
     user: { 'ID': 'id', 'Nombre': 'name', 'Apellido': 'surname', 'Fecha de nacimiento': 'birthDate', 'Genero': 'sex', 'DNI': 'idCard', 'Numero de telefono': 'phoneNumber' },
     space: { 'Nombre': 'name', 'Fecha de inicio': 'initialDate', 'Fecha de fin': 'finalDate', 'Ciudad': 'city' },
@@ -36,10 +37,10 @@ export default function Admin() {
       <tbody>
         {data && data.map((item, index) => {
           return (
-            <tr key={index} onClick={() => router.push('/user/' + item.id)} className='border h-12 odd:bg-gray-400 even:bg-gray-300'>
+            <tr key={index} className='border h-12 odd:bg-gray-400 even:bg-gray-300'>
               {Object.values(header[type]).map((key, index) => {
                 return (
-                  <td key={index} className='border text-center font-semibold'>{item[key] || '-'}</td>
+                  <td key={index} onClick={() => router.push('/user/' + item.id)} className='border text-center font-semibold'>{item[key] || '-'}</td>
                 )
               })}
               <td className='border text-center'>
@@ -75,7 +76,6 @@ export default function Admin() {
       </thead>
       <tbody>
         {data && data.map((item, index) => {
-          console.log(item)
           return (
             <tr key={index} className='border h-12 odd:bg-gray-400 even:bg-gray-300 '>
               <td onClick={() => router.push('/space/' + item.id)} className='border text-center font-semibold'>{item['id'] || '-'}</td>
@@ -99,7 +99,19 @@ export default function Admin() {
               </td>
               <td className='border text-center'>
                 <svg onClick={() => {
-                  confirm('¿Estas seguro de eliminar este espacio?') && axios.delete(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${item.id}`, { withCredentials: true })
+                  confirm('¿Estas seguro de eliminar este espacio?') &&
+                    axios.delete(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${item.id}`, { withCredentials: true }).then(() => {
+                      alert('Borrado exitosamente')
+                      setType('user')
+                      setType('space')
+                    })
+                      .catch(err => {
+                        if (err.response?.status === 400) {
+                          if (err.response.data === 'Cannot delete space containing rentals') {
+                            alert('No se puede eliminar este espacio porque tiene alguna reserva asociada')
+                          }
+                        }
+                      })
                 }} xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 m-auto text-red-500 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
@@ -145,6 +157,7 @@ export default function Admin() {
       </tbody>
     </table>),
   }
+
   useEffect(() => {
     setData(null)
     const fetchData = async () => {

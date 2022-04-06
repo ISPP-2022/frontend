@@ -2,6 +2,7 @@ import Footer from "../components/Footer";
 import Head from "next/head";
 import { Card, CardMobile } from "../components/Card";
 import { Paragraph, Title, Subtitle } from "../components/Core/Text";
+import { Loading } from "../components/Core/Loading";
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from 'react';
@@ -14,29 +15,67 @@ function Home(props) {
   const [search, setSearch] = useState("");
 
   const [data, setData] = useState([]);
-
-
-  useEffect(() => {
-    if (props.router.query.alertMessage) {
-      alert(props.router.query.alertMessage);
-    }
-  }, [])
-
+  const [loading, setLoading] = useState(true);
   const [selector, setSelector] = useState("recent");
 
   useEffect(() => {
-    axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces${selector == 'recent' ? '?orderBy=publishDate-desc&limit=6' : ''}`)
-      .then(async (response) => {
-        for (let i = 0; i < response.data.length; i++) {
-          const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
-            .then(rat => rat.data).catch(() => { return [] });
-          response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
-        }
-        setData(response.data)
-      })
-      .catch(error => {
-        setData([])
+    setLoading(true);
+    if (selector === "recent") {
+      axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces?orderBy=publishDate-desc&limit=6`)
+        .then(async (response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+              .then(rat => rat.data).catch(() => { return [] });
+            response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
+          }
+          setData(response.data)
+          setLoading(false);
+        })
+        .catch(error => {
+          setData([])
+          setLoading(false);
+        });
+    }
+    else if (selector === "nearyou") {
+      navigator.geolocation.getCurrentPosition(async function (position) {
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+        axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces?orderByLocation=${lat},${lon}&limit=6`)
+          .then(async (response) => {
+            for (let i = 0; i < response.data.length; i++) {
+              const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+                .then(rat => rat.data).catch(() => { return [] });
+              response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
+            }
+            setData(response.data)
+            setLoading(false);
+
+          })
+          .catch(error => {
+            setData([])
+            setLoading(false);
+
+          });
+      }, function (error) {
+        alert('Es necesario activar la geolocalización para poder acceder a esta funcion');
+        setSelector("recent")
       });
+    } else if (selector === "rating") {
+      axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces?orderByRatings=desc&limit=6`)
+        .then(async (response) => {
+          for (let i = 0; i < response.data.length; i++) {
+            const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+              .then(rat => rat.data).catch(() => { return [] });
+            response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
+          }
+          setData(response.data)
+          setLoading(false);
+        })
+        .catch(error => {
+          setData([])
+          setLoading(false);
+        });
+    }
   }, [selector]);
 
   const handleSubmit = (e) => {
@@ -88,7 +127,7 @@ function Home(props) {
                       </svg>
                     </button>
                   </div>
-                </form>""
+                </form>
               </div>
             </div>
           </section>
@@ -143,18 +182,19 @@ function Home(props) {
               <div className="flex-grow border-t-[2px] border-gray-400"></div>
             </div>
 
-            {data && data.length > 0 ?
-              data.map((item, index) => (
-                <article key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
-                  <Link href={`/space/${item.id}`} passHref className="w-full h-full">
-                    <a className="w-full h-full">
-                      <Card
-                        space={item}
-                      />
-                    </a>
-                  </Link>
-                </article>
-              )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
+            {loading ? <div className="flex justify-center h-full items-center"> <Loading size="large"></Loading></div>
+              : data && data.length > 0 ?
+                data.map((item, index) => (
+                  <article key={index} className="shrink-0 md:basis-1/2 lg:basis-1/4">
+                    <Link href={`/space/${item.id}`} passHref className="w-full h-full">
+                      <a className="w-full h-full">
+                        <Card
+                          space={item}
+                        />
+                      </a>
+                    </Link>
+                  </article>
+                )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
           </section>
         </div>
         {/* Mobile */}
@@ -204,18 +244,19 @@ function Home(props) {
               </menu>
             </form>
           </div>
-          {data && data.length > 0 ?
-            data.map((item, index) => (
-              <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
-                <Link href={`/space/${item.id}`} passHref className="w-full h-full">
-                  <a className="w-full h-full flex justify-center">
-                    <CardMobile
-                      space={item}
-                    />
-                  </a>
-                </Link>
-              </div>
-            )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
+          {loading ? <div className="flex justify-center h-full items-center"> <Loading size="large"></Loading></div>
+            : data && data.length > 0 ?
+              data.map((item, index) => (
+                <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 flex justify-center">
+                  <Link href={`/space/${item.id}`} passHref className="w-full h-full">
+                    <a className="w-full h-full flex justify-center">
+                      <CardMobile
+                        space={item}
+                      />
+                    </a>
+                  </Link>
+                </div>
+              )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>}
         </div>
       </main>
       <Footer />

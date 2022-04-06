@@ -16,6 +16,7 @@ export default function Comments({
   userUrl,
   loggedIn = false,
 }) {
+
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -146,9 +147,9 @@ export default function Comments({
             label={
               <Link
                 className="no-underline text-black"
-                href={userUrl.replace("${id}", reviewers[rating.rating].userId)}
+                href={userUrl.replace("${id}", reviewers[rating.reviewerId].userId)}
               >
-                {reviewers[rating.rating].userName + " - " + rating.title}
+                {reviewers[rating.reviewerId].userName + " - " + rating.title}
               </Link>
             }
             value={rating.description}

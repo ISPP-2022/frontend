@@ -30,6 +30,7 @@ export async function middleware(req) {
   }
 
   if (req.url.includes('/payment/invoice')) {
+
     let rental = await axiosInstance.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/rentals/${req.url.split('/').pop()}`)
       .then(res => {
         return res.data;
@@ -39,6 +40,7 @@ export async function middleware(req) {
     if (!rental || !user) {
       return NextResponse.redirect('/')
     } else {
+
       if (user.role !== 'ADMIN' && rental.renterId !== user.userId) {
         return NextResponse.redirect('/')
       }

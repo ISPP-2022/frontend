@@ -4,7 +4,7 @@ import { Rating } from "@mui/material";
 
 export default function UserInfo({ user, ratings }) {
 
-    const avgRating = ratings.length ? ratings.reduce((acc, cur) => acc + cur.rating) / ratings.length : 0;
+    const avgRating = ratings.length > 0 ? ratings.reduce((acc, cur) => acc + cur.rating, 0) / ratings.length : 0;
 
     return (
         <div className="basis-[60%] md:basis-5/6 xl:basis-[40%] relative flex flex-col xl:flex-row items-center">
