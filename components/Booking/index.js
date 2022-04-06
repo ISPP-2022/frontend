@@ -4,6 +4,7 @@ import * as locales from 'react-date-range/dist/locale';
 import { Button } from '../Core/Button';
 import { addDays, addHours, setHours, addMonths, addSeconds, differenceInHours, differenceInDays } from 'date-fns';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 
 const tupleToHours = (tuple) => {
@@ -18,7 +19,7 @@ const hoursStringToTuple = (hoursString) => {
 }
 
 export default function Booking({ user, space, type, setType, formStyle, disabledDates }) {
-
+  const router = useRouter();
   const dimensions = space.dimensions.split('x').reduce((acc, curr) => acc * curr).toFixed(2);
 
   const iDate = new Date(space.initialDate) < addDays(new Date(), 1) ? addDays(new Date(), 1) : new Date(space.initialDate);
@@ -54,7 +55,9 @@ export default function Booking({ user, space, type, setType, formStyle, disable
     setCost(costTemp < 0 ? 0 : costTemp);
   }
 
-  const rent = () => {
+  const rent = async () => {
+
+    console.log(initialDate, finalDate);
     let initialDateBody = new Date(initialDate);
     initialDateBody.setHours(startHour[0]);
     initialDateBody.setMinutes(startHour[1]);
@@ -72,6 +75,7 @@ export default function Booking({ user, space, type, setType, formStyle, disable
       finalDateBody = addSeconds(finalDateBody, -1);
     }
 
+    console.log(initialDateBody, finalDateBody);
     let rentBody = {
       renterId: parseInt(user.userId),
       spaceId: parseInt(space.id),
@@ -81,13 +85,57 @@ export default function Booking({ user, space, type, setType, formStyle, disable
       meters
     }
 
-    axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.id}/rentals`, rentBody, { withCredentials: true })
+    await axios.post(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.id}/rentals`,
+      rentBody,
+      {
+        withCredentials: true,
+      })
       .then(res => {
-        alert('Rentado con éxito');
-      })
-      .catch(err => {
-        alert('Error al reservar->' + err.response.data);
-      })
+        const token = res.data;
+        router.push({
+          pathname: "/payment/confirmation",
+          query: {
+            initialDate: initialDateBody.toLocaleString(),
+            finalDate: finalDateBody.toLocaleString(),
+            type: type,
+            meters: meters,
+            spaceId: space.id,
+            renterId: user.userId,
+            city: space.city,
+            province: space.province,
+            cost: cost,
+            name: space.name,
+            token: token,
+            renterConfirmation: false
+          }
+        }, "/payment/confirmation")
+      }).catch(err => {
+        console.log(err);
+        if (err.response.status === 400)
+          if (err.response.data === 'Bad Request: Missing required attributes')
+            alert('Error: Ingrese todos los atributos requeridos');
+          else if (err.response.data === 'Bad Request: Cannot rent space twice. Please update or delete your previous rental of this space') {
+            alert("No puedes alquilar el mismo espacio dos veces. Edita o elimina el alquiler anterior.");
+          } else if (err.response.data === "Bad Request: Initial date must be between space dates") {
+            alert("La fecha de inicio debe estar en el rango de fechas válidas.")
+          } else if (err.response.data === "Bad Request: Initial hour must be between space hours") {
+            alert("La hora de inicio debe estar en el rango de horas válidas.")
+          } else if (err.response.data === "Bad Request: Final hour must be between space hours") {
+            alert("La hora de fin debe estar en el rango de horas válidas.")
+          } else if (err.response.data === "Bad Request: Initial date must be a Date after today") {
+            alert("La fecha de inicio debe ser posterior a la fecha de hoy.")
+          } else if (err.response.data === "Bad Request: Final date must be a Date after today") {
+            alert("La fecha de fin debe ser posterior a la fecha de hoy.")
+          } else if (err.response.data === "Bad Request: Space not available or space capacity exceeded") {
+            alert("Se ha excedido la superficie máxima disponible en el espacio")
+          }
+          else
+            if (err.response.data === "Cannot rent your own space") {
+              alert("No puedes alquilar tu propio espacio");
+            } else {
+              alert("Error al realizar la reserva");
+            }
+      });
 
   }
 
@@ -121,6 +169,7 @@ export default function Booking({ user, space, type, setType, formStyle, disable
     finalDateBody.setMinutes(endHour[1]);
     calcCost(initialDateBody, finalDateBody, type);
   }, [initialDate, finalDate, meters, type, startHour, endHour])
+
 
   const bookingBody = {
     "HOUR": (
@@ -169,12 +218,12 @@ export default function Booking({ user, space, type, setType, formStyle, disable
       <>
         <h3 className='text-webcolor-50 text-2xl text-center mt-4'>D&iacute;a de Inicio</h3>
         <div className="flex justify-center my-3">
-          <input type={'date'} value={initialDate.toISOString().split('T')[0]} onChange={(e) => { setInitialDate(new Date(e.target.value)); setFinalDate(addMonths(new Date(e.target.value), months)) }} />
+          <input type={'date'} value={initialDate.toISOString().split('T')[0]} onChange={(e) => { setInitialDate(new Date(e.target.value)); setFinalDate(addDays(new Date(e.target.value), 30 * months)) }} />
         </div>
         <hr className=" bg-webcolor-50 w-[80%] m-auto" />
         <h3 className='text-webcolor-50 text-2xl text-center mt-4'>N&uacute;mero de meses</h3>
         <div className="flex justify-center my-3">
-          <input type={'number'} value={months} min={1} onChange={e => { setMonths(e.target.value); setFinalDate(addMonths(initialDate, e.target.value)) }} />
+          <input type={'number'} value={months} min={1} onChange={e => { setMonths(e.target.value); setFinalDate(addDays(initialDate, 30 * e.target.value)) }} />
         </div>
       </>
     ),

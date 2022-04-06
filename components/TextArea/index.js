@@ -1,4 +1,5 @@
 export const TextArea = ({
+  id,
   label,
   value,
   name,
@@ -18,6 +19,7 @@ export const TextArea = ({
       <label className="pl-2 font-medium">
         {label}
         <textarea
+          id={id}
           style={style}
           disabled={disabled}
           placeholder={placeholder}

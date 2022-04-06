@@ -8,8 +8,9 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from "next/link";
+import { withRouter } from "next/router";
 
-export default function Home() {
+function Home(props) {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
@@ -262,3 +263,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default withRouter(Home)
