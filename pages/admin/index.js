@@ -182,6 +182,11 @@ export default function Admin() {
     }
     fetchData()
   }, [type, page])
+
+  useEffect(() => {
+    setPage(0)
+  }, [type])
+
   return (
     <>
       {/*Screen */}

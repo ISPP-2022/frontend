@@ -7,10 +7,6 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 
 const createInvoice = (rental, space, renter, owner) => {
-  console.log(rental)
-  console.log(space)
-  console.log(renter)
-  console.log(owner)
   let costMinusIVA = (rental.cost / 1.21).toFixed(2);
   let costIVA = (rental.cost - costMinusIVA).toFixed(2);
   let costMinusComission = (costMinusIVA / 1.06).toFixed(2);
