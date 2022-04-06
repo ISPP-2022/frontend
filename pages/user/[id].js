@@ -32,7 +32,7 @@ async function getRatingComponentData({ query }) {
         return { data: { id: -1, name: "Usuario", surname: "Anónimo" } };
       });
 
-    const ratingId = rating.rating;
+    const ratingId = rating.reviewerId;
     reviewers[ratingId] = {};
     reviewers[ratingId].userName = user.data.name + " " + user.data.surname;
     reviewers[ratingId].userId = user.data.id;
@@ -74,6 +74,10 @@ export async function getServerSideProps(context) {
           .then(async space => {
             let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.data.id}/images`).then(imageres => imageres.data).catch(() => { });
             if (images) space.data.images = images;
+            let ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.data.ownerId}/ratings?filter=received`)
+              .then(rat => rat.data).catch(() => { return [] });
+            let avgRating = ratings.length > 0 ? ratings.reduce((acc, cur) => acc + cur.rating, 0) / ratings.length : 0;
+            space.data.rating = avgRating
             return space.data;
           }).catch(() => []);
       }))
@@ -81,7 +85,13 @@ export async function getServerSideProps(context) {
       return [];
     });
 
-  const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/ratings?filter=received`).then(res => res.data.map(e => e.rating)).catch(() => []);
+
+  const ratings = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/ratings?filter=received`).then(res => res.data).catch(() => []);
+
+  const avgRating = ratings.length > 0 ? ratings.reduce((acc, cur) => acc + cur.rating, 0) / ratings.length : 0;
+
+  spaces.forEach(space => space.rating = avgRating)
+
   const prp = await getRatingComponentData(context);
   return {
     props: {

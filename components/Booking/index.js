@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { DateRange } from 'react-date-range';
 import * as locales from 'react-date-range/dist/locale';
 import { Button } from '../Core/Button';
-import { addDays, addHours, setHours, addMonths, addSeconds, differenceInHours, differenceInDays } from 'date-fns';
+import { addDays, format, setHours, addMonths, addSeconds, differenceInHours, differenceInDays } from 'date-fns';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
@@ -18,11 +18,78 @@ const hoursStringToTuple = (hoursString) => {
   return [parseInt(hours), parseInt(minutes)];
 }
 
-export default function Booking({ user, space, type, setType, formStyle, disabledDates }) {
+const calculateDisableDates = (space, rentals) => {
+  let disabled = [];
+  let shared = [];
+  if (!space.shared) {
+    rentals.forEach(rental => {
+      let i = new Date(rental.initialDate);
+      while (i <= new Date(rental.finalDate)) {
+        disabled.push(i);
+        i = addDays(i, 1);
+      }
+    });
+    disabled = new Array(new Set(disabled));
+  } else {
+    let temp = []
+    rentals.forEach(rental => {
+      let i = new Date(rental.initialDate);
+      while (i <= new Date(rental.finalDate)) {
+        temp.push({ date: i, space: rental.meters });
+        i = addDays(i, 1);
+      }
+    });
+    temp = temp.reduce((acc, curr) => {
+      acc.find((value, index) => {
+        if (value.date.getTime() === curr.date.getTime()) {
+          acc[index].space += curr.space;
+          return true;
+        }
+        return false;
+      }) || acc.push(curr);
+      return acc;
+    }, []);
+    temp.forEach((rental) => {
+      if (rental.space === space.dimensions.split('x').reduce((ac, cu) => ac * cu))
+        disabled.push(rental.date);
+      else
+        shared.push(rental.date);
+    })
+  }
+
+  return [disabled, shared];
+}
+
+const customDayContent = (day, shared) => {
+  let extraDot = null;
+  if (shared.find(date => date.getTime() === day.getTime())) {
+    extraDot = (
+      <div
+        style={{
+          height: "5px",
+          width: "5px",
+          borderRadius: "100%",
+          background: "orange",
+          position: "absolute",
+          top: 2,
+          right: 2,
+        }}
+      />
+    )
+  }
+  return (
+    <div>
+      {extraDot}
+      <span>{format(day, "d")}</span>
+    </div>
+  )
+}
+
+export default function Booking({ user, space, type, setType, formStyle, rentals }) {
   const router = useRouter();
   const dimensions = space.dimensions.split('x').reduce((acc, curr) => acc * curr).toFixed(2);
 
-  const iDate = new Date(space.initialDate) < addDays(new Date(), 1) ? addDays(new Date(), 1) : new Date(space.initialDate);
+  const iDate = new Date(space.initialDate) < addDays(new Date(), 2) ? addDays(new Date(), 2) : new Date(space.initialDate);
 
   const [cost, setCost] = useState(0);
   const [initialDate, setInitialDate] = useState(iDate);
@@ -39,10 +106,10 @@ export default function Booking({ user, space, type, setType, formStyle, disable
     let costTemp = 0;
     switch (type) {
       case 'HOUR':
-        costTemp = (differenceInHours(fD, iD)) * space.priceHour;
+        costTemp = (differenceInHours(fD, iD, { roundingMethod: 'ceil' })) * space.priceHour;
         break;
       case 'DAY':
-        costTemp = (differenceInDays(fD, iD) + 1) * space.priceDay;
+        costTemp = ((fD.getTime() - iD.getTime()) / (1000 * 60 * 60 * 24)).toPrecision(2) * space.priceDay;
         break;
       case 'MONTH':
         costTemp = months * space.priceMonth;
@@ -59,16 +126,10 @@ export default function Booking({ user, space, type, setType, formStyle, disable
 
     console.log(initialDate, finalDate);
     let initialDateBody = new Date(initialDate);
-    initialDateBody.setHours(startHour[0]);
-    initialDateBody.setMinutes(startHour[1]);
-    initialDateBody.setSeconds(0)
-    initialDateBody.setMilliseconds(0)
+    initialDateBody.setHours(startHour[0], startHour[1], 0, 0);
 
     let finalDateBody = new Date(finalDate);
-    finalDateBody.setHours(endHour[0]);
-    finalDateBody.setMinutes(endHour[1]);
-    finalDateBody.setSeconds(0)
-    finalDateBody.setMilliseconds(0)
+    finalDateBody.setHours(endHour[0], endHour[1], 0, 0);
 
     if (type !== 'HOUR') {
       finalDateBody = addDays(finalDateBody, 1);
@@ -127,7 +188,9 @@ export default function Booking({ user, space, type, setType, formStyle, disable
           } else if (err.response.data === "Bad Request: Final date must be a Date after today") {
             alert("La fecha de fin debe ser posterior a la fecha de hoy.")
           } else if (err.response.data === "Bad Request: Space not available or space capacity exceeded") {
-            alert("Se ha excedido la superficie máxima disponible en el espacio")
+            space.shared ? alert("Se ha excedido la superficie máxima disponible en el espacio compartido") : alert("El espacio no esta disponible en ese intervalo de fechas")
+          } else if (err.response.data === "Bad Request: Initial date must be after 24 hours from now") {
+            alert("La fecha inicial debe ser con al menos 24 horas de anticipación.")
           }
           else
             if (err.response.data === "Cannot rent your own space") {
@@ -161,22 +224,27 @@ export default function Booking({ user, space, type, setType, formStyle, disable
 
   useEffect(() => {
     let initialDateBody = new Date(initialDate);
-    initialDateBody.setHours(startHour[0]);
-    initialDateBody.setMinutes(startHour[1]);
+    initialDateBody.setHours(startHour[0], startHour[1], 0);
 
     let finalDateBody = new Date(finalDate);
-    finalDateBody.setHours(endHour[0]);
-    finalDateBody.setMinutes(endHour[1]);
+    finalDateBody.setHours(endHour[0], endHour[1], 0);
+
+    if (type === 'DAY') {
+      finalDateBody.setDate(finalDateBody.getDate() + 1);
+      finalDateBody.setSeconds(finalDateBody.getSeconds() - 1)
+    }
+
     calcCost(initialDateBody, finalDateBody, type);
   }, [initialDate, finalDate, meters, type, startHour, endHour])
 
 
+  const [disabled, shared] = calculateDisableDates(space, rentals)
   const bookingBody = {
     "HOUR": (
       <>
         <h3 className='text-webcolor-50 text-2xl text-center mt-4'>D&iacute;a</h3>
         <div className="flex justify-center my-3">
-          <input type={'date'} value={initialDate.toISOString().split('T')[0]} onChange={(e) => { setInitialDate(new Date(e.target.value)); setFinalDate(new Date(e.target.value)) }} />
+          <input type={'date'} min={iDate.toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', }).split('/').reverse().join('-')} value={initialDate.toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', }).split('/').reverse().join('-')} onChange={(e) => { setInitialDate(new Date(e.target.value)); setFinalDate(new Date(e.target.value)) }} />
         </div>
         <hr className=" bg-webcolor-50 w-[80%] m-auto" />
         <h3 className='text-webcolor-50 text-2xl text-center mt-4'>Hora llegada - Hora salida</h3>
@@ -198,7 +266,8 @@ export default function Booking({ user, space, type, setType, formStyle, disable
             locale={locales.es}
             minDate={iDate}
             ranges={[{ startDate: initialDate, endDate: finalDate }]}
-            disabledDates={disabledDates}
+            disabledDates={disabled}
+            dayContentRenderer={(day) => customDayContent(day, shared)}
             onChange={item => {
               if (item.range1.startDate < item.range1.endDate) {
                 setInitialDate(item.range1.startDate);
@@ -218,12 +287,12 @@ export default function Booking({ user, space, type, setType, formStyle, disable
       <>
         <h3 className='text-webcolor-50 text-2xl text-center mt-4'>D&iacute;a de Inicio</h3>
         <div className="flex justify-center my-3">
-          <input type={'date'} value={initialDate.toISOString().split('T')[0]} onChange={(e) => { setInitialDate(new Date(e.target.value)); setFinalDate(addDays(new Date(e.target.value), 30 * months)) }} />
+          <input type={'date'} min={iDate.toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', }).split('/').reverse().join('-')} value={initialDate.toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', }).split('/').reverse().join('-')} onChange={(e) => { setInitialDate(new Date(e.target.value)); setFinalDate(addDays(new Date(e.target.value), 30 * months)) }} />
         </div>
         <hr className=" bg-webcolor-50 w-[80%] m-auto" />
         <h3 className='text-webcolor-50 text-2xl text-center mt-4'>N&uacute;mero de meses</h3>
         <div className="flex justify-center my-3">
-          <input type={'number'} value={months} min={1} onChange={e => { setMonths(e.target.value); setFinalDate(addDays(initialDate, 30 * e.target.value)) }} />
+          <input type={'number'} value={months} min={1} step={1} pattern="^[1-9][0-9]*$" onChange={e => { setMonths(parseInt(e.target.value)); setFinalDate(addDays(initialDate, 30 * e.target.value)) }} />
         </div>
       </>
     ),

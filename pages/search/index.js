@@ -3,6 +3,8 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react';
 import { FieldCheckBox, FieldSelectorBox, FieldTextBox } from '../../components/Core/Form';
 import { Paragraph, Title } from '../../components/Core/Text';
+import { Loading } from "../../components/Core/Loading";
+
 import { Card, CardMobile } from '../../components/Card';
 import { Accordion, AccordionDetails, AccordionSummary, FormControl, FormControlLabel, RadioGroup, Radio, Switch } from '@mui/material';
 import { optionTags } from '../../components/Filter/options';
@@ -15,6 +17,7 @@ const Search = () => {
     const router = useRouter();
     //set query data cloning router.query
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [tag, setTag] = useState([]);
 
     const [search, setSearch] = useState("");
@@ -61,7 +64,32 @@ const Search = () => {
         return { search: tempSearch, isRentPerDay, isRentPerHour, isRentPerMonth, minDim, maxDim, minPriceDay, maxPriceDay, minPriceHour, maxPriceHour, minPriceMonth, maxPriceMonth, tag: tag.join(",") };
     }
 
+    function processQuery(query) {
+        let finalQuery = {}
+        finalQuery.isRentPerDay = query.isRentPerDay
+        finalQuery.isRentPerHour = query.isRentPerHour
+        finalQuery.isRentPerMonth = query.isRentPerMonth
+        if (query.isRentPerDay) {
+            finalQuery.maxPriceDay = query.maxPriceDay > 0 ? query.maxPriceDay : null
+            finalQuery.minPriceDay = query.minPriceDay > 0 ? query.minPriceDay : null
+        }
+        if (query.isRentPerHour) {
+            finalQuery.maxPriceHour = query.maxPriceHour > 0 ? query.maxPriceHour : null
+            finalQuery.minPriceHour = query.minPriceHour > 0 ? query.minPriceHour : null
+        }
+        if (query.isRentPerMonth) {
+            finalQuery.maxPriceMonth = query.maxPriceMonth > 0 ? query.maxPriceMonth : null
+            finalQuery.minPriceMonth = query.minPriceMonth > 0 ? query.minPriceMonth : null
+        }
+        finalQuery.maxDim = query.maxDim > 0 ? query.maxDim : 0
+        finalQuery.minDim = query.minDim > 0 ? query.minDim : 0
+        finalQuery.search = query.search
+        finalQuery.tag = query.tag
+
+        return Object.fromEntries(Object.entries(finalQuery).filter(([key, value]) => !!value))
+    }
     useEffect(() => {
+        setLoading(true);
         parseQueryToState(router.query);
         axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
             .then(async (response) => {
@@ -71,6 +99,7 @@ const Search = () => {
                     response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
                 }
                 setData(response.data)
+                setLoading(false);
             })
             .catch(error => {
                 setData([])
@@ -78,6 +107,7 @@ const Search = () => {
     }, []);
 
     useEffect(() => {
+        setLoading(true);
         parseQueryToState(router.query);
         axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
             .then(async (response) => {
@@ -87,39 +117,12 @@ const Search = () => {
                     response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
                 }
                 setData(response.data)
+                setLoading(false);
             })
             .catch(error => {
                 setData([])
             });
     }, [router.query]);
-
-    const calculateSurface = (dimensions) => {
-        const [width, height] = dimensions.split('x');
-        return parseInt(width) * parseInt(height);
-    };
-
-    const calculateUnitPrice = (priceHour, priceDay, priceMonth) => {
-        if (priceHour) {
-            return { amount: priceHour, unit: "€/h" };
-        } else if (priceDay) {
-            return { amount: priceDay, unit: "€/d" };
-        } else if (priceMonth) {
-            return { amount: priceMonth, unit: "€/m" };
-        } else {
-            return { amount: "-", unit: "" };
-        }
-    };
-
-    const calculateTags = (inputTag) => {
-        if (inputTag.length > 0 && inputTag.length < 3) {
-            return inputTag;
-        } else if (inputTag.length > 2) {
-            return inputTag.slice(0, 2);
-        } else {
-            return ["empty"];
-        }
-    };
-
 
     const handleTagChange = (event) => {
         var tempTag = [...tag];
@@ -136,7 +139,8 @@ const Search = () => {
     const enviarDatos = async (event) => {
         event.preventDefault();
         const tempQuery = parseStateToQuery();
-        const processedQuery = Object.fromEntries(Object.entries(tempQuery).filter(([key, value]) => value));
+
+        const processedQuery = processQuery(tempQuery);
 
         router.push({
             pathname: `/search`,
@@ -179,10 +183,10 @@ const Search = () => {
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <div className='float-left pr-3'>
-                                                    <FieldTextBox type={'number'} label="Mínimo (€)" value={minPriceHour} name="minPriceHour" onChange={(e) => { setMinPriceHour(e.target.value) }} />
+                                                    <FieldTextBox type={'number'} min={0} label="Mínimo (€)" value={minPriceHour} name="minPriceHour" onChange={(e) => { setMinPriceHour(e.target.value) }} />
                                                 </div>
                                                 <div className='float-left pr-3 mb-4'>
-                                                    <FieldTextBox type={'number'} label="Máximo (€)" value={maxPriceHour} name="maxPriceHour" onChange={(e) => { setMaxPriceHour(e.target.value) }} />
+                                                    <FieldTextBox type={'number'} min={0} label="Máximo (€)" value={maxPriceHour} name="maxPriceHour" onChange={(e) => { setMaxPriceHour(e.target.value) }} />
                                                 </div>
                                             </AccordionDetails>
                                         </Accordion>
@@ -193,10 +197,10 @@ const Search = () => {
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <div className='float-left pr-3'>
-                                                    <FieldTextBox type={'number'} label="Mínimo (€)" value={minPriceDay} name="minPriceDay" onChange={(e) => { setMinPriceDay(e.target.value) }} />
+                                                    <FieldTextBox type={'number'} min={0} label="Mínimo (€)" value={minPriceDay} name="minPriceDay" onChange={(e) => { setMinPriceDay(e.target.value) }} />
                                                 </div>
                                                 <div className='float-left pr-3 mb-4'>
-                                                    <FieldTextBox type={'number'} label="Máximo (€)" value={maxPriceDay} name="maxPriceDay" onChange={(e) => { setMaxPriceDay(e.target.value) }} />
+                                                    <FieldTextBox type={'number'} min={0} label="Máximo (€)" value={maxPriceDay} name="maxPriceDay" onChange={(e) => { setMaxPriceDay(e.target.value) }} />
                                                 </div>
                                             </AccordionDetails>
                                         </Accordion>
@@ -207,10 +211,10 @@ const Search = () => {
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <div className='float-left pr-3'>
-                                                    <FieldTextBox type={'number'} label="Mínimo (€)" value={minPriceMonth} name="minPriceMonth" onChange={(e) => { setMinPriceMonth(e.target.value) }} />
+                                                    <FieldTextBox type={'number'} min={0} label="Mínimo (€)" value={minPriceMonth} name="minPriceMonth" onChange={(e) => { setMinPriceMonth(e.target.value) }} />
                                                 </div>
                                                 <div className='float-left pr-3 mb-4'>
-                                                    <FieldTextBox type={'number'} label="Máximo (€)" value={maxPriceMonth} name="maxPriceMonth" onChange={(e) => { setMaxPriceMonth(e.target.value) }} />
+                                                    <FieldTextBox type={'number'} min={0} label="Máximo (€)" value={maxPriceMonth} name="maxPriceMonth" onChange={(e) => { setMaxPriceMonth(e.target.value) }} />
                                                 </div>
                                             </AccordionDetails>
                                         </Accordion>
@@ -275,10 +279,10 @@ const Search = () => {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <div className='float-left pr-3'>
-                                        <FieldTextBox type={'number'} label="Mínimo (€)" value={minPriceHour} name="minPriceHour" onChange={(e) => { setMinPriceHour(e.target.value) }} />
+                                        <FieldTextBox type={'number'} min={0} label="Mínimo (€)" value={minPriceHour} name="minPriceHour" onChange={(e) => { setMinPriceHour(e.target.value) }} />
                                     </div>
                                     <div className='float-left pr-3 mb-4'>
-                                        <FieldTextBox type={'number'} label="Máximo (€)" value={maxPriceHour} name="maxPriceHour" onChange={(e) => { setMaxPriceHour(e.target.value) }} />
+                                        <FieldTextBox type={'number'} min={0} label="Máximo (€)" value={maxPriceHour} name="maxPriceHour" onChange={(e) => { setMaxPriceHour(e.target.value) }} />
                                     </div>
                                 </AccordionDetails>
                             </Accordion>
@@ -289,10 +293,10 @@ const Search = () => {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <div className='float-left pr-3'>
-                                        <FieldTextBox type={'number'} label="Mínimo (€)" value={minPriceDay} name="minPriceDay" onChange={(e) => { setMinPriceDay(e.target.value) }} />
+                                        <FieldTextBox type={'number'} min={0} label="Mínimo (€)" value={minPriceDay} name="minPriceDay" onChange={(e) => { setMinPriceDay(e.target.value) }} />
                                     </div>
                                     <div className='float-left pr-3 mb-4'>
-                                        <FieldTextBox type={'number'} label="Máximo (€)" value={maxPriceDay} name="maxPriceDay" onChange={(e) => { setMaxPriceDay(e.target.value) }} />
+                                        <FieldTextBox type={'number'} min={0} label="Máximo (€)" value={maxPriceDay} name="maxPriceDay" onChange={(e) => { setMaxPriceDay(e.target.value) }} />
                                     </div>
                                 </AccordionDetails>
                             </Accordion>
@@ -303,10 +307,10 @@ const Search = () => {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <div className='float-left pr-3'>
-                                        <FieldTextBox type={'number'} label="Mínimo (€)" value={minPriceMonth} name="minPriceMonth" onChange={(e) => { setMinPriceMonth(e.target.value) }} />
+                                        <FieldTextBox type={'number'} min={0} label="Mínimo (€)" value={minPriceMonth} name="minPriceMonth" onChange={(e) => { setMinPriceMonth(e.target.value) }} />
                                     </div>
                                     <div className='float-left pr-3 mb-4'>
-                                        <FieldTextBox type={'number'} label="Máximo (€)" value={maxPriceMonth} name="maxPriceMonth" onChange={(e) => { setMaxPriceMonth(e.target.value) }} />
+                                        <FieldTextBox type={'number'} min={0} label="Máximo (€)" value={maxPriceMonth} name="maxPriceMonth" onChange={(e) => { setMaxPriceMonth(e.target.value) }} />
                                     </div>
                                 </AccordionDetails>
                             </Accordion>
@@ -333,10 +337,10 @@ const Search = () => {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <div className='float-left pr-3'>
-                                        <FieldTextBox type={'number'} label="Mínimo (m)" value={minDim} name="minDim" onChange={(e) => { setMinDim(e.target.value) }} />
+                                        <FieldTextBox type={'number'} min={0} label="Mínimo (m)" value={minDim} name="minDim" onChange={(e) => { setMinDim(e.target.value) }} />
                                     </div>
                                     <div className='float-left pr-3 mb-4'>
-                                        <FieldTextBox type={'number'} label="Máximo (m)" value={maxDim} name="maxDim" onChange={(e) => { setMaxDim(e.target.value) }} />
+                                        <FieldTextBox type={'number'} min={0} label="Máximo (m)" value={maxDim} name="maxDim" onChange={(e) => { setMaxDim(e.target.value) }} />
                                     </div>
                                 </AccordionDetails>
                             </Accordion>
@@ -352,38 +356,40 @@ const Search = () => {
                     </form>
                     <section className='w-full hidden sm:grid sm:w-4/5 mx-auto justify-center lg:grid-cols-2 lg:gap-2 md:grid-cols-1 md:gap-1'>
                         {
-                            data && data.length > 0 ?
-                                data.map((espacio, index) => {
-                                    return (
-                                        <div key={index} className='h-[220px]'>
-                                            <Link href={`/space/${espacio.id}`} passHref>
-                                                <a>
-                                                    <Card key={index}
-                                                        space={espacio}
-                                                    />
-                                                </a>
-                                            </Link>
-                                        </div>
-                                    );
-                                }) : <h1 className="h-full w-full col-span-2 min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>
+                            loading ? <div className="flex justify-center h-screenC col-span-2 row-span-4 items-center"> <Loading size="large"></Loading></div>
+                                : data && data.length > 0 ?
+                                    data.map((espacio, index) => {
+                                        return (
+                                            <div key={index} className='h-[220px]'>
+                                                <Link href={`/space/${espacio.id}`} passHref>
+                                                    <a>
+                                                        <Card key={index}
+                                                            space={espacio}
+                                                        />
+                                                    </a>
+                                                </Link>
+                                            </div>
+                                        );
+                                    }) : <h1 className="h-full w-full col-span-2 min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>
                         }
                     </section>
                     <section className='sm:hidden w-full flex flex-col px-5 justify-center' >
                         {
-                            data && data.length > 0 ?
-                                data.map((espacio, index) => {
-                                    return (
-                                        <div key={index} className='py-2'>
-                                            <Link href={`/space/${espacio.id}`}>
-                                                <a>
-                                                    <CardMobile key={index}
-                                                        space={espacio}
-                                                    />
-                                                </a>
-                                            </Link>
-                                        </div>
-                                    );
-                                }) : <h1 className="h-full w-full col-span-2 min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>
+                            loading ? <div className="flex justify-center h-screenC items-center"> <Loading size="large"></Loading></div>
+                                : data && data.length > 0 ?
+                                    data.map((espacio, index) => {
+                                        return (
+                                            <div key={index} className='py-2'>
+                                                <Link href={`/space/${espacio.id}`}>
+                                                    <a>
+                                                        <CardMobile key={index}
+                                                            space={espacio}
+                                                        />
+                                                    </a>
+                                                </Link>
+                                            </div>
+                                        );
+                                    }) : <h1 className="h-full w-full col-span-2 min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>
                         }
                     </section>
                 </div>

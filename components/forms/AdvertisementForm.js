@@ -117,7 +117,6 @@ export default function AdvertisementForm(props) {
         });
     }
 
-
     // Se usa al editar para rellenar los campos del formulario automáticamente
     function fillForm(space) {
         setTitle(space.name);
@@ -140,6 +139,9 @@ export default function AdvertisementForm(props) {
             setType('hours');
             setPrice(space.priceHour);
             document.getElementById('hours').checked = true;
+            setStartHour(new Date(space.startHour).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+            setEndHour(new Date(space.endHour).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
         } else if ('priceDay' in space) {
             setType('days');
             setPrice(space.priceDay);
@@ -170,7 +172,7 @@ export default function AdvertisementForm(props) {
         // Da 404 si no tiene imágenes o el id no existe
         axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${props.space.id}/images`)
             .then(res => {
-                setImages(res.data);
+                setImages(res.data.map(x => x.image));
             }).catch(err => {
                 setImages([]);
             })
@@ -192,7 +194,11 @@ export default function AdvertisementForm(props) {
         // Si no hay errores, hacemos POST/UPDATE
         if (errorsArray.length == 0) {
             // Crea un objeto con los atributos adecuados
-            let newSpace = CreateNewSpaceObject(props.userId, title, description, startAvailability, endAvailability, location,
+            let userId = props.userId
+            if (props.isEdit) {
+                userId = props.space.ownerId
+            }
+            let newSpace = CreateNewSpaceObject(userId, title, description, startAvailability, endAvailability, location,
                 surface1, surface2, shared, type, price, tags, space, images, startHourdate, endHourdate, city, province, country);
             // Si es edit --> PUT
 
@@ -201,6 +207,7 @@ export default function AdvertisementForm(props) {
                     withCredentials: true,
                 })
                     .then(res => {
+                        alert('Espacio actualizado correctamente');
                         setSuccess(true);
                         router.push('/');
                     }).catch(err => {
@@ -213,6 +220,7 @@ export default function AdvertisementForm(props) {
                     withCredentials: true,
                 })
                     .then(res => {
+                        alert('Espacio creado correctamente');
                         setSuccess(true);
                         router.push('/')
                     }).catch(err => {

@@ -127,7 +127,7 @@ function Home(props) {
                       </svg>
                     </button>
                   </div>
-                </form>""
+                </form>
               </div>
             </div>
           </section>
