@@ -92,6 +92,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: stackingup/data-service:${{ steps.changelog.outputs.tag }}
+          tags: stackingup/ui-service:${{ steps.changelog.outputs.tag }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

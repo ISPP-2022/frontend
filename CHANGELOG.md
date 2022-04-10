@@ -1,4 +1,54 @@
-# 0.1.0 (2022-03-23)
+# [0.2.0](https://github.com/Stacking-Up/frontend/compare/v0.1.0...v0.2.0) (2022-04-06)
+
+
+### Bug Fixes
+
+* Component import route ([1a05002](https://github.com/Stacking-Up/frontend/commit/1a05002bc7035e8e0b51048ebb1a44667d895c7e))
+* Default var values ([c068daa](https://github.com/Stacking-Up/frontend/commit/c068daa1e8cf082e83714f83ef203e2ebdef0887))
+* Env vars ([4847806](https://github.com/Stacking-Up/frontend/commit/4847806b7e217752432d14b7a434cc5fcdfa4032))
+* Fixed recent spaces selector ([91910e0](https://github.com/Stacking-Up/frontend/commit/91910e07f63cac9e344cd4bf6f7d0df251029ceb))
+* Form validation correct values ([77de4c5](https://github.com/Stacking-Up/frontend/commit/77de4c529bf095f5e9319ed0f6e1a820a93a8d83))
+* Hour limir Booking ([a157973](https://github.com/Stacking-Up/frontend/commit/a157973ddd5258121b9b3c7834b8c267326179a9))
+* Images don't showing on recent rentals ([5618398](https://github.com/Stacking-Up/frontend/commit/56183988200e60f85fb45213e4bc79aaf7e7ec0d))
+* Import error ([7f16a9c](https://github.com/Stacking-Up/frontend/commit/7f16a9cd4fd1ed76d4dd8d1628fe8a75b8cb26c5))
+* Minor bugs ([36705c1](https://github.com/Stacking-Up/frontend/commit/36705c19b6019239b783e0575f5011f98250cc87))
+* Months of 30 days ([4a9ab90](https://github.com/Stacking-Up/frontend/commit/4a9ab9051053852e6eed94af220ea25311fdeb3f))
+* Public env setup ([625e5ca](https://github.com/Stacking-Up/frontend/commit/625e5ca1c41644b952dd41cd9af08a3a78a186d2))
+* Redirection to previous page on editing ([83bae7e](https://github.com/Stacking-Up/frontend/commit/83bae7e834f210a456e9883e143a8f4f5bee0241))
+* Regex error ([d7014c9](https://github.com/Stacking-Up/frontend/commit/d7014c9209b69cfb92fbc5e867531f4377a8a8e9))
+* Remove commented code and added some comments ([b8bb32a](https://github.com/Stacking-Up/frontend/commit/b8bb32a82feb40376e36a4c4d695fd121c656b59))
+* Screen overflow in user details view ([5c51ef4](https://github.com/Stacking-Up/frontend/commit/5c51ef4d88c4935691afb615b54b1de7e4de8204))
+* Search loading bug ([44aa305](https://github.com/Stacking-Up/frontend/commit/44aa3050823eadeceeab04383532fa478265b470))
+* Size change ([dba312a](https://github.com/Stacking-Up/frontend/commit/dba312a2d60a2ff0cbab4aa9d0ba1fe28421c999))
+* Some bugs in rental validation ([f05b43d](https://github.com/Stacking-Up/frontend/commit/f05b43db11d601f6f54099cd8ce851eb6c2bb2dc))
+* User id undefined ([bcc7217](https://github.com/Stacking-Up/frontend/commit/bcc72173ca464422a9ed2202849308b323666975))
+
+
+### Features
+
+* Basic admin ([53b4186](https://github.com/Stacking-Up/frontend/commit/53b418671032a82544e2357ac18a03f18ad90877))
+* Component Comments finished. ([a7478ca](https://github.com/Stacking-Up/frontend/commit/a7478ca32031d4d79daa18003745c9df339a551e))
+* Frontend enhancements ([74e0d9c](https://github.com/Stacking-Up/frontend/commit/74e0d9c760502cd00015e40101d7e3eaac0e25d7))
+* Frontend model changed ([717a2e2](https://github.com/Stacking-Up/frontend/commit/717a2e2d2aa1462b9ab371dc586704497edde743))
+* Frontend refactorization ([ac4fb7d](https://github.com/Stacking-Up/frontend/commit/ac4fb7d12d8046660b2fc5d610b3cb0800cf0d8d))
+* Invoice creation logic + Rent validation ([a0c036b](https://github.com/Stacking-Up/frontend/commit/a0c036b0c303d4fd6b7a0fb3ff00beaa49a44ed0))
+* Invoice viewer ([81ed704](https://github.com/Stacking-Up/frontend/commit/81ed704fc7ede49de5f001091afbbdf3d0b68bc3))
+* IVA disclaimer ([cad41fa](https://github.com/Stacking-Up/frontend/commit/cad41fa00a4bcf0cbfba35dad808cfd8231d9aa4))
+* Pay with Paypal for rent (needs validation) ([f766c7b](https://github.com/Stacking-Up/frontend/commit/f766c7b1af7ba3c2f1a40a54485591814c476669))
+* Recent spaces selector ([d948d81](https://github.com/Stacking-Up/frontend/commit/d948d816105172c53e544df9afc4081797591729))
+* Register logic and validation ([66cf82f](https://github.com/Stacking-Up/frontend/commit/66cf82f8954c494f0357591b81ddc0d94014de70))
+* Register view in modal ([f4f12f5](https://github.com/Stacking-Up/frontend/commit/f4f12f5c73b61d3b864d682eb669b6308e32c1dd))
+* User detail page ([eb15d90](https://github.com/Stacking-Up/frontend/commit/eb15d90d0981e3a62d1267ef0e2f74d4f86978fe))
+* User details view and edition ([9f1a082](https://github.com/Stacking-Up/frontend/commit/9f1a08213e3bff4418385cb6d8e4912a57321e40))
+* User page consolidation ([3a30eb8](https://github.com/Stacking-Up/frontend/commit/3a30eb84afd4cce127b3cd3a4086f01c14c1e98e))
+* Verify phone number modal ([7cb33c4](https://github.com/Stacking-Up/frontend/commit/7cb33c4b19768baf6eec0531ead5bbee554ae2ec))
+* Verify profile implemented ([99d92c0](https://github.com/Stacking-Up/frontend/commit/99d92c084c61f35c340b4f954455bd60fe5df352))
+* Verify system finished. ([3f978be](https://github.com/Stacking-Up/frontend/commit/3f978be64c2106d65a98b16f3d22ed1e1736019a))
+* Wip recent spaces selector ([752c668](https://github.com/Stacking-Up/frontend/commit/752c6685170af36e4a57bca0f0e962011415b6f1))
+
+
+
+# [0.1.0](https://github.com/Stacking-Up/frontend/compare/6bbf42d76d746b7c9216e99702147f957fb70cfe...v0.1.0) (2022-03-23)
 
 
 ### Bug Fixes
