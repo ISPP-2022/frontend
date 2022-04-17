@@ -10,7 +10,7 @@ import { useState } from "react";
 import { VerifyProfile } from "../../components/VerifyProfile";
 import { DialogText } from "../../components/Core/Dialog";
 import { PayPalButton } from 'react-paypal-button-v2';
-
+import { useRouter } from 'next/router';
 
 
 async function getRatingComponentData({ query }) {
@@ -124,9 +124,19 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
     );
   }
 
-  function handlePaymentForPremium() {
-    console.log("Pago realizado con éxito");
-    setShowModal(false);
+
+  const router = useRouter();
+
+  async function handlePaymentForPremium() {
+    await axios.put(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/suscribe`, {},
+    {
+      withCredentials: true,
+    }).then(res => {
+      router.reload(window.location.pathname);
+    }).catch(err => {
+      setShowModal(false);
+      alert('El pago se realizó con éxito, pero hubo un problema en servidor. Póngase en contacto con nosotros.');
+    });
   }
 
   return (
@@ -155,7 +165,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
 
           {/* Nombre, foto de perfil, valoración del usuario y botón de chat */}
           <div>
-            <UserInfo id={id} user={userData} ratings={ratings} />
+            <UserInfo id={id} user={userData} userSession={userSession} ratings={ratings} />
 
             {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') && <div className='flex justify-center'>
               <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
