@@ -2,6 +2,8 @@ import React from 'react'
 import Confirmation from '../../components/Payment/Confirmation'
 import { withRouter } from 'next/router'
 import { useState } from 'react'
+import jwt from 'jsonwebtoken';
+
 
 function confirmation(props) {
 
@@ -33,11 +35,29 @@ function confirmation(props) {
       province={province}
       name={name}
       token={token}
+      userSession={props.userSession}
     /> ) : <></>}
 
     </>
   )
 
 }
+
+// Necesitamos userSession para obtener el rol del usuario
+export function getServerSideProps(context) {
+  let userSession;
+  try {
+      userSession = context.req.cookies.authToken ? jwt.decode(context.req.cookies.authToken) : null;
+  } catch (error) {
+      userSession = null;
+  }
+
+  return {
+      props: {
+          userSession: userSession
+      }
+  }
+}
+
 
 export default withRouter(confirmation)
