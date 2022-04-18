@@ -1,6 +1,6 @@
 export const ABOUTUS = [
   { name: "Preguntas frecuentes", link: "#" },
-  { name: "Términos y condiciones", link: "#" },
+  { name: "Términos y condiciones", link: "/terminos" },
   { name: "Política de Privacidad", link: "#" },
   { name: "Sobre nosotros", link: "#" },
   { name: "Sitemap", link: "#" },
