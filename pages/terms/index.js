@@ -1,146 +1,153 @@
 import Head from 'next/head';
+import Footer from '../../components/Footer';
 
-function Terminos(){
+function Terminos() {
     return (
-        <div className='md:bg-gray-100 flex justify-center items-center'>
-        <Head>
-            <title>Términos y condiciones del servicio.</title>
-            <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1.0"
-            ></meta> 
-        </Head>
-        <div className='md:bg-white p-4 md:mb-14 md:w-2/3 md:mt-3 md:rounded-xl md:border-2 md:border-[#4aa7c0] flex flex-col'>
-        <div className='md:block p-8 m-5'>
-            <h1 className='text-5xl flex justify-center items-center font-bold text-[#4aa7c0] font-black mt-1'>Términos y condiciones de uso</h1>
-        </div>
-        <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Condiciones de servicio de StackingUp</h2>
-        <p>{condiciones}</p>
-        <ol className='list-decimal ml-14'>
-            <li>para facilitar el uso de la plataforma y</li>
-            <li>la mediación de pagos y cobros entre arrendadores y arrendatarios.</li>
-        </ol>
-        <p>{condiciones2}</p>
-        <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Acceso a la plataforma</h2>
-        <p>{acceso}</p>
-        <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Cuentas de usuarios en StackingUp</h2>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Registro de cuenta</h3>
-        <p>{registro}</p>
-        <ol className='list-decimal ml-14'>
-            <li>Crear varias cuentas de StackingUp</li>
-            <li>Si la información proporcionada es falsa</li>
-            <li>Violación de estos términos.</li>
-        </ol>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Información del inquilino</h3>
-        <p>{inquilino}</p>
-        <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Anuncios en StackingUp</h2>
-        <p>{anuncio}</p>
-        <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Condiciones de reserva y financieras</h2>
-        <p>{condiciones_reserva}</p>
-        <p className='font-bold text-[#256172] mb-2'>1) Arrendador</p>
-        <p>{arrendador}</p>
-        <p className='font-bold text-[#256172] mb-2'>2) Inquilino</p>
-        <p>{inquilino2}</p>
-        <ol className='list-decimal ml-14'>
-            <li>Obtener una preautorización en su tarjeta de crédito en nombre del arrendador o</li>
-            <li>Cobrar a su tarjeta de crédito una tarifa temporal para la verificación a su entera discreción</li>
-        </ol>
-        <p>{inquilino2_2}</p>
-        <p className='font-bold text-[#256172] mb-2'>3) Inquilino ingresa al local </p>
-        <p>{inquilino_local}</p>
-        <p className='font-bold text-[#256172] mb-2'>4) Desalojo del espacio después de la finalización del contrato de arrendamiento </p>
-        <p>{desalojo}</p>
-        <p className='font-bold text-[#256172] mb-2'>5) Pago al propietario  </p>
-        <p>{pago}</p>
-        <p className='font-bold text-[#256172] mb-2'>6) Tarifas  </p>
-        <p>{tarifas}</p>
-        <p className='font-bold text-[#256172] mb-2'>7) Pago garantizado  </p>
-        <p>{pagos}</p>
-        <p className='font-bold text-[#256172] mb-2'>8) Cancelaciones y reembolsos </p>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Cancelación por parte del arrendatario</h3>
-        <p>{cancelaciones1}<a className='text-[#4aa7c0]' href="mailto:info@stackingup.es">info@stackingup.es</a>{cancelaciones1_end}</p>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Cancelación por parte del arrendador  </h3>
-        <p>{cancelaciones2}</p>
-        <p className='font-bold text-[#256172] mb-2'>9) Chat </p>
-        <p>{chat}</p>
-        <p className='font-bold text-[#256172] mb-2'>10) Impuestos </p>
-        <p>{impuestos}</p>
-        <p className='font-bold text-[#256172] mb-2'>11) Varias ranuras de daño  </p>
-        <p>{danyos}</p>
-        <ol className='list-decimal ml-14'>
-            <li>Materiales explosivos y combustibles </li>
-            <li>Residuos </li>
-            <li>Armas de fuego  </li>
-            <li>Drogas o sustancias ilegales </li>
-            <li>Propiedad robada  </li>
-            <li>Bienes perecederos </li>
-        </ol>
-        <p>{danyos2}</p>
-        <p>{danyos3}</p>
-        <p>{danyos4}</p>
-        <p>El arrendatario incumple si:</p>
-        <ol className='list-decimal ml-14'>
-            <li>El arrendatario no cumple con su obligación de pagar la renta </li>
-            <li>El arrendatario proporciona información falsa o inexacta al inquilino o a StackingUp. </li>
-            <li>El arrendatario no recoge el objeto al final del período de arrendamiento o en el momento requerido por el arrendador (siempre cumple con estas condiciones) </li>
-            <li>El incumplimiento por parte del arrendatario de los puntos principales de estos términos y condiciones </li>
-        </ol>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Medidas de StackingUp</h3>
-        <p>{medidas}</p>
-        <ol className='list-decimal ml-14'>
-            <li>{medidas1}</li>
-            <li>{medidas2}</li>
-        </ol>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Cobro</h3>
-        <p>{cobro}</p>
-        <ol className='list-decimal ml-14'>
-            <li>Violación de las leyes o regulaciones actuales </li>
-            <li>Use un software artesanal o automático para hacer "scraping" en la plataforma.</li>
-            <li>Use una plataforma con fines comerciales u otros fines que no sean compatibles en estos términos. </li>
-            <li>Intervención o dañar la plataforma a través del uso de virus informáticos, bots, troyano o tecnología similar.</li>
-            <li>Use la plataforma para distribuir correos electrónicos de comercio no deseados ("SPAM") o publicidad </li>
-            <li>Acosar a otros usuarios en nuestra plataforma o recopilar o almacenar cualquier información de identidad personal sobre cualquier otro usuario, diferente del propósito de negociar como propietarios o inquilinos </li>
-            <li>Recomendar, como propietarios, espacios que no son de su propiedad y no tenga permisos para ser alquilado. </li>
-            <li>Ponerse en contacto con el arrendador para propósitos que no sean relacionados con el alquiler o su espacio publicitario. </li>
-            <li>Contactar a los inquilinos en cualquier propósito, que no sea relacionada con la reserva o el uso de su espacio. </li>
-            <li>La propuesta de un usuario a un servicio o sitio web de terceros como competidores de StackingUp sin el consentimiento por escrito de StackingUp. </li>
-            <li>Hacerse pasar por otra persona </li>
-            <li>Use la plataforma para encontrar un servidor o inquilino, y luego complete las transacciones fuera a la plataforma</li>
-            <li>Publicar, descargar, enviar o transferir cualquier contenido:</li>
-                <ol className='list-decimal ml-20'>
-                    <li>Infrinja, se apropie indebidamente o viole la patente los derechos de autor, la marca comercial, el secreto comercial, los derechos morales u otros derechos de propiedad intelectual de un tercero, o los derechos de publicidad o privacidad. </li>
-                    <li>Violar o contribuir a todos los actos de infringir cualquier ley o reglamento aplicable o conducir a la responsabilidad civil. </li>
-                    <li>Sea fraudulento, falso, engañoso o engañoso. </li>
-                    <li>Sea difamatorio, obsceno, pornográfico, vulgar u ofensivo. </li>
-                    <li>Promover la discriminación, intolerancia, racismo, odio, persecución o daño de cada persona o grupo. </li>
-                    <li>Sea violento o amenazante o contribuya a la violencia o a acciones que amenazan a cualquier otra persona. </li>
-                    <li>Contribuir a las acciones o sustancias ilegales o dañinas. </li>
-                </ol>
-            <li>Vulnerar la propiedad intelectual de StackingUp </li>
-        </ol>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Compensación</h3>
-        <p>{compensacion}</p>
-            <ol className='list-decimal ml-14'>
-                <li>Acceso a esta plataforma o violación de las condiciones. </li>
-                <li>Su contenido publicado como usuario de StackingUp. </li>
-                <li>Cualquier daño que ocurra con cada persona o propiedad debido a uso, ocupación, desconexión o de entrada o salida de cualquier espacio convertido. </li>
-                <li>Interacción con cualquier miembro de la reserva de un espacio o su uso, condiciones o ubicaciones arrendadas por usted, incluso a lesiones, perdidas o daños de cualquier tipo debido a la relación o el resultado de la contratación, la reserva o el uso espacial. </li>
-                <li>Cualquier disputa entre usted y otro usuario del sitio web o servicio. </li>
-                <li>Cualquier violación o tareas ilegales de terceros. </li>
-            </ol>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Enlaces</h3>
-        <p>{enlaces}</p>
-            <ol className='list-decimal ml-14'>
-                <li>Disponibilidad o precisión de dichos sitios web o recursos.</li>
-                <li>Contenido, productos o servicios o disponibles en lugares o recursos. </li>
-            </ol>
-        <p>{enlaces2} <a className='text-[#4aa7c0]' target="_blank" href="https://www.mapbox.com/legal/tos">https://www.mapbox.com/legal/tos</a></p>
-        <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Modificación de condiciones</h3>
-        <p>{modificacionCondiciones}</p>
-        <h3 className='text-md font-bold italic text-[#256172] italic mb-2 mt-2'>Política contra la discriminación </h3>
-        <p>{discriminacion}</p>
-        </div>
-        </div>
+        <>
+            <Head>
+                <title>Términos y condiciones del servicio.</title>
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0"
+                ></meta>
+            </Head>
+            <div className='md:bg-gray-100 flex justify-center items-center'>
+
+                <div className='md:bg-white p-4 md:mb-14 md:w-2/3 md:mt-3 md:rounded-xl md:border-2 md:border-[#4aa7c0] flex flex-col'>
+                    <div className='md:block p-8 m-5'>
+                        <h1 className='text-5xl flex justify-center items-center font-bold text-[#4aa7c0] font-black mt-1'>Términos y condiciones de uso</h1>
+                    </div>
+                    <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Condiciones de servicio de StackingUp</h2>
+                    <p>{condiciones}</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>para facilitar el uso de la plataforma y</li>
+                        <li>la mediación de pagos y cobros entre arrendadores y arrendatarios.</li>
+                    </ol>
+                    <p>{condiciones2}</p>
+                    <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Acceso a la plataforma</h2>
+                    <p>{acceso}</p>
+                    <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Cuentas de usuarios en StackingUp</h2>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Registro de cuenta</h3>
+                    <p>{registro}</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>Crear varias cuentas de StackingUp</li>
+                        <li>Si la información proporcionada es falsa</li>
+                        <li>Violación de estos términos.</li>
+                    </ol>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Información del inquilino</h3>
+                    <p>{inquilino}</p>
+                    <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Anuncios en StackingUp</h2>
+                    <p>{anuncio}</p>
+                    <h2 className='text-lg font-bold text-[#256172] mb-2 mt-2'>Condiciones de reserva y financieras</h2>
+                    <p>{condiciones_reserva}</p>
+                    <p className='font-bold text-[#256172] mb-2'>1) Arrendador</p>
+                    <p>{arrendador}</p>
+                    <p className='font-bold text-[#256172] mb-2'>2) Inquilino</p>
+                    <p>{inquilino2}</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>Obtener una preautorización en su tarjeta de crédito en nombre del arrendador o</li>
+                        <li>Cobrar a su tarjeta de crédito una tarifa temporal para la verificación a su entera discreción</li>
+                    </ol>
+                    <p>{inquilino2_2}</p>
+                    <p className='font-bold text-[#256172] mb-2'>3) Inquilino ingresa al local </p>
+                    <p>{inquilino_local}</p>
+                    <p className='font-bold text-[#256172] mb-2'>4) Desalojo del espacio después de la finalización del contrato de arrendamiento </p>
+                    <p>{desalojo}</p>
+                    <p className='font-bold text-[#256172] mb-2'>5) Pago al propietario  </p>
+                    <p>{pago}</p>
+                    <p className='font-bold text-[#256172] mb-2'>6) Tarifas  </p>
+                    <p>{tarifas}</p>
+                    <p className='font-bold text-[#256172] mb-2'>7) Pago garantizado  </p>
+                    <p>{pagos}</p>
+                    <p className='font-bold text-[#256172] mb-2'>8) Cancelaciones y reembolsos </p>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Cancelación por parte del arrendatario</h3>
+                    <p>{cancelaciones1}<a className='text-[#4aa7c0]' href="mailto:info@stackingup.es">info@stackingup.es</a>{cancelaciones1_end}</p>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Cancelación por parte del arrendador  </h3>
+                    <p>{cancelaciones2}</p>
+                    <p className='font-bold text-[#256172] mb-2'>9) Chat </p>
+                    <p>{chat}</p>
+                    <p className='font-bold text-[#256172] mb-2'>10) Impuestos </p>
+                    <p>{impuestos}</p>
+                    <p className='font-bold text-[#256172] mb-2'>11) Varias ranuras de daño  </p>
+                    <p>{danyos}</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>Materiales explosivos y combustibles </li>
+                        <li>Residuos </li>
+                        <li>Armas de fuego  </li>
+                        <li>Drogas o sustancias ilegales </li>
+                        <li>Propiedad robada  </li>
+                        <li>Bienes perecederos </li>
+                    </ol>
+                    <p>{danyos2}</p>
+                    <p>{danyos3}</p>
+                    <p>{danyos4}</p>
+                    <p>El arrendatario incumple si:</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>El arrendatario no cumple con su obligación de pagar la renta </li>
+                        <li>El arrendatario proporciona información falsa o inexacta al inquilino o a StackingUp. </li>
+                        <li>El arrendatario no recoge el objeto al final del período de arrendamiento o en el momento requerido por el arrendador (siempre cumple con estas condiciones) </li>
+                        <li>El incumplimiento por parte del arrendatario de los puntos principales de estos términos y condiciones </li>
+                    </ol>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Medidas de StackingUp</h3>
+                    <p>{medidas}</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>{medidas1}</li>
+                        <li>{medidas2}</li>
+                    </ol>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Cobro</h3>
+                    <p>{cobro}</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>Violación de las leyes o regulaciones actuales </li>
+                        <li>Use un software artesanal o automático para hacer "scraping" en la plataforma.</li>
+                        <li>Use una plataforma con fines comerciales u otros fines que no sean compatibles en estos términos. </li>
+                        <li>Intervención o dañar la plataforma a través del uso de virus informáticos, bots, troyano o tecnología similar.</li>
+                        <li>Use la plataforma para distribuir correos electrónicos de comercio no deseados ("SPAM") o publicidad </li>
+                        <li>Acosar a otros usuarios en nuestra plataforma o recopilar o almacenar cualquier información de identidad personal sobre cualquier otro usuario, diferente del propósito de negociar como propietarios o inquilinos </li>
+                        <li>Recomendar, como propietarios, espacios que no son de su propiedad y no tenga permisos para ser alquilado. </li>
+                        <li>Ponerse en contacto con el arrendador para propósitos que no sean relacionados con el alquiler o su espacio publicitario. </li>
+                        <li>Contactar a los inquilinos en cualquier propósito, que no sea relacionada con la reserva o el uso de su espacio. </li>
+                        <li>La propuesta de un usuario a un servicio o sitio web de terceros como competidores de StackingUp sin el consentimiento por escrito de StackingUp. </li>
+                        <li>Hacerse pasar por otra persona </li>
+                        <li>Use la plataforma para encontrar un servidor o inquilino, y luego complete las transacciones fuera a la plataforma</li>
+                        <li>Publicar, descargar, enviar o transferir cualquier contenido:</li>
+                        <ol className='list-decimal ml-20'>
+                            <li>Infrinja, se apropie indebidamente o viole la patente los derechos de autor, la marca comercial, el secreto comercial, los derechos morales u otros derechos de propiedad intelectual de un tercero, o los derechos de publicidad o privacidad. </li>
+                            <li>Violar o contribuir a todos los actos de infringir cualquier ley o reglamento aplicable o conducir a la responsabilidad civil. </li>
+                            <li>Sea fraudulento, falso, engañoso o engañoso. </li>
+                            <li>Sea difamatorio, obsceno, pornográfico, vulgar u ofensivo. </li>
+                            <li>Promover la discriminación, intolerancia, racismo, odio, persecución o daño de cada persona o grupo. </li>
+                            <li>Sea violento o amenazante o contribuya a la violencia o a acciones que amenazan a cualquier otra persona. </li>
+                            <li>Contribuir a las acciones o sustancias ilegales o dañinas. </li>
+                        </ol>
+                        <li>Vulnerar la propiedad intelectual de StackingUp </li>
+                    </ol>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Compensación</h3>
+                    <p>{compensacion}</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>Acceso a esta plataforma o violación de las condiciones. </li>
+                        <li>Su contenido publicado como usuario de StackingUp. </li>
+                        <li>Cualquier daño que ocurra con cada persona o propiedad debido a uso, ocupación, desconexión o de entrada o salida de cualquier espacio convertido. </li>
+                        <li>Interacción con cualquier miembro de la reserva de un espacio o su uso, condiciones o ubicaciones arrendadas por usted, incluso a lesiones, perdidas o daños de cualquier tipo debido a la relación o el resultado de la contratación, la reserva o el uso espacial. </li>
+                        <li>Cualquier disputa entre usted y otro usuario del sitio web o servicio. </li>
+                        <li>Cualquier violación o tareas ilegales de terceros. </li>
+                    </ol>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Enlaces</h3>
+                    <p>{enlaces}</p>
+                    <ol className='list-decimal ml-14'>
+                        <li>Disponibilidad o precisión de dichos sitios web o recursos.</li>
+                        <li>Contenido, productos o servicios o disponibles en lugares o recursos. </li>
+                    </ol>
+                    <p>{enlaces2} <a className='text-[#4aa7c0]' target="_blank" href="https://www.mapbox.com/legal/tos">https://www.mapbox.com/legal/tos</a></p>
+                    <h3 className='text-md font-bold text-[#256172] italic mb-2 mt-2'>Modificación de condiciones</h3>
+                    <p>{modificacionCondiciones}</p>
+                    <h3 className='text-md font-bold italic text-[#256172] italic mb-2 mt-2'>Política contra la discriminación </h3>
+                    <p>{discriminacion}</p>
+                </div>
+
+            </div>
+            <Footer />
+        </>
+
     )
 }
 
