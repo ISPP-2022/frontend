@@ -170,9 +170,9 @@ function Navbar({ user }) {
             </div>
             <div className="mx-6 border-t-2" />
             <article className="mx-3 h-3/6 space-y-2">
-              <a href="/questions" className="text-[#4aa7c0] underline">Preguntas frecuentes</a>
-              <p className="text-[#4aa7c0] underline">Términos y condiciones</p>
-              <p className="text-[#4aa7c0] underline">Política de privacidad</p>
+              <p><a href="/questions" className="text-[#4aa7c0] underline">Preguntas frecuentes</a></p>
+              <p><a href="/terms" className="text-[#4aa7c0] underline">Términos y condiciones</a></p>
+              <p><a href="/privatyPolicy" className="text-[#4aa7c0] underline">Política de privacidad</a></p>
               <p className="text-[#4aa7c0] underline">Sobre nosotros</p>
               <p className="text-[#4aa7c0] underline">Sitemap</p>
             </article>
