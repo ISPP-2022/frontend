@@ -32,11 +32,11 @@ export default function privacyPolicy() {
                                 respecta al tratamiento de datos personales y a la libre circulación de estos.</p>
                             <br></br>
                             <p>El usuario podrá en cualquier momento ejercitar los derechos de acceso, oposición, rectificación y cancelación reconocidos en el citado Reglamento (UE).
-                                El ejercicio de estos derechos puede realizarlo el propio usuario a través de email a: support@stackingup.es, indicando qué desea realizar. Las
+                                El ejercicio de estos derechos puede realizarlo el propio usuario a través de email a: <a href="mailto:support@stackingup.es">support@stackingup.es</a>, indicando qué desea realizar. Las
                                 respuestas a estas solicitudes tendrán un margen de respuesta de 48 horas.</p>
                             <br></br>
                             <p>El usuario manifiesta que todos los datos facilitados por él son ciertos y correctos, y se compromete a mantenerlos actualizados, comunicando los cambios
-                                a support@stackingup.es. </p>
+                                a <a href="mailto:support@stackingup.es">support@stackingup.es</a>. </p>
                             <br></br>
                             <br></br>
                             <h2 className="flex font-bold text-[#256172] " >Finalidad del tratamiento de los datos personales: </h2>
