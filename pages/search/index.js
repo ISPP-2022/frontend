@@ -10,8 +10,10 @@ import { Accordion, AccordionDetails, AccordionSummary, FormControl, FormControl
 import { optionTags } from '../../components/Filter/options';
 import { Button } from '../../components/Core/Button';
 import { SearchFilter } from '../../components/Filter';
+import InteractiveMapBox from '../../components/InteractiveMapBox';
 import Link from 'next/link';
 import Head from 'next/head';
+
 
 const Search = () => {
     const router = useRouter();
@@ -88,6 +90,7 @@ const Search = () => {
 
         return Object.fromEntries(Object.entries(finalQuery).filter(([key, value]) => !!value))
     }
+
     useEffect(() => {
         setLoading(true);
         parseQueryToState(router.query);
@@ -135,7 +138,6 @@ const Search = () => {
         }
     };
 
-
     const enviarDatos = async (event) => {
         event.preventDefault();
         const tempQuery = parseStateToQuery();
@@ -148,6 +150,8 @@ const Search = () => {
         });
 
     };
+
+
 
     return (
         <>
@@ -354,6 +358,15 @@ const Search = () => {
                                 transition duration-200 ease-in-out  "
                             type="text" placeholder="Search" value={search} onChange={(e) => { setSearch(e.target.value) }} />
                     </form>
+
+
+                    {/* Mapa interactivo */}
+                    {
+                        !loading && data && data.length > 0 && <InteractiveMapBox spaces={data} />
+                    }
+
+
+
                     <section className='w-full hidden sm:grid sm:w-4/5 mx-auto justify-center lg:grid-cols-2 lg:gap-2 md:grid-cols-1 md:gap-1'>
                         {
                             loading ? <div className="flex justify-center h-screenC col-span-2 row-span-4 items-center"> <Loading size="large"></Loading></div>
