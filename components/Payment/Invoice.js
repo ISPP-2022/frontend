@@ -81,7 +81,7 @@ const createInvoice = (rental, space, renter, owner, userSession) => {
           body: [
             [{ text: 'Item', bold: true, fontSize: 12 }, { text: 'Descripción', bold: true, fontSize: 12 }, { text: 'Precio', bold: true, fontSize: 12, alignment: 'right' }],
             ['Alquiler', `Desde: ${new Date(rental.initialDate).toLocaleDateString()} ${new Date(rental.initialDate).toLocaleTimeString()}\nHasta: ${new Date(rental.finalDate).toLocaleDateString()} ${new Date(rental.finalDate).toLocaleTimeString()}`, { text: costMinusComission, alignment: 'right' }],
-            ['Comisión', 'Importe comisiones 6%', { text: costComission, alignment: 'right' }],
+            ['Comisión', 'Importe 6% (0% para usuarios Premium)', { text: costComission, alignment: 'right' }],
             ["", { text: 'Subtotal', bold: true, alignment: 'right' }, { text: costMinusIVA, bold: true, alignment: 'right' }],
             ["", { text: 'IVA(21%)', bold: true, alignment: 'right' }, { text: costIVA, bold: true, alignment: 'right' }],
             ["", { text: 'Total', bold: true, alignment: 'right' }, { text: rental.cost.toFixed(2), bold: true, alignment: 'right' }],
