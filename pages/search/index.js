@@ -20,6 +20,7 @@ const Search = () => {
     //set query data cloning router.query
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [showMap, setShowMap] = useState(false);
     const [tag, setTag] = useState([]);
 
     const [search, setSearch] = useState("");
@@ -362,30 +363,41 @@ const Search = () => {
 
                     {/* Mapa interactivo */}
                     {
-                        !loading && data && data.length > 0 && <InteractiveMapBox spaces={data} />
+                        !loading && data && data.length > 0 &&
+                        <>
+                            <div className='flex justify-end items-center'>
+
+                                <Switch label=" " checked={showMap} name="ShowMap" onChange={(e) => { setShowMap(e.target.checked) }} />
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                </svg>
+                            </div>
+                            {
+                                showMap && <InteractiveMapBox spaces={data} />
+                            }
+                        </>
                     }
-
-
-
-                    <section className='w-full hidden sm:grid sm:w-4/5 mx-auto justify-center lg:grid-cols-2 lg:gap-2 md:grid-cols-1 md:gap-1'>
-                        {
-                            loading ? <div className="flex justify-center h-screenC col-span-2 row-span-4 items-center"> <Loading size="large"></Loading></div>
-                                : data && data.length > 0 ?
-                                    data.map((espacio, index) => {
-                                        return (
-                                            <div key={index} className='h-[220px]'>
-                                                <Link href={`/space/${espacio.id}`} passHref>
-                                                    <a>
-                                                        <Card key={index}
-                                                            space={espacio}
-                                                        />
-                                                    </a>
-                                                </Link>
-                                            </div>
-                                        );
-                                    }) : <h1 className="h-full w-full col-span-2 min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>
-                        }
-                    </section>
+                    <div className='flex justify-end w-full lg:w-4/5 ml-auto'>
+                        <section className='w-full hidden sm:grid mx-auto justify-end grid-cols-2 xl:grid-cols-3 gap-1 lg:gap-2 xl:gap-1'>
+                            {
+                                loading ? <div className="flex justify-center h-screenC col-span-2 row-span-4 items-center"> <Loading size="large"></Loading></div>
+                                    : data && data.length > 0 ?
+                                        data.map((espacio, index) => {
+                                            return (
+                                                <div key={index} className='h-[220px]'>
+                                                    <Link href={`/space/${espacio.id}`} passHref>
+                                                        <a>
+                                                            <Card key={index}
+                                                                space={espacio}
+                                                            />
+                                                        </a>
+                                                    </Link>
+                                                </div>
+                                            );
+                                        }) : <h1 className="h-full w-full col-span-2 min-h-[200px] flex items-center justify-center text-7xl text-center text-gray-500">Sin resultados</h1>
+                            }
+                        </section>
+                    </div>
                     <section className='sm:hidden w-full flex flex-col px-5 justify-center' >
                         {
                             loading ? <div className="flex justify-center h-screenC items-center"> <Loading size="large"></Loading></div>
@@ -409,7 +421,6 @@ const Search = () => {
             </main>
         </>
     );
-
 };
 
 export default Search;

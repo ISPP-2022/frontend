@@ -3,7 +3,6 @@ import { render } from 'react-dom';
 import mapboxgl from 'mapbox-gl';
 import { Card, CardMobile } from '../../components/Card';
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
 
 export default function InteractiveMapBox({ spaces }) {
     const mapContainerRef = useRef(null);
@@ -11,6 +10,8 @@ export default function InteractiveMapBox({ spaces }) {
     const [lng, setLng] = useState(parseFloat(spaces[0].location.split(',')[1]));
     const [lat, setLat] = useState(parseFloat(spaces[0].location.split(',')[0]));
     const [zoom, setZoom] = useState(15);
+
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
 
     // Initialize map when component mounts
     useEffect(() => {
