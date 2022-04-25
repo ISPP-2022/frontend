@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { render } from 'react-dom';
 import mapboxgl from 'mapbox-gl';
-import { CardMobile } from '../../components/Card';
+import { Card, CardMobile } from '../../components/Card';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY;
 
@@ -89,9 +89,18 @@ export default function InteractiveMapBox({ spaces }) {
                 //Set size of popup
 
                 render(
-                    <a href={`/space/${space.id}`} target="_blank" rel="noopener noreferrer">
-                        <CardMobile space={space} />
-                    </a>,
+                    <div>
+                        <div className='sm:hidden '>
+                            <a href={`/space/${space.id}`} target="_blank" rel="noopener noreferrer" >
+                                <CardMobile space={space} />
+                            </a>
+                        </div>
+                        <div className='hidden sm:inline w-[500px]'>
+                            <a href={`/space/${space.id}`} target="_blank" rel="noopener noreferrer">
+                                <Card space={space} />
+                            </a>
+                        </div>
+                    </div>,
                     popUpNode);
 
 
