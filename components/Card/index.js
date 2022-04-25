@@ -121,15 +121,15 @@ export const CardMobile = ({ space: { name, dimensions, priceHour, priceDay, pri
             </div>
             {/* Body */}
             <div className="grid grid-cols-[2fr_1fr] grid-rows-2 h-20 p-2">
-                <h1 className="text-gray-900 font-bold text-lg sm:text-2xl line-clamp-1">{name} | {surface} m²</h1>
-                <h1 className="text-blue-bondi sm:font-bold text-lg sm:text-2xl flex justify-end text-right">{price.amount} {price.unit}</h1>
+                <h1 className="text-gray-900 font-bold text-md sm:text-2xl line-clamp-1">{name} | {surface} m²</h1>
+                <h1 className="text-blue-bondi sm:font-bold text-md sm:text-2xl flex justify-end text-right">{price.amount} {price.unit}</h1>
                 <div className=""><Rating value={rating} readOnly /></div>
                 <div className="flex items-center justify-end h-full text-webcolor-50">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <p className="flex items-center text-lg text-center h-full">
+                    <p className="flex items-center text-md text-center h-full">
                         {city}
                     </p>
                 </div>
