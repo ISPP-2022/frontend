@@ -121,7 +121,9 @@ function Chat(props) {
                   <hr />
                 </div>
               )
-            }) : null
+            }) : <div>
+              <h1 className="text-center text-2xl my-10 font-bold text-gray-600">Ningún chats disponibles</h1>
+            </div>
           }
         </section>
         {
