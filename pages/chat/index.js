@@ -67,6 +67,7 @@ function Chat(props) {
   useEffect(() => {
     if (query.user) {
       if (chatsId) {
+        socket.removeAllListeners("message");
         socket.emit('leave')
         let index = chatsId.indexOf(parseInt(query.user));
         if (index !== -1) {
