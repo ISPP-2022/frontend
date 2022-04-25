@@ -81,7 +81,15 @@ function Navbar({ user }) {
                 <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" enableBackground="new 0 0 612 612" viewBox="0 0 612 612"><path d="M273.053,273.046c75.399,0,136.524-61.124,136.524-136.523S348.454,0,273.053,0c-75.4,0-136.522,61.124-136.522,136.523   S197.654,273.046,273.053,273.046z M338.347,191.161c-6.209,20.535-32.814,35.971-64.698,35.971   c-31.885,0-58.489-15.437-64.699-35.971H338.347z M566.878,582.625l-52.115-52.102c16.502-18.348,26.629-42.539,26.629-69.158   c0-57.199-46.369-103.568-103.57-103.568c-57.199,0-103.568,46.369-103.568,103.568c0,57.201,46.369,103.57,103.568,103.57   c16.871,0,32.748-4.119,46.824-11.275l55.605,55.594c3.662,3.662,9.654,3.66,13.314,0l13.312-13.312   C570.54,592.279,570.54,586.287,566.878,582.625z M437.823,527.273c-36.4,0-65.908-29.508-65.908-65.908   c0-36.398,29.508-65.906,65.908-65.906c36.398,0,65.908,29.508,65.908,65.906C503.731,497.766,474.222,527.273,437.823,527.273z    M310.716,461.363c0,16.277,3.188,31.795,8.787,46.113c-14.46,0.613-29.923,0.955-46.45,0.955   c-131.637,0-196.056-21.51-219.673-32.02c-6.094-2.711-11.004-10.463-11.004-17.133v-45.002   c0-67.436,51.344-123.381,116.86-130.874c1.991-0.228,4.943,0.624,6.565,1.799c30.208,21.87,67.191,34.92,107.25,34.92   c40.06,0,77.042-13.051,107.251-34.92c1.621-1.175,4.574-2.027,6.564-1.799c39.754,4.547,74.201,26.995,95.215,58.962   c-13.807-5.154-28.68-8.109-44.262-8.109C367.735,334.256,310.716,391.271,310.716,461.363z" fill="#ffffff" className="color000 svgShape" /></svg>
                   <Link href={`/user/${isLogged.userId}`} passHref>
-                    <a>Mi perfil</a>
+                    <a>Perfil</a>
+                  </Link>
+                </button>
+                <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 rotate-90" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                  </svg>
+                  <Link href={`/chat`} passHref>
+                    <a>Chat</a>
                   </Link>
                 </button>
                 <button onClick={handleLogout} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
@@ -132,7 +140,7 @@ function Navbar({ user }) {
           <header className=" text-center w-full py-1 my-auto">
             <Image className="shrink-0" src="/logolargo.png" alt="StackingUp Logo" width={180} height={65} layout="intrinsic" />
           </header>
-          <nav className="row-span-4 text-center space-y-5">
+          <nav className="row-span-4 text-center space-y-2">
             <div className="mx-6 border-t-2" />
             {/* Botones movil */}
             {
@@ -146,6 +154,12 @@ function Navbar({ user }) {
                 <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
                   <Link href={`/user/${isLogged.userId}`} passHref>
                     <a onClick={() => { setIsOpen(false) }} >Mi perfil</a>
+                  </Link>
+                </button>
+                <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+
+                  <Link href={`/chat`} passHref>
+                    <a>Chat</a>
                   </Link>
                 </button>
               </>
@@ -170,9 +184,9 @@ function Navbar({ user }) {
             </div>
             <div className="mx-6 border-t-2" />
             <article className="mx-3 h-3/6 space-y-2">
-              <p className="text-[#4aa7c0] underline">Preguntas frecuentes</p>
-              <p className="text-[#4aa7c0] underline">Términos y condiciones</p>
-              <p className="text-[#4aa7c0] underline">Política de privacidad</p>
+              <p><a href="/questions" className="text-[#4aa7c0] underline">Preguntas frecuentes</a></p>
+              <p><a href="/terms" className="text-[#4aa7c0] underline">Términos y condiciones</a></p>
+              <p><a href="/privatyPolicy" className="text-[#4aa7c0] underline">Política de privacidad</a></p>
               <p className="text-[#4aa7c0] underline">Sobre nosotros</p>
               <p className="text-[#4aa7c0] underline">Sitemap</p>
             </article>

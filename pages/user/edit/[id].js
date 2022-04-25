@@ -92,14 +92,14 @@ export default function UserEdit({ userData, userSession }) {
         }
 
         if (!avatar) {
-            await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/avatar`)
+            await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/avatar`)
                 .then(res => avatar = res.data.image)
                 .catch(() => avatar = null);
         }
 
 
         if (validations.length === 0) {
-            await axios.put(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}`, {
+            await axios.put(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}`, {
                 name: name,
                 surname: surname,
                 sex: sex,
