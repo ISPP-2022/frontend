@@ -93,8 +93,10 @@ function Chat(props) {
 
   const handleMessageSend = (event) => {
     event.preventDefault();
-    socket.emit("message", message);
-    setMessage('')
+    if (message.trim() !== '') {
+      socket.emit("message", message);
+      setMessage('')
+    }
   }
 
   return (
