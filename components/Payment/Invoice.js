@@ -10,12 +10,12 @@ const createInvoice = (rental, space, renter, owner, userSession) => {
   let costMinusIVA = (rental.cost / 1.21).toFixed(2);
   let costIVA = (rental.cost - costMinusIVA).toFixed(2);
   let costMinusComission, costComission;
-  if (userSession.role !== "SUBSCRIBED") {
+  if (renter.auth.role !== "SUBSCRIBED") {
     costMinusComission = (costMinusIVA / 1.06).toFixed(2);
     costComission = (costMinusIVA - costMinusComission).toFixed(2);
   } else {
     costMinusComission = costMinusIVA;
-    costComission = 0.00; 
+    costComission = 0.00;
   }
   return {
     content: [
