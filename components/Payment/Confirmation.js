@@ -14,7 +14,10 @@ function Confirmation(props) {
 
   useEffect(() => {
     let coste = parseFloat(props.cost).toFixed(2);
-    let comisions = (+coste * 0.06).toFixed(2);
+    let comisions = 0.0;
+    if (props.userSession.role !== 'SUBSCRIBED') {
+      comisions = (+coste * 0.06).toFixed(2);
+    }
     let iva = ((+coste + +comisions) * 0.21).toFixed(2);
 
     setComisions(comisions);
@@ -82,8 +85,12 @@ function Confirmation(props) {
             <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Precio inicial:</h2>
             <p className='text-blue-bondi text-xl pl-2'>{props.cost + " euros"}</p>
 
-            <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Comisiones (6%):</h2>
-            <p className='text-blue-bondi text-xl pl-2'>{comisions + " euros"}</p>
+            { props.userSession.role !== 'SUBSCRIBED' &&
+              <>
+                <h2 className="pl-2 font-bold text-2xl lg:text-3xl">Comisiones (6%):</h2>
+                <p className='text-blue-bondi text-xl pl-2'>{comisions + " euros"}</p>
+              </>
+            }
 
             <h2 className="pl-2 font-bold text-2xl lg:text-3xl">IVA (21%):</h2>
             <p className='text-blue-bondi text-xl pl-2'>{iva + " euros"}</p>

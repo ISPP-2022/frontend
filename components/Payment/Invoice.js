@@ -6,11 +6,17 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
-const createInvoice = (rental, space, renter, owner) => {
+const createInvoice = (rental, space, renter, owner, userSession) => {
   let costMinusIVA = (rental.cost / 1.21).toFixed(2);
   let costIVA = (rental.cost - costMinusIVA).toFixed(2);
-  let costMinusComission = (costMinusIVA / 1.06).toFixed(2);
-  let costComission = (costMinusIVA - costMinusComission).toFixed(2);
+  let costMinusComission, costComission;
+  if (renter.auth.role !== "SUBSCRIBED") {
+    costMinusComission = (costMinusIVA / 1.06).toFixed(2);
+    costComission = (costMinusIVA - costMinusComission).toFixed(2);
+  } else {
+    costMinusComission = costMinusIVA;
+    costComission = 0.00;
+  }
   return {
     content: [
       {
@@ -72,11 +78,10 @@ const createInvoice = (rental, space, renter, owner) => {
           // you can declare how many rows should be treated as headers
           headerRows: 1,
           widths: [150, '*', 50],
-
           body: [
             [{ text: 'Item', bold: true, fontSize: 12 }, { text: 'Descripción', bold: true, fontSize: 12 }, { text: 'Precio', bold: true, fontSize: 12, alignment: 'right' }],
             ['Alquiler', `Desde: ${new Date(rental.initialDate).toLocaleDateString()} ${new Date(rental.initialDate).toLocaleTimeString()}\nHasta: ${new Date(rental.finalDate).toLocaleDateString()} ${new Date(rental.finalDate).toLocaleTimeString()}`, { text: costMinusComission, alignment: 'right' }],
-            ['Comisión', 'Importe comisiones 6%', { text: costComission, alignment: 'right' }],
+            ['Comisión', 'Importe 6% (0% para usuarios Premium)', { text: costComission, alignment: 'right' }],
             ["", { text: 'Subtotal', bold: true, alignment: 'right' }, { text: costMinusIVA, bold: true, alignment: 'right' }],
             ["", { text: 'IVA(21%)', bold: true, alignment: 'right' }, { text: costIVA, bold: true, alignment: 'right' }],
             ["", { text: 'Total', bold: true, alignment: 'right' }, { text: rental.cost.toFixed(2), bold: true, alignment: 'right' }],
@@ -129,7 +134,7 @@ function Invoice({ user }) {
           return { name: "Desconocido" }
         });
 
-      const invoice = createInvoice(rental, space, renter, owner);
+      const invoice = createInvoice(rental, space, renter, owner, user);
 
       const pdfDocGenerator = pdfMake.createPdf(invoice)
       pdfDocGenerator.getBase64((data) => {
@@ -147,7 +152,6 @@ function Invoice({ user }) {
           <embed id="pdfID" type="text/html" className='w-11/12 h-11/12' src={`data:application/pdf;base64,${invoice}`} />
         </object>
       }
-
     </>
   )
 }
