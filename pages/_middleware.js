@@ -1,6 +1,7 @@
 import axios from "axios";
 import fetchAdapter from '@vespaiach/axios-fetch-adapter'
 import { NextResponse } from "next/server"
+import io from "socket.io-client";
 var jwt = require('jsonwebtoken');
 
 export async function middleware(req) {
@@ -59,6 +60,17 @@ export async function middleware(req) {
     }
   }
 
+  if (req.url.includes('/chat')) {
+    if (!user) {
+      return NextResponse.redirect('/')
+    }
+    if (req.url.includes('?user=')) {
+      const userId = req.url.split('?user=').pop()
+      if (user.userId === parseInt(userId)) {
+        return NextResponse.redirect('/chat')
+      }
+    }
+  }
   // If user is authenticated, continue.
   return NextResponse.next()
 }

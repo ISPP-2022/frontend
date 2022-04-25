@@ -123,8 +123,10 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
   }
 
   const rent = async () => {
-
-    console.log(initialDate, finalDate);
+    if (!user) {
+      alert('Debe iniciar sesión para realizar una reserva');
+      return;
+    }
     let initialDateBody = new Date(initialDate);
     initialDateBody.setHours(startHour[0], startHour[1], 0, 0);
 
@@ -136,7 +138,6 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
       finalDateBody = addSeconds(finalDateBody, -1);
     }
 
-    console.log(initialDateBody, finalDateBody);
     let rentBody = {
       renterId: parseInt(user.userId),
       spaceId: parseInt(space.id),

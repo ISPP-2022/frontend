@@ -66,7 +66,7 @@ export default function Space(props) {
 
                         {/* User and price selector */}
                         <section className='basis-1/3 flex flex-col'>
-                            <UserInfo user={props.owner} ratings={props.ratings} />
+                            <UserInfo user={props.owner} ratings={props.ratings} withChat />
                             <div className='basis-[30%] md:basis-1/6 xl:basis-[60%]'>
                                 <div className='flex flex-col justify-center md:flex-row md:justify-evenly xl:justify-center items-center lg:items-end xl:items-center h-full w-full'>
                                     <Button type="button" onClick={() => setType('HOUR')} disabled={!props.space.priceHour || type === 'HOUR'} color={type === 'HOUR' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-1/3 lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
