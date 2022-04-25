@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 import Comments from "../../components/Comments/";
 import { useState } from "react";
 import { VerifyProfile } from "../../components/VerifyProfile";
-
+import { useRouter } from "next/router";
 
 async function getRatingComponentData({ query }) {
   const ratings = await axios
@@ -111,6 +111,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
 
   const [infoState, setInfoState] = useState('resume');
   const [openVerified, setOpenVerified] = useState(false);
+  const router = useRouter();
 
   if (!userData) {
     return (
@@ -157,7 +158,8 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
             </div>}
           </div>
           <div className="flex justify-center mt-4">
-            <Button className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2" color="secondary" onClick={() => alert('Proximamente...')}>
+            <Button className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2" color="secondary"
+              onClick={() => router.push(`/chat?user=${id}`)}>
               <div className="flex items-center justify-center">
                 <img src="/images/paperplane.svg" className="w-5 h-5" />
                 <p className="ml-2"> Chat</p>

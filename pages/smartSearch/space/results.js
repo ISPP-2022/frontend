@@ -144,7 +144,7 @@ export default function SpaceSmartSearch() {
                     <Button type="button" disabled={selectedSpaceIndex === 0} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex - 1))} className="flex items-center justify-center rounded-3xl disabled:bg-gray-200 p-2 md:px-6 w-[90px] md:w-auto">
                         Anterior
                     </Button>
-                    <Button type="button" onClick={() => alert('Proximamente...')} className="flex items-center justify-center bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl p-2 md:px-6 w-[30px] md:w-auto">
+                    <Button type="button" onClick={() => router.push(`/chat?user=${spaces[selectedSpaceIndex].owner.id}`)} className="flex items-center justify-center bg-gray-50 text-webcolor-50 border-webcolor-50 border-2 rounded-2xl p-2 md:px-6 w-[30px] md:w-auto">
                         Chat
                     </Button>
                     <Button type="button" disabled={selectedSpaceIndex + 1 === spaces.length} onClick={() => setSelectedSpaceIndex((selectedSpaceIndex + 1))} className="flex items-center justify-center rounded-3xl disabled:bg-gray-200 p-2 md:px-6 w-[90px] md:w-auto">

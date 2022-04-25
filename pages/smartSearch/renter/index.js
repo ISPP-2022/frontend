@@ -118,7 +118,7 @@ function Renter({ spaces }) {
                 <nav className="flex flex-row justify-center items-center mt-5">
                     <Link href={{ pathname: '/smartSearch/renter/results', query: { space: page[selected]?.id } }}>
                         <button disabled={!page[selected]?.id} className={`text-white font-bold py-2 px-4 rounded ${!page[selected]?.id ? 'bg-gray-300 text-gray-500' : 'bg-[#4aa7c0] hover:bg-blue-bondi-dark'}`}>
-                            Start
+                            Empezar
                         </button>
                     </Link>
                 </nav>
