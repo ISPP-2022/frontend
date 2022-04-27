@@ -112,9 +112,25 @@ export default function UserEdit({ userData, userSession }) {
             })
                 .catch(err => {
                     if (err.response.status === 400)
-                        if (err.response.data.match(/^Bad Request:/) !== null)
-                            alert('Error: Ingrese todos los atributos requeridos');
-                        else {
+                        if (err.response.data === 'Bad Request: Missing required attributes: name, surname or phone number') {
+                            alert('Error: Ingrese todos los atributos requeridos.');
+                        } else if (err.response.data === 'Bad Request: Name must contain at least 3 characters') {
+                            alert('Error: El nombre debe contener al menos 3 caracteres.')
+                        } else if (err.response.data === 'Bad Request: Surname must contain at least 3 characters') {
+                            alert('Error: El apellido debe contener al menos 3 caracteres.')
+                        } else if (err.response.data === 'Bad Request: Invalid date format') {
+                            alert('Error: Formato de fecha inválida.')
+                        } else if (err.response.data === 'Bad Request: Birthday date cannot be after today') {
+                            alert('Error: La fecha de nacimiento no puede ser posterior a la fecha actual.')
+                        } else if (err.response.data === 'Bad Request: Invalid sex, must be MALE, FEMALE or OTHER') {
+                            alert('Error: El sexo debe ser HOMBRE, MUJER u OTRO.')
+                        } else if (err.response.data === 'Bad Request: Invalid ID card format') {
+                            alert('Error: El formato de DNI no es válido.');
+                        } else if (err.response.data === 'Bad Request: Invalid phone number, must be +34XXXXXXXXX') {
+                            alert('Error: El número de teléfono no es válido, debe tener el formato +34XXXXXXXXX');
+                        } else if (err.response.data === 'Bad Request: Avatar must be jpeg or png') {
+                            alert('Error: El avatar debe ser un archivo JPEG o PNG.')
+                        } else {
                             alert(err.response.data);
                         }
                     else
