@@ -62,31 +62,31 @@ export default function UserEdit({ userData, userSession }) {
         e.preventDefault();
         const { id, name, surname, sex, phoneNumber, idCard } = userDataForm;
         let { avatar } = userDataForm;
-        setErrors({});
+        let errorsTemp = {};
         let validations = []
 
         if (!name || name.match(/^ *$/) !== null) {
-            setErrors({ ...errors, name: 'Debe insertar un nombre' })
+            errorsTemp = { ...errorsTemp, name: 'Debe insertar un nombre' };
             validations.push(false);
         }
 
         if (!surname || surname.match(/^ *$/) !== null) {
-            setErrors({ ...errors, surname: `Debe insertar un apellido` })
+            errorsTemp = { ...errorsTemp, surname: `Debe insertar un apellido` };
             validations.push(false);
         }
 
         if (sex && (sex !== 'MALE' && sex !== 'FEMALE' && sex !== 'OTHER')) {
-            setErrors({ ...errors, sex: `El género debe ser Hombre, Mujer u Otro` })
+            errorsTemp = { ...errorsTemp, sex: `El género debe ser Hombre, Mujer u Otro` };
             validations.push(false);
         }
 
         if (phoneNumber && phoneNumber.match(/^\+?([0-9]{2})\d{9}$/) === null) {
-            setErrors({ ...errors, phoneNumber: `El número de teléfono debe seguir el formato +34XXXXXXXXX` })
+            errorsTemp = { ...errorsTemp, phoneNumber: `El número de teléfono debe seguir el formato +34XXXXXXXXX` }
             validations.push(false);
         }
 
         if (idCard && !checkIdCard(idCard)) {
-            setErrors({ ...errors, idCard: `El DNI debe seguir el formato XXXXXXXXA o es invalido` })
+            errorsTemp = { ...errorsTemp, idCard: `El DNI debe seguir el formato XXXXXXXXA o es invalido` }
             validations.push(false);
         }
 
@@ -120,6 +120,8 @@ export default function UserEdit({ userData, userSession }) {
                     else
                         alert("Error al editar los datos");
                 });
+        } else {
+            setErrors(errorsTemp);
         }
 
 
