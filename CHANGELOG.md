@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/Stacking-Up/frontend/compare/v0.3.0...v0.3.1) (2022-04-27)
+
+
+### Bug Fixes
+
+* Minor bugs ([9cdc493](https://github.com/Stacking-Up/frontend/commit/9cdc493bd99c22e85167d4deb242bde055dd0a49))
+
+
+
 # [0.3.0](https://github.com/Stacking-Up/frontend/compare/v0.2.0...v0.3.0) (2022-04-27)
 
 
