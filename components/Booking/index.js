@@ -331,7 +331,7 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
         <>
           <div className="flex flex-col items-center">
             <hr className=" bg-webcolor-50 w-[80%] my-4" />
-            <h3 className='text-webcolor-50 text-2xl text-center mb-4'>Metros alquilados</h3>
+            <h3 className='text-webcolor-50 text-2xl text-center mb-4'>Superficie alquilada (m²)</h3>
             <input type="number" placeholder="metros" className="rounded-full" value={meters} max={dimensions} min={0.1} onChange={(e) => {
               setMeters(parseFloat(e.target.value))
             }} /></div>

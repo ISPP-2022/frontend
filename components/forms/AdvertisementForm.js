@@ -251,7 +251,12 @@ export default function AdvertisementForm(props) {
             .then(res => {
                 router.push("/");
             }).catch(err => {
-                setErrors(['Ha habido un problema. Inténtelo más tarde.']);
+                if (err.response.data === 'Cannot delete space containing rentals') {
+                    setErrors(['No se puede eliminar este espacio porque tiene alguna reserva asociada.']);
+                }
+                else {
+                    setErrors(['Ha habido un problema. Inténtelo más tarde.']);
+                }
             });
     }
 
