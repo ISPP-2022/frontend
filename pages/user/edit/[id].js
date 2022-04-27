@@ -62,7 +62,6 @@ export default function UserEdit({ userData, userSession }) {
         e.preventDefault();
         const { id, name, surname, sex, phoneNumber, idCard } = userDataForm;
         let { avatar } = userDataForm;
-        console.log(id, name, surname, sex, phoneNumber, idCard)
         setErrors({});
         let validations = []
 
