@@ -133,10 +133,10 @@ export default function AdvertisementForm(props) {
         setTitle(space.name);
         setDescription(space.description);
 
-        setStartAvailability(space.initialDate.split('T')[0]);
+        setStartAvailability(new Date(space.initialDate).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', }).split('/').reverse().join('-'));
 
         if ('finalDate' in space) {
-            setEndAvailability(space.finalDate.split('T')[0]);
+            setEndAvailability(new Date(space.finalDate).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', }).split('/').reverse().join('-'));
         }
 
         // Crea Geocoder y pasa de coordenadas a dirección
@@ -150,8 +150,9 @@ export default function AdvertisementForm(props) {
             setType('hours');
             setPrice(space.priceHour);
             document.getElementById('hours').checked = true;
-            setStartHour(new Date(space.startHour).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-            setEndHour(new Date(space.endHour).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+            setStartHour(`${(new Date(space.startHour).getUTCHours() - new Date().getTimezoneOffset() / 60).toLocaleString(undefined, { minimumIntegerDigits: 2 })}:${new Date(space.startHour).getUTCMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 })}`);
+            setEndHour(`${(new Date(space.endHour).getUTCHours() - new Date().getTimezoneOffset() / 60).toLocaleString(undefined, { minimumIntegerDigits: 2 })}:${new Date(space.endHour).getUTCMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 })}`);
 
         } else if ('priceDay' in space) {
             setType('days');
