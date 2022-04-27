@@ -1,3 +1,53 @@
+# [0.3.0](https://github.com/Stacking-Up/frontend/compare/v0.2.0...v0.3.0) (2022-04-27)
+
+
+### Bug Fixes
+
+* Admin commisions ([37a0783](https://github.com/Stacking-Up/frontend/commit/37a0783c3d325aa0beb7b2fbf600c55f5d4e7744))
+* Comision info in invoice ([8987be1](https://github.com/Stacking-Up/frontend/commit/8987be176d7083a91a3ad424f8844a44af113587))
+* Date and hours set in update ([9a130a0](https://github.com/Stacking-Up/frontend/commit/9a130a020d8830bbc3ee662bf7a6de0df8ed1a17))
+* Delete log when editing user profile ([d5bb5fd](https://github.com/Stacking-Up/frontend/commit/d5bb5fd7e3139d4f6dfc7f871d98d6c8864ae5ac))
+* Email already registered validation ([f1d8580](https://github.com/Stacking-Up/frontend/commit/f1d8580b634b19dfb3db4bae74508859815264e5))
+* Empty chats notification ([a5373f8](https://github.com/Stacking-Up/frontend/commit/a5373f81bc68808f85091637d1487c86b8332ff5))
+* File type and size filter ([ab4c0fc](https://github.com/Stacking-Up/frontend/commit/ab4c0fcadac2270efee31aaf02a92fbd80f1f9fe))
+* Footers pages ([eea6481](https://github.com/Stacking-Up/frontend/commit/eea64812d5eae69bf16d42f1cb1694fa30d2772e))
+* Getting role from renter ([da14014](https://github.com/Stacking-Up/frontend/commit/da14014248b2f05c517bef1f719e6c111ea381ce))
+* improved layout having now a visual style similar to the application ([31c4fc6](https://github.com/Stacking-Up/frontend/commit/31c4fc661097bc1abd890340b060cd667ac3cbb4))
+* Link to Privacy Policy when responsive ([e61bfd9](https://github.com/Stacking-Up/frontend/commit/e61bfd950644c201f9be90a62567590b7fd97e9d))
+* Merge error ([0588202](https://github.com/Stacking-Up/frontend/commit/058820253f95c184dd0dd1ed86f11b0cd50b3fe5))
+* Message blank restriction ([3c874e1](https://github.com/Stacking-Up/frontend/commit/3c874e17d90aca8813f70d3f40e703aa954d6ee2))
+* Message errors for user profile form ([e3a0f5e](https://github.com/Stacking-Up/frontend/commit/e3a0f5e2f3dbb8558cb10dfe131b3cfee5b244a2))
+* Message when there is no chat available ([05f2e4f](https://github.com/Stacking-Up/frontend/commit/05f2e4f9c354b83436850f265f59e30f2f1274db))
+* Meter message ([9c11ef7](https://github.com/Stacking-Up/frontend/commit/9c11ef7d8ae6491223ae4d14565c631f9afc4654))
+* Minor changes ([631f8b4](https://github.com/Stacking-Up/frontend/commit/631f8b4e294f029067ea2688d37af3fbabccb7df))
+* New validations for hours in space form ([915547d](https://github.com/Stacking-Up/frontend/commit/915547d7f9a3e2824dba3b3156e3d7fdd496d1db))
+* Other edit space selected ([cf05768](https://github.com/Stacking-Up/frontend/commit/cf05768384960ccb149bc720fd129918eb98bcd7))
+* Pdf iframe ([405e57c](https://github.com/Stacking-Up/frontend/commit/405e57c2269b863a1fbf62f2ff67f3675c2e7e09))
+* Remove message listener onChange ([87bc4d8](https://github.com/Stacking-Up/frontend/commit/87bc4d8e21c669f3fb6d43a57e505e1286dbda5c))
+* Temp chat env var ([2c448a3](https://github.com/Stacking-Up/frontend/commit/2c448a3401bda780286a386c3f0d9f2b2f899b47))
+* Test overflow ([1598f47](https://github.com/Stacking-Up/frontend/commit/1598f4784799365191033a53b9b2b115e6cb43c9))
+* Trim title and desc ([29c4897](https://github.com/Stacking-Up/frontend/commit/29c48973641f1beacc1c696d5f02c4026883296c))
+* Typo ([66716e4](https://github.com/Stacking-Up/frontend/commit/66716e4574abc0937252f4c586b7bb81aeabdc64))
+* Validate blank title, description in comment ([2b620c8](https://github.com/Stacking-Up/frontend/commit/2b620c818375580b7fad41960e3170903203ca1d))
+* Validations when editing profile ([e60101f](https://github.com/Stacking-Up/frontend/commit/e60101f56e36bfd2b694b395d2de5f31b3bf771e))
+
+
+### Features
+
+* Button, Modal to become Premium (no logic) ([452d4c5](https://github.com/Stacking-Up/frontend/commit/452d4c51226feb6fc355d5926417a53fde07e968))
+* Chat implementation ([b651943](https://github.com/Stacking-Up/frontend/commit/b651943c8291f6535e18253161b7f11b2ea129be))
+* Comissions removed when role is subscribed ([9f4786f](https://github.com/Stacking-Up/frontend/commit/9f4786f8045431dd945ecf873b68c99ebf908a27))
+* Connected susbcription button with endpoint ([c1ab578](https://github.com/Stacking-Up/frontend/commit/c1ab57846e8dd3e34b2922c0acf4941b34e374e1))
+* Cookies privacy added ([9c1e12d](https://github.com/Stacking-Up/frontend/commit/9c1e12d8672ea31410228134cfdb58ccd717ec11))
+* FAQ page finished ([7105b68](https://github.com/Stacking-Up/frontend/commit/7105b68384d880166e7e58ba879ffc0f116ced42))
+* Interactive map with results in search view ([7a1a494](https://github.com/Stacking-Up/frontend/commit/7a1a494026a152757e9e0aa50e588c3446afb8d7))
+* Map disable button ([07042ff](https://github.com/Stacking-Up/frontend/commit/07042ffd779b94c95f85777e5496ec920449cc38))
+* Page for Privacy Policy done ([05acbed](https://github.com/Stacking-Up/frontend/commit/05acbedf78208e0d7eb6f25049fda184258d4e56))
+* PopUp consent cookies ([158860b](https://github.com/Stacking-Up/frontend/commit/158860b26bd90e064450517f75a0359cc363915f))
+* Terms and service conditions ([93c2b59](https://github.com/Stacking-Up/frontend/commit/93c2b59ac8fce59061c020c45d27a6a8b5af9282))
+
+
+
 # [0.2.0](https://github.com/Stacking-Up/frontend/compare/v0.1.0...v0.2.0) (2022-04-06)
 
 
