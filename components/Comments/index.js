@@ -99,8 +99,17 @@ export default function Comments({
     );
 
     const errors = {};
+
+    if (!title || /^\s*$/.test(title)) {
+      errors.title = "El título no puede estar vacío";
+    }
+
     if (title.length <= 2 || 50 < title.length) {
       errors.title = "El título tiene que medir entre 3 y 50 carácteres";
+    }
+
+    if (!description || /^\s*$/.test(description)) {
+      errors.description = "La descripción no puede estar vacía";
     }
 
     if (description.length <= 2 || 100 < description.length) {
@@ -195,6 +204,7 @@ export default function Comments({
                   id="title"
                   placeholder="Título"
                   name="title"
+                  required
                   className="pl-2 ml-2 bg-gray-200 shadow-sm rounded-md"
                   onChange={(event) => handleInputChange(event)}
                 />
