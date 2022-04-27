@@ -119,6 +119,7 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
         break;
     }
     costTemp = costTemp / dimensions * meters
+    if (costTemp < 1) costTemp = 1;
     setCost(costTemp < 0 ? 0 : costTemp);
   }
 
@@ -176,7 +177,7 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
         if (err.response.status === 400)
           if (err.response.data === 'Bad Request: Missing required attributes')
             alert('Error: Ingrese todos los atributos requeridos');
-          else if (err.response.data === 'Bad Request: Cannot rent space twice. Please update or delete your previous rental of this space') {
+          else if (err.response.data === 'Cannot rent space twice. Please update or delete your previous rental of this space') {
             alert("No puedes alquilar el mismo espacio dos veces. Edita o elimina el alquiler anterior.");
           } else if (err.response.data === "Bad Request: Initial date must be between space dates") {
             alert("La fecha de inicio debe estar en el rango de fechas válidas.")
@@ -188,8 +189,10 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
             alert("La fecha de inicio debe ser posterior a la fecha de hoy.")
           } else if (err.response.data === "Bad Request: Final date must be a Date after today") {
             alert("La fecha de fin debe ser posterior a la fecha de hoy.")
+          } else if (err.response.data === "Bad Request: Final date must be between space dates") {
+            alert("La fecha de fin debe estar en el rango de disponibilidad del espacio.")
           } else if (err.response.data === "Bad Request: Space not available or space capacity exceeded") {
-            space.shared ? alert("Se ha excedido la superficie máxima disponible en el espacio compartido") : alert("El espacio no esta disponible en ese intervalo de fechas")
+            space.shared ? alert("Se ha excedido la superficie máxima disponible en el espacio compartido durante el periodo") : alert("El espacio no esta disponible en ese intervalo de fechas")
           } else if (err.response.data === "Bad Request: Initial date must be after 24 hours from now") {
             alert("La fecha inicial debe ser con al menos 24 horas de anticipación.")
           }
@@ -326,11 +329,9 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
       {bookingBody[type]}
       {space.shared ?
         <>
-
-
           <div className="flex flex-col items-center">
             <hr className=" bg-webcolor-50 w-[80%] my-4" />
-            <h3 className='text-webcolor-50 text-2xl text-center mb-4'>Metros alquilados</h3>
+            <h3 className='text-webcolor-50 text-2xl text-center mb-4'>Superficie alquilada (m²)</h3>
             <input type="number" placeholder="metros" className="rounded-full" value={meters} max={dimensions} min={0.1} onChange={(e) => {
               setMeters(parseFloat(e.target.value))
             }} /></div>

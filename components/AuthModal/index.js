@@ -323,6 +323,11 @@ export default function AuthModal({ childerns, ...props }) {
                 email: 'El email no es válido'
               })
             }
+            if (err.response.data === "Email already registered") {
+              setErrors({
+                email: 'El email ya está registrado'
+              })
+            }
             if (err.response.data === "Password must contain at least one number, one lowercase and one uppercase letter, and at least 8 characters long") {
               setErrors({
                 password: 'La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula y un número'

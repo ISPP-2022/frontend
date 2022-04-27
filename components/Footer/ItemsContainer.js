@@ -8,7 +8,7 @@ const ItemsContainer = () => {
       <Item Links={RENTS} title="ALQUILERES" />
       <div className="justify-center">
         <span className="grid gap-5">¿Tienes un problema?
-          <a type="button" href="mailto:stackingup13@gmail.com" className="justify-center transform motion-safe:hover:scale-110 bg-[#4CA6C4] hover:bg-sky-400 duration-300 px-10 py-4
+          <a type="button" href="mailto:info@stackingup.es" className="justify-center transform motion-safe:hover:scale-110 bg-[#4CA6C4] hover:bg-sky-400 duration-300 px-10 py-4
         rounded-md text-white md:w-auto w-full"
           >
             Contáctanos

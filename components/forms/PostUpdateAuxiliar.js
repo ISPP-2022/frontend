@@ -33,8 +33,13 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
         if (!endHour || !startHour) {
             errorsArray.push('Escoge una hora de inicio y fin.');
         }
-        if (endHour != '' && startHour > endHour) {
-            errorsArray.push('La hora de inicio debe ser anterior a la hora de fin.');
+
+        if (endHour === startHour) {
+            errorsArray.push('La hora de inicio no puede ser igual a la hora de fin.')
+        }
+
+        if (endHour != '' && endHour - startHour < 60*60*1000) {
+            errorsArray.push('La diferencia entre la hora de inicio y de fin debe ser de 1 hora mínimo.');
         }
     }
 

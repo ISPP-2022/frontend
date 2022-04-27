@@ -10,7 +10,7 @@ const createInvoice = (rental, space, renter, owner, userSession) => {
   let costMinusIVA = (rental.cost / 1.21).toFixed(2);
   let costIVA = (rental.cost - costMinusIVA).toFixed(2);
   let costMinusComission, costComission;
-  if (renter.auth.role !== "SUBSCRIBED") {
+  if (renter.auth.role !== "SUBSCRIBED" && renter.auth.role !== "ADMIN") {
     costMinusComission = (costMinusIVA / 1.06).toFixed(2);
     costComission = (costMinusIVA - costMinusComission).toFixed(2);
   } else {
@@ -139,6 +139,7 @@ function Invoice({ user }) {
       const pdfDocGenerator = pdfMake.createPdf(invoice)
       pdfDocGenerator.getBase64((data) => {
         setInvoice(data)
+
       })
     }
     fetchData();
@@ -149,7 +150,7 @@ function Invoice({ user }) {
       {
         invoice &&
         <object className='h-screen flex justify-center' height="100%">
-          <embed id="pdfID" type="text/html" className='w-11/12 h-11/12' src={`data:application/pdf;base64,${invoice}`} />
+          <iframe id="pdfID" type="text/html" className='w-11/12 h-11/12' src={`data:application/pdf;base64,${invoice}`} />
         </object>
       }
     </>
