@@ -31,9 +31,9 @@ export default function privacyPolicy() {
                                 Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo, de 27 de abril de 2016, relativo a la protección de las personas físicas en lo que
                                 respecta al tratamiento de datos personales y a la libre circulación de estos.</p>
                             <br></br>
-                            <p>El usuario podrá en cualquier momento ejercitar los derechos de acceso, oposición, rectificación y cancelación reconocidos en el citado Reglamento (UE).
+                            <p><b>El usuario podrá en cualquier momento ejercitar los derechos de acceso, oposición, rectificación y cancelación reconocidos en el citado Reglamento (UE).
                                 El ejercicio de estos derechos puede realizarlo el propio usuario a través de email a: <a href="mailto:support@stackingup.es">support@stackingup.es</a>, indicando qué desea realizar. Las
-                                respuestas a estas solicitudes tendrán un margen de respuesta de 48 horas.</p>
+                                respuestas a estas solicitudes tendrán un margen de respuesta de 48 horas.</b></p>
                             <br></br>
                             <p>El usuario manifiesta que todos los datos facilitados por él son ciertos y correctos, y se compromete a mantenerlos actualizados, comunicando los cambios
                                 a <a href="mailto:support@stackingup.es">support@stackingup.es</a>. </p>
