@@ -188,6 +188,8 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
             alert("La fecha de inicio debe ser posterior a la fecha de hoy.")
           } else if (err.response.data === "Bad Request: Final date must be a Date after today") {
             alert("La fecha de fin debe ser posterior a la fecha de hoy.")
+          } else if (err.response.data === "Bad Request: Final date must be between space dates") {
+            alert("La fecha de fin debe estar en el rango de disponibilidad del espacio.")
           } else if (err.response.data === "Bad Request: Space not available or space capacity exceeded") {
             space.shared ? alert("Se ha excedido la superficie máxima disponible en el espacio compartido durante el periodo") : alert("El espacio no esta disponible en ese intervalo de fechas")
           } else if (err.response.data === "Bad Request: Initial date must be after 24 hours from now") {

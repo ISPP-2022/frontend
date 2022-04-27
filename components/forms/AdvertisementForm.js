@@ -171,7 +171,7 @@ export default function AdvertisementForm(props) {
 
         for (var i = 0; i < space.tags.length; i++) {
             var tag = space.tags[i].tag;
-            if (['HOUSE_ROOM', 'GARAGE', 'BASEMENT', 'WAREHOUSE', 'STORAGE_ROOM', 'OTHER'].includes(tag)) {
+            if (['HOUSE_ROOM', 'GARAGE', 'BASEMENT', 'WAREHOUSE', 'STORAGE_ROOM', 'OTHERS'].includes(tag)) {
                 document.getElementById(tag).checked = true;
                 setSpace(tag);
             }
@@ -315,8 +315,8 @@ export default function AdvertisementForm(props) {
                                 </li>
 
                                 <li>
-                                    <input className='hidden peer' type="radio" id="OTHER" name="space" value="OTHERS" onChange={(e) => setSpace(e.target.value)} />
-                                    <label htmlFor="OTHER" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
+                                    <input className='hidden peer' type="radio" id="OTHERS" name="space" value="OTHERS" onChange={(e) => setSpace(e.target.value)} />
+                                    <label htmlFor="OTHERS" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                         <Image src="/images/other.svg" width="100" height="100" alt='other' />
                                     </label>
                                     <p className='flex justify-center'>Otro</p>
