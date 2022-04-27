@@ -102,8 +102,21 @@ export function Avatar({ userData, setUserData, error }) {
     // Convierte los archivos a base64 y los guarda en images
     async function handleFile(e) {
         let file = e.target.files[0];
-        let imageBase64 = await readFileAsDataURL(file);
-        setUserData({ ...userData, avatar: imageBase64.split(',')[1] });
+        const maxAllowedSize = 50 * 1024 * 1024;
+        let size = file.size;
+        if (size < maxAllowedSize) {
+            if (file.type.includes('image')) {
+                var imageBase64 = await readFileAsDataURL(file);
+                setUserData({ ...userData, avatar: imageBase64.split(',')[1] });
+            } else {
+                alert('El archivo no es una imagen');
+                e.target.value = "";
+            }
+        }
+        else {
+            alert('El tamaño máximo de los archivos superan el maximo permitido');
+            e.target.value = "";
+        }
     }
 
     async function readFileAsDataURL(file) {

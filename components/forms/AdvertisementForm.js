@@ -58,9 +58,20 @@ export default function AdvertisementForm(props) {
         setImages([]);
         let array1 = Array.from(e.target.files);
         let array2 = [];
-        for (let file of array1) {
-            var imageBase64 = await readFileAsDataURL(file);
-            array2.push(imageBase64.split(',')[1]);
+        const maxAllowedSize = 50 * 1024 * 1024;
+        let size = array1.reduce((acc, cur) => acc + cur.size, 0);
+        if (size < maxAllowedSize) {
+            for (let file of array1) {
+                if (file.type.includes('image')) {
+                    var imageBase64 = await readFileAsDataURL(file);
+                    array2.push(imageBase64.split(',')[1]);
+                } else {
+                    alert('El archivo no es una imagen');
+                }
+            }
+        }
+        else {
+            alert('El tamaño máximo de los archivos superan el maximo permitido');
         }
         setImages(array2);
     }
@@ -256,7 +267,7 @@ export default function AdvertisementForm(props) {
 
             <div>
                 <main className='grid bg-gray-100  place-items-center md:py-4 '>
-                    <form onSubmit={handleSubmit} className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
+                    <form id="FORM_ID" onSubmit={handleSubmit} className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
                         <p className='text-center'>INFORMACIÓN DE TU ESPACIO</p>
 
                         {/* Tipos de espacios */}
@@ -435,7 +446,7 @@ export default function AdvertisementForm(props) {
                                 <Image src="/images/image.svg" width='100' height='100' alt='image' />
                             </label>
                             <div className='pt-10'>Suba imágenes pulsando el icono (PNG o JPEG). {images.length} imágenes subidas.</div>
-                            <input className='pt-0 hidden' onChange={handleFiles} type="file" multiple id="img" name="img" accept="image/png,image/jpeg" />
+                            <input className='pt-0 hidden' onChange={handleFiles} type="file" multiple id="img" name="img" accept="image/*" />
                         </fieldset>
 
                         {props.isEdit == false &&
