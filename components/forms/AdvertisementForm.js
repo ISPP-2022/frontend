@@ -58,9 +58,20 @@ export default function AdvertisementForm(props) {
         setImages([]);
         let array1 = Array.from(e.target.files);
         let array2 = [];
-        for (let file of array1) {
-            var imageBase64 = await readFileAsDataURL(file);
-            array2.push(imageBase64.split(',')[1]);
+        const maxAllowedSize = 50 * 1024 * 1024;
+        let size = array1.reduce((acc, cur) => acc + cur.size, 0);
+        if (size < maxAllowedSize) {
+            for (let file of array1) {
+                if (file.type.includes('image')) {
+                    var imageBase64 = await readFileAsDataURL(file);
+                    array2.push(imageBase64.split(',')[1]);
+                } else {
+                    alert('El archivo no es una imagen');
+                }
+            }
+        }
+        else {
+            alert('El tamaño máximo de los archivos superan el maximo permitido');
         }
         setImages(array2);
     }
@@ -122,10 +133,10 @@ export default function AdvertisementForm(props) {
         setTitle(space.name);
         setDescription(space.description);
 
-        setStartAvailability(space.initialDate.split('T')[0]);
+        setStartAvailability(new Date(space.initialDate).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', }).split('/').reverse().join('-'));
 
         if ('finalDate' in space) {
-            setEndAvailability(space.finalDate.split('T')[0]);
+            setEndAvailability(new Date(space.finalDate).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit', }).split('/').reverse().join('-'));
         }
 
         // Crea Geocoder y pasa de coordenadas a dirección
@@ -139,8 +150,9 @@ export default function AdvertisementForm(props) {
             setType('hours');
             setPrice(space.priceHour);
             document.getElementById('hours').checked = true;
-            setStartHour(new Date(space.startHour).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-            setEndHour(new Date(space.endHour).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+            setStartHour(`${(new Date(space.startHour).getUTCHours() - new Date().getTimezoneOffset() / 60).toLocaleString(undefined, { minimumIntegerDigits: 2 })}:${new Date(space.startHour).getUTCMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 })}`);
+            setEndHour(`${(new Date(space.endHour).getUTCHours() - new Date().getTimezoneOffset() / 60).toLocaleString(undefined, { minimumIntegerDigits: 2 })}:${new Date(space.endHour).getUTCMinutes().toLocaleString(undefined, { minimumIntegerDigits: 2 })}`);
 
         } else if ('priceDay' in space) {
             setType('days');
@@ -160,7 +172,7 @@ export default function AdvertisementForm(props) {
 
         for (var i = 0; i < space.tags.length; i++) {
             var tag = space.tags[i].tag;
-            if (['HOUSE_ROOM', 'GARAGE', 'BASEMENT', 'WAREHOUSE', 'STORAGE_ROOM', 'OTHER'].includes(tag)) {
+            if (['HOUSE_ROOM', 'GARAGE', 'BASEMENT', 'WAREHOUSE', 'STORAGE_ROOM', 'OTHERS'].includes(tag)) {
                 document.getElementById(tag).checked = true;
                 setSpace(tag);
             }
@@ -239,7 +251,12 @@ export default function AdvertisementForm(props) {
             .then(res => {
                 router.push("/");
             }).catch(err => {
-                setErrors(['Ha habido un problema. Inténtelo más tarde.']);
+                if (err.response.data === 'Cannot delete space containing rentals') {
+                    setErrors(['No se puede eliminar este espacio porque tiene alguna reserva asociada.']);
+                }
+                else {
+                    setErrors(['Ha habido un problema. Inténtelo más tarde.']);
+                }
             });
     }
 
@@ -256,7 +273,7 @@ export default function AdvertisementForm(props) {
 
             <div>
                 <main className='grid bg-gray-100  place-items-center md:py-4 '>
-                    <form onSubmit={handleSubmit} className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
+                    <form id="FORM_ID" onSubmit={handleSubmit} className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
                         <p className='text-center'>INFORMACIÓN DE TU ESPACIO</p>
 
                         {/* Tipos de espacios */}
@@ -304,8 +321,8 @@ export default function AdvertisementForm(props) {
                                 </li>
 
                                 <li>
-                                    <input className='hidden peer' type="radio" id="OTHER" name="space" value="OTHERS" onChange={(e) => setSpace(e.target.value)} />
-                                    <label htmlFor="OTHER" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
+                                    <input className='hidden peer' type="radio" id="OTHERS" name="space" value="OTHERS" onChange={(e) => setSpace(e.target.value)} />
+                                    <label htmlFor="OTHERS" className='flex justify-center rounded-xl hover:bg-gray-200 peer-checked:bg-[#e6f6fa]'>
                                         <Image src="/images/other.svg" width="100" height="100" alt='other' />
                                     </label>
                                     <p className='flex justify-center'>Otro</p>
@@ -435,7 +452,7 @@ export default function AdvertisementForm(props) {
                                 <Image src="/images/image.svg" width='100' height='100' alt='image' />
                             </label>
                             <div className='pt-10'>Suba imágenes pulsando el icono (PNG o JPEG). {images.length} imágenes subidas.</div>
-                            <input className='pt-0 hidden' onChange={handleFiles} type="file" multiple id="img" name="img" accept="image/png,image/jpeg" />
+                            <input className='pt-0 hidden' onChange={handleFiles} type="file" multiple id="img" name="img" accept="image/*" />
                         </fieldset>
 
                         {props.isEdit == false &&

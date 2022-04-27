@@ -8,7 +8,9 @@ import jwt from 'jsonwebtoken';
 import Comments from "../../components/Comments/";
 import { useState } from "react";
 import { VerifyProfile } from "../../components/VerifyProfile";
-
+import { DialogText } from "../../components/Core/Dialog";
+import { PayPalButton } from 'react-paypal-button-v2';
+import { useRouter } from 'next/router';
 
 async function getRatingComponentData({ query }) {
   const ratings = await axios
@@ -111,6 +113,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
 
   const [infoState, setInfoState] = useState('resume');
   const [openVerified, setOpenVerified] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   if (!userData) {
     return (
@@ -118,6 +121,21 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
         <h1 className="text-6xl font-bold text-gray-500 text-center">Usuario no encontrado</h1>
       </div>
     );
+  }
+
+
+  const router = useRouter();
+
+  async function handlePaymentForPremium() {
+    await axios.put(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/suscribe`, {},
+    {
+      withCredentials: true,
+    }).then(res => {
+      router.reload(window.location.pathname);
+    }).catch(err => {
+      setShowModal(false);
+      alert('El pago se realizó con éxito, pero hubo un problema en servidor. Póngase en contacto con nosotros.');
+    });
   }
 
   return (
@@ -146,7 +164,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
 
           {/* Nombre, foto de perfil, valoración del usuario y botón de chat */}
           <div>
-            <UserInfo id={id} user={userData} ratings={ratings} />
+            <UserInfo id={id} user={userData} userSession={userSession} ratings={ratings} />
 
             {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') && <div className='flex justify-center'>
               <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
@@ -155,9 +173,60 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
                 </Link>
               </Button>
             </div>}
+
+            {(userSession?.userId === userData?.id && userSession?.role === 'VERIFIED') && <div className='flex justify-center'>
+              <Button onClick={() => setShowModal(true)} className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+                Pasar a Premium
+              </Button>
+            </div>}
+
+            {showModal && (
+              <DialogText 
+                title="Pasar a Premium"
+                width="small"
+                height="small"  
+                onClickClose={() => setShowModal(false)}
+                visibleAcceptButton={false}
+                visibleCancelButton={false}>
+                
+                <main className="flex flex-col justify-center items-center md:h-full space-y-[5vh] py-10">
+                    <div className="flex flex-col justify-center items-center">
+                        <p className="md:text-2xl text-xl font-bold text-[#4aa7c0]">Hazte usuario Premium por solo:</p>
+                        <p className="p-4 md:text-6xl text-4xl font-bold text-[#4aa7c0]">9.99 €</p>
+                        <p className="pb-4 md:text-2xl text-xl font-bold text-[#4aa7c0]">Y disfruta de las siguientes ventajas:</p>
+                    
+                        <ul className="list-disc text-lg text-[#4aa7c0]">
+                            <li>No pagarás comisiones al reservar un espacio.</li>
+                            <li>Prioridad en la búsqueda inteligente</li>
+                            <p>(tanto de tu perfil como de tus espacios).</p>
+                        </ul>
+                
+                        <div className="py-[8%]" >
+                            <PayPalButton
+                                options={{
+                                    currency: "EUR",
+                                    clientId: `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb'}`
+                                }}
+                                amount="9.99"
+                                onSuccess={(details, data) => {
+                                    handlePaymentForPremium();
+                                    return
+                                }}
+                                onError={console.log("Error in the transaction.")}
+                                onCancel={console.log("Transaction cancelled")}
+                            />
+                        </div>
+                            
+                    </div>
+                </main>
+
+              </DialogText>
+            )}
+
           </div>
           <div className="flex justify-center mt-4">
-            <Button className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2" color="secondary" onClick={() => alert('Proximamente...')}>
+            <Button className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2" color="secondary"
+              onClick={() => router.push(`/chat?user=${id}`)}>
               <div className="flex items-center justify-center">
                 <img src="/images/paperplane.svg" className="w-5 h-5" />
                 <p className="ml-2"> Chat</p>

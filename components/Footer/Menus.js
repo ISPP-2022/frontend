@@ -1,9 +1,7 @@
 export const ABOUTUS = [
-  { name: "Preguntas frecuentes", link: "#" },
-  { name: "Términos y condiciones", link: "#" },
-  { name: "Política de Privacidad", link: "#" },
-  { name: "Sobre nosotros", link: "#" },
-  { name: "Sitemap", link: "#" },
+  { name: "Preguntas frecuentes", link: "/questions" },
+  { name: "Términos y condiciones", link: "/terms" },
+  { name: "Política de Privacidad", link: "/privacyPolicy" },
 ];
 
 export const RESOURCES = [

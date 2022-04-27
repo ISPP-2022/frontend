@@ -66,7 +66,7 @@ export default function Space(props) {
 
                         {/* User and price selector */}
                         <section className='basis-1/3 flex flex-col'>
-                            <UserInfo user={props.owner} ratings={props.ratings} />
+                            <UserInfo user={props.owner} ratings={props.ratings} withChat />
                             <div className='basis-[30%] md:basis-1/6 xl:basis-[60%]'>
                                 <div className='flex flex-col justify-center md:flex-row md:justify-evenly xl:justify-center items-center lg:items-end xl:items-center h-full w-full'>
                                     <Button type="button" onClick={() => setType('HOUR')} disabled={!props.space.priceHour || type === 'HOUR'} color={type === 'HOUR' ? 'secondary' : 'primary'} className="rounded-3xl h-[30px] my-[2px] w-5/6 md:w-1/4 lg:w-auto flex justify-center items-center mx-0 lg:h-1/3 lg:mx-1 xl:h-1/3 md:disabled:mb-6 disabled:bg-gray-200">H</Button>
@@ -121,13 +121,13 @@ export async function getServerSideProps({ params }) {
     let space, owner, ratings, rentals;
     try {
         space = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}`).then(async res => {
-            let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/images`).then(imageres => imageres.data).catch(() => { return "not found" });
+            let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${params.id}/images`).then(imageres => imageres.data).catch(() => { });
             if (images) res.data.images = images;
             return res.data;
         });
 
         owner = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${space.ownerId}`).then(async res => {
-            let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { return {} });
+            let avatar = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${res.data.id}/avatar`).then(avatarres => avatarres.data).catch(() => { });
             if (avatar) res.data.avatar = avatar;
             return res.data;
         });

@@ -81,7 +81,15 @@ function Navbar({ user }) {
                 <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" enableBackground="new 0 0 612 612" viewBox="0 0 612 612"><path d="M273.053,273.046c75.399,0,136.524-61.124,136.524-136.523S348.454,0,273.053,0c-75.4,0-136.522,61.124-136.522,136.523   S197.654,273.046,273.053,273.046z M338.347,191.161c-6.209,20.535-32.814,35.971-64.698,35.971   c-31.885,0-58.489-15.437-64.699-35.971H338.347z M566.878,582.625l-52.115-52.102c16.502-18.348,26.629-42.539,26.629-69.158   c0-57.199-46.369-103.568-103.57-103.568c-57.199,0-103.568,46.369-103.568,103.568c0,57.201,46.369,103.57,103.568,103.57   c16.871,0,32.748-4.119,46.824-11.275l55.605,55.594c3.662,3.662,9.654,3.66,13.314,0l13.312-13.312   C570.54,592.279,570.54,586.287,566.878,582.625z M437.823,527.273c-36.4,0-65.908-29.508-65.908-65.908   c0-36.398,29.508-65.906,65.908-65.906c36.398,0,65.908,29.508,65.908,65.906C503.731,497.766,474.222,527.273,437.823,527.273z    M310.716,461.363c0,16.277,3.188,31.795,8.787,46.113c-14.46,0.613-29.923,0.955-46.45,0.955   c-131.637,0-196.056-21.51-219.673-32.02c-6.094-2.711-11.004-10.463-11.004-17.133v-45.002   c0-67.436,51.344-123.381,116.86-130.874c1.991-0.228,4.943,0.624,6.565,1.799c30.208,21.87,67.191,34.92,107.25,34.92   c40.06,0,77.042-13.051,107.251-34.92c1.621-1.175,4.574-2.027,6.564-1.799c39.754,4.547,74.201,26.995,95.215,58.962   c-13.807-5.154-28.68-8.109-44.262-8.109C367.735,334.256,310.716,391.271,310.716,461.363z" fill="#ffffff" className="color000 svgShape" /></svg>
                   <Link href={`/user/${isLogged.userId}`} passHref>
-                    <a>Mi perfil</a>
+                    <a>Perfil</a>
+                  </Link>
+                </button>
+                <button className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 rotate-90" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                  </svg>
+                  <Link href={`/chat`} passHref>
+                    <a>Chat</a>
                   </Link>
                 </button>
                 <button onClick={handleLogout} className="text-white bg-[#4aa7c0] px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2">
@@ -132,7 +140,7 @@ function Navbar({ user }) {
           <header className=" text-center w-full py-1 my-auto">
             <Image className="shrink-0" src="/logolargo.png" alt="StackingUp Logo" width={180} height={65} layout="intrinsic" />
           </header>
-          <nav className="row-span-4 text-center space-y-5">
+          <nav className="row-span-4 text-center space-y-2">
             <div className="mx-6 border-t-2" />
             {/* Botones movil */}
             {
@@ -146,6 +154,12 @@ function Navbar({ user }) {
                 <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
                   <Link href={`/user/${isLogged.userId}`} passHref>
                     <a onClick={() => { setIsOpen(false) }} >Mi perfil</a>
+                  </Link>
+                </button>
+                <button className="text-white bg-[#4aa7c0] w-4/5 px-5 py-2 text-2xl align-middle space-x-4 my-2 rounded hover:bg-[#34778a] font-semibold transition-colors duration-100">
+
+                  <Link href={`/chat`} passHref>
+                    <a>Chat</a>
                   </Link>
                 </button>
               </>
@@ -170,11 +184,9 @@ function Navbar({ user }) {
             </div>
             <div className="mx-6 border-t-2" />
             <article className="mx-3 h-3/6 space-y-2">
-              <p className="text-[#4aa7c0] underline">Preguntas frecuentes</p>
-              <p className="text-[#4aa7c0] underline">Términos y condiciones</p>
-              <p className="text-[#4aa7c0] underline">Política de privacidad</p>
-              <p className="text-[#4aa7c0] underline">Sobre nosotros</p>
-              <p className="text-[#4aa7c0] underline">Sitemap</p>
+              <p><a href="/questions" className="text-[#4aa7c0] underline">Preguntas frecuentes</a></p>
+              <p><a href="/terms" className="text-[#4aa7c0] underline">Términos y condiciones</a></p>
+              <p><a href="/privacyPolicy" className="text-[#4aa7c0] underline">Política de privacidad</a></p>
             </article>
             <div className="flex justify-end text-[#4aa7c0] space-x-3 mx-3">
               <a href="https://twitter.com/StackingUp_">
@@ -183,7 +195,6 @@ function Navbar({ user }) {
               <a href="https://instagram.com/stackingup__">
                 <svg className="fill-[#4aa7c0]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" /></svg>
               </a>
-              <svg className="fill-[#4aa7c0]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" /></svg>
             </div>
           </section>
         </div>

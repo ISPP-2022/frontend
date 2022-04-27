@@ -41,7 +41,7 @@ export default function AuthModal({ childerns, ...props }) {
           </div>
           <footer className="flex justify-end items-center ">
             <p className="text-xs text-gray-300 w-full text-center">
-              Registrándote aceptas nuestras <br /> <a className="underline" href="#">Condiciones de uso</a> y <a className="underline" href="#">Políticas de privacidad</a>
+              Registrándote aceptas nuestras <br /> <a className="underline" href="/terms">Condiciones de uso</a> y <a className="underline" href="/privacyPolicy">Políticas de privacidad</a>
             </p>
           </footer>
         </main>
@@ -94,7 +94,7 @@ export default function AuthModal({ childerns, ...props }) {
           </div>
           <footer className="flex justify-end items-center ">
             <p className="text-xs text-gray-600 w-full text-center">
-              Registrándote aceptas nuestras <br /> <a className="underline" href="#">Condiciones de uso</a> y <a className="underline" href="#">Políticas de privacidad</a>
+              Registrándote aceptas nuestras <br /> <a className="underline" href="/terms">Condiciones de uso</a> y <a className="underline" href="/privacyPolicy">Políticas de privacidad</a>
             </p>
           </footer>
         </main>
@@ -174,7 +174,7 @@ export default function AuthModal({ childerns, ...props }) {
           </div>
           <footer className="flex justify-end items-center ">
             <p className="text-xs text-gray-600 w-full text-center">
-              Registrándote aceptas nuestras <br /> <a className="underline" href="#">Condiciones de uso</a> y <a className="underline" href="#">Políticas de privacidad</a>
+              Registrándote aceptas nuestras <br /> <a className="underline" href="/terms">Condiciones de uso</a> y <a className="underline" href="/privacyPolicy">Políticas de privacidad</a>
             </p>
           </footer>
         </main>
@@ -321,6 +321,11 @@ export default function AuthModal({ childerns, ...props }) {
             if (err.response.data === "Invalid email. Please provide a valid email") {
               setErrors({
                 email: 'El email no es válido'
+              })
+            }
+            if (err.response.data === "Email already registered") {
+              setErrors({
+                email: 'El email ya está registrado'
               })
             }
             if (err.response.data === "Password must contain at least one number, one lowercase and one uppercase letter, and at least 8 characters long") {

@@ -18,7 +18,7 @@ export const optionTags = [
     { value: 'HOT', label: 'Caluroso' },
     { value: 'SECURITY_ALARM', label: 'Con alarma de seguridad' },
     { value: 'VIDEO_MONITORING', label: 'Con cámara de seguridad' },
-    { value: 'FIRE_ALARM', label: 'Con alamra de incendios' },
+    { value: 'FIRE_ALARM', label: 'Con alarma de incendios' },
     { value: 'GROUND_FLOOR', label: 'Planta baja' },
     { value: 'SOCKET', label: 'Con enchufes' },
     { value: 'INDOOR', label: 'Interiores' },
