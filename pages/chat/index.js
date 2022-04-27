@@ -122,7 +122,7 @@ function Chat(props) {
                 </div>
               )
             }) : <div>
-              <h1 className="text-center text-2xl my-10 font-bold text-gray-600">Ningún chats disponibles</h1>
+              <h1 className="text-center text-2xl my-10 font-bold text-gray-600">Ningún chat disponible</h1>
             </div>
           }
         </section>
