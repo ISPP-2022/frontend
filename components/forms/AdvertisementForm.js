@@ -24,8 +24,8 @@ export default function AdvertisementForm(props) {
     const [space, setSpace] = useState('');
 
     const [type, setType] = useState('');
-    const [startHour, setStartHour] = useState('00:00');
-    const [endHour, setEndHour] = useState('00:00');
+    const [startHour, setStartHour] = useState('06:00');
+    const [endHour, setEndHour] = useState('22:00');
     const [price, setPrice] = useState(1);
     const [surface1, setSurface1] = useState(1);
     const [surface2, setSurface2] = useState(1);

@@ -38,8 +38,11 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
             errorsArray.push('La hora de inicio no puede ser igual a la hora de fin.')
         }
 
-        if (endHour != '' && endHour - startHour < 60*60*1000) {
+        if (endHour != '' && endHour - startHour < 60 * 60 * 1000) {
             errorsArray.push('La diferencia entre la hora de inicio y de fin debe ser de 1 hora mínimo.');
+        }
+        if (new Date(startHour).getHours() < 6 || new Date(endHour).getHours() > 22) {
+            errorsArray.push('Para el alquiler por hora solo se permiten horas entre las 6 y las 22.');
         }
     }
 
