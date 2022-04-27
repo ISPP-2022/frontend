@@ -105,7 +105,7 @@ function Chat(props) {
         <title>StackingUp Chat</title>
       </Head>
       <main className="h-screenC md:flex">
-        <section className="md:basis-1/2 lg:basis-2/5 xl:basis-1/5 border-r">
+        <section className="md:basis-1/2 lg:basis-2/5 xl:basis-1/5 border-r overflow-y-auto">
           {
             chatsUsers && chatsUsers.length > 0 ? chatsUsers.map((user, index) => {
               return (
