@@ -100,19 +100,11 @@ export default function Comments({
 
     const errors = {};
 
-    if (!title || /^\s*$/.test(title)) {
-      errors.title = "El título no puede estar vacío";
-    }
-
-    if (title.length <= 2 || 50 < title.length) {
+    if (title.trim().length <= 2 || 50 < title.trim().length) {
       errors.title = "El título tiene que medir entre 3 y 50 carácteres";
     }
 
-    if (!description || /^\s*$/.test(description)) {
-      errors.description = "La descripción no puede estar vacía";
-    }
-
-    if (description.length <= 2 || 100 < description.length) {
+    if (description.trim().length <= 2 || 100 < description.trim().length) {
       errors.description =
         "La descripción tiene que medir entre 3 y 100 carácteres";
     }
