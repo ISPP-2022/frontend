@@ -1,3 +1,18 @@
+# [0.4.0](https://github.com/Stacking-Up/frontend/compare/v0.3.1...v0.4.0) (2022-05-16)
+
+
+### Bug Fixes
+
+* minor bugs ([b6eeca7](https://github.com/Stacking-Up/frontend/commit/b6eeca755bb0d52cd07fef4acd70f9a4d73757ef))
+* minor bugs ([d4cd080](https://github.com/Stacking-Up/frontend/commit/d4cd0800497e91b33d5c7889c39975d8b1585314))
+
+
+### Features
+
+* PPL enhancement features ([1f1eadb](https://github.com/Stacking-Up/frontend/commit/1f1eadb5f587e460a8075511f0a7722f6512a616))
+
+
+
 ## [0.3.1](https://github.com/Stacking-Up/frontend/compare/v0.3.0...v0.3.1) (2022-04-27)
 
 
