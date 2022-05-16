@@ -160,6 +160,9 @@ export default function UserEdit({ userData, userSession }) {
             axios.put(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/changePassword`, { oldPassword, newPassword: newpass }, { withCredentials: true })
                 .then(res => {
                     alert('Contraseña cambiada con éxito.');
+                    setShowNewPass(false);
+                    setShowOldPassword(false);
+                    setShowPassConfirm(false);
                     setOldPassword('');
                     setNewPass('');
                     setPassConfirm('');
@@ -285,6 +288,9 @@ export default function UserEdit({ userData, userSession }) {
                 showModal &&
                 <div className="fixed inset-0 z-10">
                     <div onClick={() => {
+                        setShowNewPass(false);
+                        setShowOldPassword(false);
+                        setShowPassConfirm(false);
                         setOldPassword('');
                         setNewPass('');
                         setPassConfirm('');
@@ -294,6 +300,9 @@ export default function UserEdit({ userData, userSession }) {
                     <div className="fixed block top-1/2 left-1/2 w-full h-full md:w-[30rem] md:h-2/3 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 rounded">
                         <header className="flex justify-end items-center md:hidden ">
                             <svg onClick={() => {
+                                setShowNewPass(false);
+                                setShowOldPassword(false);
+                                setShowPassConfirm(false);
                                 setOldPassword('');
                                 setNewPass('');
                                 setPassConfirm('');
