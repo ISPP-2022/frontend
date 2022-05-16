@@ -326,6 +326,16 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
         </fieldset>
       </menu>
       <hr className=" bg-webcolor-50 w-[95%] m-auto mb-6" />
+      <h2 className="text-webcolor-50 text-xl font-bold Disponibilidad mb-4 mt-2 w-full text-center">
+        Disponibilidad
+      </h2>
+      <p className="text-webcolor-50 text-lg Disponibilidad mb-4 mt-2 w-full text-center ">
+        Desde: {new Date(space.initialDate).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+      </p>
+      <p className="text-webcolor-50 text-lg Disponibilidad mb-4 mt-2 w-full text-center ">
+        {space.finalDate ? ` Hasta: ${new Date(space.finalDate).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}` : ``}
+      </p>
+      <hr className=" bg-webcolor-50 w-[95%] m-auto mb-6" />
       {bookingBody[type]}
       {space.shared ?
         <>
