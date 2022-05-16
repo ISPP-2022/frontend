@@ -264,7 +264,7 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
     ),
     "DAY": (
       <>
-        <div className='flex justify-center'>
+        <div className='flex justify-center '>
           <DateRange
             editableDateInputs={false}
             locale={locales.es}
@@ -303,10 +303,6 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
 
   return (
     <form className={formStyle}>
-      <h2 className="text-webcolor-50 text-2xl font-bold Disponibilidad mb-4 mt-2 w-full text-center">
-        Reservar
-      </h2>
-      <hr className=" bg-webcolor-50 w-[95%] m-auto mb-4" />
       <h2 className="text-webcolor-50 text-xl font-bold Disponibilidad mb-2 w-full text-center">
         Disponibilidad
       </h2>
