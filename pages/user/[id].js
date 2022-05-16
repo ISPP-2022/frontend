@@ -169,11 +169,15 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
 
             {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') &&
               <div className='flex justify-center'>
-                <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
-                  <Link href={`/user/edit/${userData.id}`} passHref>
-                    <a>Editar</a>
-                  </Link>
-                </Button>
+                <Link href={`/user/edit/${userData.id}`} passHref>
+                  <a>
+                    <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+
+                      Editar
+
+                    </Button>
+                  </a>
+                </Link>
               </div>}
 
             {(userSession?.userId === userData?.id && userSession?.role === 'VERIFIED') && <div className='flex justify-center'>
@@ -319,11 +323,12 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
                       </Link>
 
                       {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') &&
-                        <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
-                          <Link href={`/publish/edit/${space.id}`} passHref>
-                            <a>Editar</a>
-                          </Link>
-                        </Button>
+
+                        <Link href={`/publish/edit/${space.id}`} passHref><a>
+                          <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+                            Editar
+                          </Button>
+                        </a></Link>
                       }
                     </div>
                   )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center text-gray-500">Sin resultados</h1>}

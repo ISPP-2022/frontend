@@ -160,6 +160,10 @@ export default function UserEdit({ userData, userSession }) {
             axios.put(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/changePassword`, { oldPassword, newPassword: newpass }, { withCredentials: true })
                 .then(res => {
                     alert('Contraseña cambiada con éxito.');
+                    setOldPassword('');
+                    setNewPass('');
+                    setPassConfirm('');
+                    setPassError({});
                     setShowModal(false);
                 })
                 .catch(err => {
@@ -233,29 +237,30 @@ export default function UserEdit({ userData, userSession }) {
                         <PhoneNumber userData={userDataForm} setUserData={setUserData} error={errors.phoneNumber ?? ''} />
                         <Avatar userData={userDataForm} setUserData={setUserData} error={errors.avatar ?? ''} />
 
+
+                        <hr className="my-4" />
+                        <div className="flex justify-center mt-4">
+                            <Button
+                                className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2"
+                                color="secondary"
+                                onClick={() => {
+                                    router.push(`/user/${userSession.userId}`)
+                                }}
+                            >
+                                <div className="flex items-center justify-center">
+                                    <p>Cancelar</p>
+                                </div>
+                            </Button>
+                            <Button
+                                className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2"
+                                color="secondary"
+                                type="submit">
+                                <div className="flex items-center justify-center">
+                                    <p>Editar</p>
+                                </div>
+                            </Button>
+                        </div>
                     </form>
-                    <hr className="my-4" />
-                    <div className="flex justify-center mt-4">
-                        <Button
-                            className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2"
-                            color="secondary"
-                            onClick={() => {
-                                router.push(`/user/${userSession.userId}`)
-                            }}
-                        >
-                            <div className="flex items-center justify-center">
-                                <p>Cancelar</p>
-                            </div>
-                        </Button>
-                        <Button
-                            className="px-5 py-1 text-xl my-auto rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold flex items-center space-x-2"
-                            color="secondary"
-                            type="submit">
-                            <div className="flex items-center justify-center">
-                                <p>Editar</p>
-                            </div>
-                        </Button>
-                    </div>
                 </div>
                 <div className="basis-1/3 grid grid-cols-[1px_1fr]">
                     <div className=" w-1 border-r">
@@ -384,7 +389,7 @@ export default function UserEdit({ userData, userSession }) {
                                     </span>
                                     <span
                                         className={passError.response ? `border-red-500 text-red-500` : `text-gray-600`}>
-                                        {passError.response ? passError.response : '*La contraseña debe contener mayusculas, minúsculas, números y al menos 8 caracteres'}
+                                        {passError.response ? passError.response : '*La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula y un número'}
                                     </span>
                                     <div className="flex justify-center">
                                         <button onClick={handlerChangePass} className="bg-[#4aa7c0] rounded text-white py-2 px-7 hover:bg-[#34778a]">

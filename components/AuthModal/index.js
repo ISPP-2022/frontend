@@ -189,7 +189,7 @@ export default function AuthModal({ childerns, ...props }) {
               </div>
               <span
                 className={errors.password || errors.response ? `border-red-500 text-red-500` : `text-gray-600`}>
-                {errors.password || errors.response ? errors.password || errors.response : '*La contraseña debe contener mayusculas, minúsculas, números y al menos 8 caracteres'}
+                {errors.password || errors.response ? errors.password || errors.response : 'La contraseña debe contener al menos 8 caracteres, una mayúscula, una minúscula y un número'}
               </span>
               <div className="flex justify-center items-center w-full space-x-3">
                 <input className={`${errors.check ? 'border-red-500' : ''} `} type="checkbox" value={check} onChange={(e) => setCheck(e.target.checked)} /> <span className={`text-sm ${errors.check ? 'text-red-500' : ''} `}>Acepto los términos y condiciones</span>
