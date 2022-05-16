@@ -285,11 +285,19 @@ export default function UserEdit({ userData, userSession }) {
                 showModal &&
                 <div className="fixed inset-0 z-10">
                     <div onClick={() => {
+                        setOldPassword('');
+                        setNewPass('');
+                        setPassConfirm('');
+                        setPassError({});
                         setShowModal(false);
                     }} className="absolute inset-0 bg-gray-900 opacity-50 min-h-[850px]" />
                     <div className="fixed block top-1/2 left-1/2 w-full h-full md:w-[30rem] md:h-2/3 min-h-[550px] bg-white -translate-x-1/2 -translate-y-1/2 rounded">
                         <header className="flex justify-end items-center md:hidden ">
                             <svg onClick={() => {
+                                setOldPassword('');
+                                setNewPass('');
+                                setPassConfirm('');
+                                setPassError({});
                                 setShowModal(false);
                             }} xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 m-5 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="#4aa7c0" strokeWidth="2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
