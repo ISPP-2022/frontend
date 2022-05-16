@@ -264,7 +264,7 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
     ),
     "DAY": (
       <>
-        <div className='flex justify-center'>
+        <div className='flex justify-center '>
           <DateRange
             editableDateInputs={false}
             locale={locales.es}
@@ -284,7 +284,6 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
             dateDisplayFormat={"d/MM/yyyy"}
           />
         </div>
-        <hr className=" bg-webcolor-50 w-[80%] m-auto" />
       </>
     ),
     "MONTH": (
@@ -304,27 +303,15 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
 
   return (
     <form className={formStyle}>
-      <h2 className="text-webcolor-50 text-2xl font-bold Disponibilidad mb-4 mt-2 w-full text-center">
-        Reservar
+      <h2 className="text-webcolor-50 text-xl font-bold Disponibilidad mb-2 w-full text-center">
+        Disponibilidad
       </h2>
-      <menu className="flex justify-center">
-        <fieldset className='p-4 w-full max-w-[400px]'>
-          <ul className='grid grid-cols-3 font-semibold text-webcolor-50'>
-            <li className='border rounded-l border-webcolor-50'>
-              <input disabled={!space.priceHour} className='hidden peer' type="radio" id="HOUR" name="type" value="HOUR" checked={type === 'HOUR'} onChange={(e) => setType(e.target.value)} />
-              <label htmlFor="HOUR" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa] peer-disabled:bg-gray-300 peer-disabled:text-white'>Horas</label>
-            </li>
-            <li className='border-y border-webcolor-50 text-center'>
-              <input disabled={!space.priceDay} className='hidden peer' type="radio" id="DAY" name="type" value="DAY" checked={type === 'DAY'} onChange={(e) => setType(e.target.value)} />
-              <label htmlFor="DAY" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa] peer-disabled:bg-gray-300 peer-disabled:text-white'>Días</label>
-            </li>
-            <li className='border rounded-r border-webcolor-50 text-center'>
-              <input disabled={!space.priceMonth} className='hidden peer' type="radio" id="MONTH" name="type" value="MONTH" checked={type === 'MONTH'} onChange={(e) => setType(e.target.value)} />
-              <label htmlFor="MONTH" className='flex justify-center hover:bg-gray-100 peer-checked:bg-[#e6f6fa] peer-disabled:bg-gray-300 peer-disabled:text-white'>Meses</label>
-            </li>
-          </ul>
-        </fieldset>
-      </menu>
+      <p className="text-webcolor-50 text-lg Disponibilidad mb-4 mt-2 w-full text-center ">
+        Desde: {new Date(space.initialDate).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+      </p>
+      <p className="text-webcolor-50 text-lg Disponibilidad mb-4 mt-2 w-full text-center ">
+        {space.finalDate ? ` Hasta: ${new Date(space.finalDate).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}` : ``}
+      </p>
       <hr className=" bg-webcolor-50 w-[95%] m-auto mb-6" />
       {bookingBody[type]}
       {space.shared ?

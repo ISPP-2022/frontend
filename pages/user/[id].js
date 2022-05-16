@@ -69,10 +69,10 @@ export async function getServerSideProps(context) {
       }));
     }).catch(() => []);
 
-  const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/rentals?limit=3`)
+  const rentals = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${id}/rentals`)
     .then(async res => {
       return await Promise.all(res.data.reverse().map(async rental => {
-        return await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${rental.spaceId}`)
+        rental.space = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${rental.spaceId}`)
           .then(async space => {
             let images = await axios.get(`${process.env.DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces/${space.data.id}/images`).then(imageres => imageres.data).catch(() => { });
             if (images) space.data.images = images;
@@ -82,6 +82,7 @@ export async function getServerSideProps(context) {
             space.data.rating = avgRating
             return space.data;
           }).catch(() => []);
+        return rental;
       }))
     }).catch((err) => {
       return [];
@@ -128,14 +129,14 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
 
   async function handlePaymentForPremium() {
     await axios.put(`${process.env.NEXT_PUBLIC_AUTH_API_URL || 'http://localhost:4000'}/api/v1/suscribe`, {},
-    {
-      withCredentials: true,
-    }).then(res => {
-      router.reload(window.location.pathname);
-    }).catch(err => {
-      setShowModal(false);
-      alert('El pago se realizó con éxito, pero hubo un problema en servidor. Póngase en contacto con nosotros.');
-    });
+      {
+        withCredentials: true,
+      }).then(res => {
+        router.reload(window.location.pathname);
+      }).catch(err => {
+        setShowModal(false);
+        alert('El pago se realizó con éxito, pero hubo un problema en servidor. Póngase en contacto con nosotros.');
+      });
   }
 
   return (
@@ -166,13 +167,18 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
           <div>
             <UserInfo id={id} user={userData} userSession={userSession} ratings={ratings} />
 
-            {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') && <div className='flex justify-center'>
-              <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+            {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') &&
+              <div className='flex justify-center'>
                 <Link href={`/user/edit/${userData.id}`} passHref>
-                  <a>Editar</a>
+                  <a>
+                    <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+
+                      Editar
+
+                    </Button>
+                  </a>
                 </Link>
-              </Button>
-            </div>}
+              </div>}
 
             {(userSession?.userId === userData?.id && userSession?.role === 'VERIFIED') && <div className='flex justify-center'>
               <Button onClick={() => setShowModal(true)} className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
@@ -181,43 +187,43 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
             </div>}
 
             {showModal && (
-              <DialogText 
+              <DialogText
                 title="Pasar a Premium"
                 width="small"
-                height="small"  
+                height="small"
                 onClickClose={() => setShowModal(false)}
                 visibleAcceptButton={false}
                 visibleCancelButton={false}>
-                
+
                 <main className="flex flex-col justify-center items-center md:h-full space-y-[5vh] py-10">
-                    <div className="flex flex-col justify-center items-center">
-                        <p className="md:text-2xl text-xl font-bold text-[#4aa7c0]">Hazte usuario Premium por solo:</p>
-                        <p className="p-4 md:text-6xl text-4xl font-bold text-[#4aa7c0]">9.99 €</p>
-                        <p className="pb-4 md:text-2xl text-xl font-bold text-[#4aa7c0]">Y disfruta de las siguientes ventajas:</p>
-                    
-                        <ul className="list-disc text-lg text-[#4aa7c0]">
-                            <li>No pagarás comisiones al reservar un espacio.</li>
-                            <li>Prioridad en la búsqueda inteligente</li>
-                            <p>(tanto de tu perfil como de tus espacios).</p>
-                        </ul>
-                
-                        <div className="py-[8%]" >
-                            <PayPalButton
-                                options={{
-                                    currency: "EUR",
-                                    clientId: `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb'}`
-                                }}
-                                amount="9.99"
-                                onSuccess={(details, data) => {
-                                    handlePaymentForPremium();
-                                    return
-                                }}
-                                onError={console.log("Error in the transaction.")}
-                                onCancel={console.log("Transaction cancelled")}
-                            />
-                        </div>
-                            
+                  <div className="flex flex-col justify-center items-center">
+                    <p className="md:text-2xl text-xl font-bold text-[#4aa7c0]">Hazte usuario Premium por solo:</p>
+                    <p className="p-4 md:text-6xl text-4xl font-bold text-[#4aa7c0]">9.99 €</p>
+                    <p className="pb-4 md:text-2xl text-xl font-bold text-[#4aa7c0]">Y disfruta de las siguientes ventajas:</p>
+
+                    <ul className="list-disc text-lg text-[#4aa7c0]">
+                      <li>No pagarás comisiones al reservar un espacio.</li>
+                      <li>Prioridad en la búsqueda inteligente</li>
+                      <p>(tanto de tu perfil como de tus espacios).</p>
+                    </ul>
+
+                    <div className="py-[8%]" >
+                      <PayPalButton
+                        options={{
+                          currency: "EUR",
+                          clientId: `${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb'}`
+                        }}
+                        amount="9.99"
+                        onSuccess={(details, data) => {
+                          handlePaymentForPremium();
+                          return
+                        }}
+                        onError={console.log("Error in the transaction.")}
+                        onCancel={console.log("Transaction cancelled")}
+                      />
                     </div>
+
+                  </div>
                 </main>
 
               </DialogText>
@@ -316,11 +322,14 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
                         </a>
                       </Link>
 
-                      {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') && <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
-                        <Link href={`/publish/edit/${space.id}`} passHref>
-                          <a>Editar</a>
-                        </Link>
-                      </Button>}
+                      {(userSession?.userId === userData?.id || userSession?.role === 'ADMIN') &&
+
+                        <Link href={`/publish/edit/${space.id}`} passHref><a>
+                          <Button className="px-5 py-1 my-1 text-xl rounded hover:bg-[#34778a] transition-colors duration-100 font-semibold space-x-2" color="secondary">
+                            Editar
+                          </Button>
+                        </a></Link>
+                      }
                     </div>
                   )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center text-gray-500">Sin resultados</h1>}
               </div>
@@ -335,15 +344,31 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
                   </h2>
                   <div className="relative w-full overflow-x-scroll overflow-y-hidden whitespace-nowrap">
                     {rentals && rentals.length > 0 ?
-                      rentals.map((space, index) => (
-                        <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block">
-                          <Link href={`/space/${space.id}`} passHref className="w-full h-full">
-                            <a className="w-full h-full flex justify-center">
+                      rentals.map((rental, index) => (
+                        <div key={'mobile' + index} className="shrink-0 basis-1/4 p-4 px-8 inline-block relative">
+                          <Link href={`/space/${rental.space.id}`} passHref className="w-full h-full">
+                            <a className="w-[420px] h-full flex justify-center">
                               <CardMobile
-                                space={space}
+                                space={rental.space}
                               />
                             </a>
                           </Link>
+                          {
+                            rental.type === 'HOUR' ?
+                              <p className="absolute top-5 right-0 left-0 text-center text-lg text-blue-bondi font-bold">
+                                {`${new Date(rental.initialDate).toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' })} `}
+                                {`${new Date(rental.initialDate).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} `}
+                                -
+                                {` ${new Date(rental.finalDate).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} `}
+                              </p>
+                              :
+                              <p className="absolute top-5 right-0 left-0 text-center text-lg text-blue-bondi font-bold">
+                                {`${new Date(rental.initialDate).toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' })} `}
+                                -
+                                {` ${new Date(rental.finalDate).toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' })} `}
+                              </p>
+                          }
+
                         </div>
                       )) : <h1 className="h-full w-full min-h-[200px] flex items-center justify-center text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center text-gray-500">Sin resultados</h1>}
                   </div>
