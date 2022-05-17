@@ -355,14 +355,14 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
                           </Link>
                           {
                             rental.type === 'HOUR' ?
-                              <p className="absolute top-5 right-0 left-0 text-center text-lg text-blue-bondi font-bold">
+                              <p className="absolute top-5 right-0 left-0 text-center text-lg text-blue-bondi font-bold" style={{ textShadow: '2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff' }}>
                                 {`${new Date(rental.initialDate).toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' })} `}
                                 {`${new Date(rental.initialDate).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} `}
                                 -
                                 {` ${new Date(rental.finalDate).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })} `}
                               </p>
                               :
-                              <p className="absolute top-5 right-0 left-0 text-center text-lg text-blue-bondi font-bold">
+                              <p className="absolute top-5 right-0 left-0 text-center text-lg text-blue-bondi font-bold" style={{ textShadow: '2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff' }}>
                                 {`${new Date(rental.initialDate).toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' })} `}
                                 -
                                 {` ${new Date(rental.finalDate).toLocaleDateString('es-ES', { year: '2-digit', month: '2-digit', day: '2-digit' })} `}

@@ -230,7 +230,7 @@ export default function UserEdit({ userData, userSession }) {
 
     return (
         <div className="md:bg-gray-100 flex justify-center items-center">
-            <main id='main' className="md:bg-white py-5 md:w-4/5 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-8 md:mb-8 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg flex flex-row">
+            <main id='main' className="md:bg-white py-5 md:w-4/5 w-full h-full md:h-3/4 md:min-h-[769px] md:mt-8 md:mb-8 md:rounded-xl md:border md:border-[#4aa7c0] relative md:shadow-lg flex flex-col md:flex-row">
                 <div className="basis-2/3 p-10">
                     <h2 className="text-2xl font-bold text-gray-500 text-center">Información personal</h2>
                     <form className="pr-3" onSubmit={handleSubmit}>
@@ -265,7 +265,10 @@ export default function UserEdit({ userData, userSession }) {
                         </div>
                     </form>
                 </div>
+                <hr className="my-4 block md:hidden" />
+
                 <div className="basis-1/3 grid grid-cols-[1px_1fr]">
+
                     <div className=" w-1 border-r">
 
                     </div>
