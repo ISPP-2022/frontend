@@ -66,7 +66,8 @@ function Chat(props) {
   }, [chatSelected])
 
   useEffect(() => {
-    if (didMount && query.user) {
+    console.log(didMount)
+    if (didMount.current && query.user) {
       if (chatsId) {
         socket.emit('leave')
         let index = chatsId.indexOf(parseInt(query.user));
