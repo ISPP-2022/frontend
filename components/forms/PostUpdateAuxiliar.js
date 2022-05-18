@@ -40,7 +40,7 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
         }
 
         if (endHour != '' && endHour - startHour < 0) {
-            errorsArray.push('La hora de inicio debe ser posterior a la hora de fin.');
+            errorsArray.push('La hora de inicio debe ser anterior a la hora de fin.');
         }
 
         if (endHour != '' && endHour - startHour < 60 * 60 * 1000 && endHour - startHour > 0) {

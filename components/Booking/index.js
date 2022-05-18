@@ -196,7 +196,7 @@ export default function Booking({ user, space, type, setType, formStyle, rentals
           } else if (err.response.data === "Bad Request: Initial date must be after 24 hours from now") {
             alert("La fecha inicial debe ser con al menos 24 horas de anticipación.")
           } else if (err.response.data === "Bad Request: Final date must be after initial date") {
-            alert("La hora de inicio debe ser superior a la de fin.")
+            alert("La hora de inicio debe ser anterior a la de fin.")
           } else if (err.response.data === "Bad Request: Cannot rent a space for 0 hours at the same day") {
             alert("No puedes alquilar un espacio por 0 horas en el mismo día.")
           }
