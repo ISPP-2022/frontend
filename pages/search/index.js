@@ -14,8 +14,8 @@ import InteractiveMapBox from '../../components/InteractiveMapBox';
 import Link from 'next/link';
 import Head from 'next/head';
 
-
 const Search = () => {
+
     const router = useRouter();
     //set query data cloning router.query
     const [data, setData] = useState([]);
@@ -39,6 +39,23 @@ const Search = () => {
     const [minPriceMonth, setMinPriceMonth] = useState(0);
     const [maxPriceMonth, setMaxPriceMonth] = useState(0);
 
+    const deg2rad = (deg) => {
+        return deg * (Math.PI / 180);
+    };
+
+    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        console.log(lat1, lon1, lat2, lon2);
+        const R = 6371;
+        const dLat = deg2rad(lat2 - lat1);
+        const dLon = deg2rad(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const d = R * c;
+        return d;
+    };
 
     const parseQueryToState = (qr) => {
         const { search, tag, isRentPerDay, isRentPerHour, isRentPerMonth, minDim, maxDim, minPriceDay, maxPriceDay, minPriceHour, maxPriceHour, minPriceMonth, maxPriceMonth } = qr;
@@ -93,39 +110,81 @@ const Search = () => {
     }
 
     useEffect(() => {
-        setLoading(true);
-        parseQueryToState(router.query);
-        axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
-            .then(async (response) => {
-                for (let i = 0; i < response.data.length; i++) {
-                    const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
-                        .then(rat => rat.data).catch(() => { return [] });
-                    response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
-                }
-                setData(response.data)
-                setLoading(false);
-            })
-            .catch(error => {
-                setData([])
-            });
+        const fecthData = async () => {
+            setLoading(true);
+            parseQueryToState(router.query);
+            const mapSearch = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${router.query.search}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_KEY}&country=es&limit=1`)
+                .then(res => {
+                    if (res.data.features.length > 0) {
+                        const latitudSearch = res.data.features[0].geometry.coordinates[1];
+                        const longitudSearch = res.data.features[0].geometry.coordinates[0];
+                        return { latitudSearch, longitudSearch };
+                    }
+                })
+            console.log(mapSearch);
+            axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
+                .then(async (response) => {
+                    for (let i = 0; i < response.data.length; i++) {
+                        const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+                            .then(rat => rat.data).catch(() => { return [] });
+                        response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
+                    }
+                    if (mapSearch) {
+                        console.log("1", response.data)
+                        response.data.map(space => {
+                            let spaceLocation = space.location.split(',');
+                            space.distance = getDistanceFromLatLonInKm(mapSearch.latitudSearch, mapSearch.longitudSearch, parseFloat(spaceLocation[0]), parseFloat(spaceLocation[1]));
+                            return space;
+                        });
+                        response.data.sort((a, b) => a.distance - b.distance);
+                        console.log("2", response.data)
+                    }
+                    setData(response.data)
+                    setLoading(false);
+                })
+                .catch(error => {
+                    setData([])
+                });
+        }
+        fecthData();
     }, []);
 
     useEffect(() => {
-        setLoading(true);
-        parseQueryToState(router.query);
-        axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
-            .then(async (response) => {
-                for (let i = 0; i < response.data.length; i++) {
-                    const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
-                        .then(rat => rat.data).catch(() => { return [] });
-                    response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
-                }
-                setData(response.data)
-                setLoading(false);
-            })
-            .catch(error => {
-                setData([])
-            });
+        const fecthData = async () => {
+            setLoading(true);
+            parseQueryToState(router.query);
+            const mapSearch = await axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${router.query.search}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_KEY}&country=es&limit=1`)
+                .then(res => {
+                    if (res.data.features.length > 0) {
+                        const latitudSearch = res.data.features[0].geometry.coordinates[1];
+                        const longitudSearch = res.data.features[0].geometry.coordinates[0];
+                        return { latitudSearch, longitudSearch };
+                    }
+                })
+            console.log(mapSearch);
+            axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/spaces`, { params: router.query })
+                .then(async (response) => {
+                    for (let i = 0; i < response.data.length; i++) {
+                        const ratings = await axios.get(`${process.env.NEXT_PUBLIC_DATA_API_URL || 'http://localhost:4100'}/api/v1/users/${response.data[i].ownerId}/ratings?filter=received`)
+                            .then(rat => rat.data).catch(() => { return [] });
+                        response.data[i].rating = ratings.reduce((acc, cur) => acc + cur.rating / ratings.length, 0);
+                    }
+                    if (mapSearch) {
+                        response.data.map(space => {
+                            let spaceLocation = space.location.split(',');
+                            space.distance = getDistanceFromLatLonInKm(mapSearch.latitudSearch, mapSearch.longitudSearch, parseFloat(spaceLocation[0]), parseFloat(spaceLocation[1]));
+                            return space;
+                        });
+                        response.data.sort((a, b) => a.distance - b.distance);
+                    }
+                    setData(response.data)
+                    setLoading(false);
+                })
+                .catch(error => {
+                    setData([])
+                });
+        }
+        fecthData();
     }, [router.query]);
 
     const handleTagChange = (event) => {
@@ -246,10 +305,10 @@ const Search = () => {
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <div className='float-left pr-3'>
-                                                    <FieldTextBox type={'number'} label="Mínimo (€)" value={minPriceMonth} name="minPriceMonth" onChange={(e) => { setMinPriceMonth(e.target.value) }} />
+                                                    <FieldTextBox type={'number'} min={0} label="Mínimo (m)" value={minDim} name="minDim" onChange={(e) => { setMinDim(e.target.value) }} />
                                                 </div>
                                                 <div className='float-left pr-3 mb-4'>
-                                                    <FieldTextBox type={'number'} label="Máximo (€)" value={maxPriceMonth} name="maxPriceMonth" onChange={(e) => { setMaxPriceMonth(e.target.value) }} />
+                                                    <FieldTextBox type={'number'} min={0} label="Máximo (m)" value={maxDim} name="maxDim" onChange={(e) => { setMaxDim(e.target.value) }} />
                                                 </div>
                                             </AccordionDetails>
                                         </Accordion>

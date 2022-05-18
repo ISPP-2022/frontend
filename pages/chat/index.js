@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -16,6 +16,7 @@ function Chat(props) {
   const router = useRouter();
 
   const { query } = router;
+  const didMount = useRef(false);
 
   useEffect(() => {
     const socketCon = io(process.env.NEXT_PUBLIC_CHAT_SOCKET_URL || "http://localhost:4200", {
@@ -65,7 +66,8 @@ function Chat(props) {
   }, [chatSelected])
 
   useEffect(() => {
-    if (query.user) {
+    console.log(didMount)
+    if (didMount.current && query.user) {
       if (chatsId) {
         socket.emit('leave')
         let index = chatsId.indexOf(parseInt(query.user));
@@ -89,6 +91,7 @@ function Chat(props) {
         }
       }
     }
+    didMount.current = true;
   }, [query.user, chatsId, chatsUsers])
 
   const handleMessageSend = (event) => {
