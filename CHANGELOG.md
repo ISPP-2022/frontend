@@ -1,3 +1,13 @@
+## [0.4.1](https://github.com/Stacking-Up/frontend/compare/v0.4.0...v0.4.1) (2022-05-18)
+
+
+### Bug Fixes
+
+* Changes ([8de6785](https://github.com/Stacking-Up/frontend/commit/8de67859861b1b0d6fd0990d58856f2f208e542d))
+* Minor changes and bugfixes ([d34d674](https://github.com/Stacking-Up/frontend/commit/d34d67475357593eb94e75925ceabbf0c0cdfb07))
+
+
+
 # [0.4.0](https://github.com/Stacking-Up/frontend/compare/v0.3.1...v0.4.0) (2022-05-16)
 
 
