@@ -227,7 +227,7 @@ export default function Comments({
                   ratingValue={dataForm.rating * 20}
                   transition
                 />
-                <Button className="shadow-lg rounded-lg" type="submit">
+                <Button className="shadow-lg rounded-lg" type={!loading && "submit"}>
                   {!loading && "Enviar valoración"}
                   {loading && <Loading size="small" />}
                 </Button>

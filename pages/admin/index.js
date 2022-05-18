@@ -15,7 +15,7 @@ export default function Admin() {
   }
 
   const header = {
-    user: { 'ID': 'id', 'Nombre': 'name', 'Apellido': 'surname', 'Email': 'email', 'Numero de telefono': 'phoneNumber' },
+    user: { 'ID': 'id', 'Nombre': 'name', 'Apellido': 'surname', 'Email': 'email', 'Rol': 'role', 'Numero de telefono': 'phoneNumber' },
     space: { 'Nombre': 'name', 'Fecha de inicio': 'initialDate', 'Fecha de fin': 'finalDate', 'Ciudad': 'city' },
     rentals: { 'ID': 'id', 'Inquilino': 'renterId', 'Espacio': 'spaceId', 'Fecha de inicio': 'initialDate', 'Fecha de fin': 'finalDate', 'Tipo': 'type' },
   }
@@ -178,6 +178,13 @@ export default function Admin() {
       }
       const result = await axios.get(url)
         .then(res => res.data)
+      if (type === 'user') {
+        result.map(item => {
+          item.email = item.auth.email
+          item.role = item.auth.role
+          return item
+        })
+      }
       setData(result)
     }
     fetchData()
