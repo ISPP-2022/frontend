@@ -146,7 +146,7 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
         <div className="md:flex md:justify-between">
           {
             userSession && userSession.userId === userData.id && userSession.role === 'USER' ?
-              <>
+              <div style={{ margin: "50px 0" }}>
                 <Button disabled={!userData.phoneNumber}
                   className={`px-5 py-1 text-xl my-auto rounded transition-colors duration-100 font-semibold flex 
                   items-center space-x-2 border ${userData.phoneNumber ? 'border-blue-bondi text-blue-bondi' : 'border-gray-500 text-gray-500'}`} color="none"
@@ -157,10 +157,16 @@ export default function User({ id, userData, spaces, ratings, rentals, userSessi
                   Verificarse
                 </Button>
                 {
+                  !userData.phoneNumber &&
+                  <p className="text-gray-500">
+                    *Añada un telefono a su perfil
+                  </p>
+                }
+                {
                   openVerified ?
                     <VerifyProfile phoneNumber={userData.phoneNumber} setOpen={setOpenVerified} /> : null
                 }
-              </> : null
+              </div> : null
           }
 
           {/* Nombre, foto de perfil, valoración del usuario y botón de chat */}
