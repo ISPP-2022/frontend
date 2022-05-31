@@ -62,7 +62,10 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
         const diffTime = Math.abs(date2 - date1);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         if (diffDays < 30) {
-            errorsArray.push('Si se indica un alquiler de meses, la disponibilidad debe ser al menos de 30 días.');
+            errorsArray.push('Si se indica un alquiler por meses, la disponibilidad debe ser al menos de 30 días.');
+        }
+        if (Math.ceil(Math.abs(date2 - new Date()) / (1000 * 60 * 60 * 24)) < 33) {
+            errorsArray.push('Si se indica un alquiler por meses, al menos debe haber pasado 33 días desde el día de hoy.');
         }
     }
 
