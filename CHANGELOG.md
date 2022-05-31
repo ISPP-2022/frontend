@@ -1,3 +1,12 @@
+## [0.4.2](https://github.com/Stacking-Up/frontend/compare/v0.4.1...v0.4.2) (2022-05-31)
+
+
+### Bug Fixes
+
+* cosas ([84739c2](https://github.com/Stacking-Up/frontend/commit/84739c29f082e4fd9ff6c4741cba102f1c9e20fd))
+
+
+
 ## [0.4.1](https://github.com/Stacking-Up/frontend/compare/v0.4.0...v0.4.1) (2022-05-18)
 
 
