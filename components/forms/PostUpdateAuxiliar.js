@@ -1,6 +1,6 @@
 import { addDays } from 'date-fns';
 
-export default function PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, shared, type, space, title, description) {
+export default function PostUpdateVerification(startHour, endHour, startAvailability, endAvailability, location, shared, type, space, title, description, price) {
     let errorsArray = [];
 
 
@@ -11,6 +11,10 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
 
     if (description?.trim().length < 3) {
         errorsArray.push('La descripcion debe tener al menos 3 caracteres');
+    }
+
+    if (!price || price < 1) {
+        errorsArray.push('El precio debe ser mayor que 1');
     }
 
     if (space == '') {
@@ -54,7 +58,16 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
     const date1 = new Date(startAvailability);
     const today = new Date();
     if (date1 < today) {
-        errorsArray.push('La fecha de inicio de disponibilidad debe ser posterior a la fecha actual');
+        errorsArray.push('La fecha de inicio de disponibilidad debe ser posterior a la fecha actual.');
+    }
+
+    if (type !== 'months' && endAvailability != undefined) {
+        const date2 = new Date(endAvailability);
+        const diffTime = Math.abs(date2 - date1);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays < 5) {
+            errorsArray.push('La disponibilidad inicial de un espacio debe ser mayor a 5 días.');
+        }
     }
 
     if (type == 'months' && endAvailability != undefined) {
@@ -65,7 +78,7 @@ export default function PostUpdateVerification(startHour, endHour, startAvailabi
             errorsArray.push('Si se indica un alquiler por meses, la disponibilidad debe ser al menos de 30 días.');
         }
         if (Math.ceil(Math.abs(date2 - new Date()) / (1000 * 60 * 60 * 24)) < 33) {
-            errorsArray.push('Si se indica un alquiler por meses, al menos debe haber pasado 33 días desde el día de hoy.');
+            errorsArray.push('Si se indica un alquiler por meses, la fecha de finalización debe ser posterior al día actual en al menos 33 días.');
         }
     }
 

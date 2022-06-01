@@ -95,6 +95,11 @@ export default function UserEdit({ userData, userSession }) {
             validations.push(false);
         }
 
+        if (userSession?.role !== 'USER' && (phoneNumber != userData?.phoneNumber)) {
+            errorsTemp = { ...errorsTemp, phoneNumber: `Los usuarios verificados no se puede modificar el numero de telefono` }
+            validations.push(false);
+        }
+
         if (idCard && !checkIdCard(idCard)) {
             errorsTemp = { ...errorsTemp, idCard: `El DNI debe seguir el formato XXXXXXXXA o es invalido` }
             validations.push(false);
@@ -237,7 +242,7 @@ export default function UserEdit({ userData, userSession }) {
                         <LegalName userData={userDataForm} setUserData={setUserData} error={errors.name ?? ''} />
                         <Sex userData={userDataForm} setUserData={setUserData} error={errors.sex ?? ''} />
                         <IdCard userData={userDataForm} setUserData={setUserData} error={errors.idCard ?? ''} />
-                        <PhoneNumber userData={userDataForm} setUserData={setUserData} error={errors.phoneNumber ?? ''} />
+                        <PhoneNumber userData={userDataForm} setUserData={setUserData} error={errors.phoneNumber ?? ''} disabled={userSession?.role !== 'USER'} />
                         <Avatar userData={userDataForm} setUserData={setUserData} error={errors.avatar ?? ''} />
 
 
