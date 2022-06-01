@@ -200,8 +200,9 @@ export default function AdvertisementForm(props) {
         let startHourdate = (new Date()).setHours(startHour.split(':')[0], startHour.split(':')[1]);
         let endHourdate = (new Date()).setHours(endHour.split(':')[0], endHour.split(':')[1]);
         // Realiza las validaciones
+
         let errorsArray = (PostUpdateVerification(startHourdate, endHourdate, startAvailability, endAvailability, location,
-            shared, type, space, title, description));
+            shared, type, space, title, description, price));
 
         // Si no hay errores, hacemos POST/UPDATE
         if (errorsArray.length == 0) {
@@ -223,7 +224,39 @@ export default function AdvertisementForm(props) {
                         setSuccess(true);
                         router.push('/');
                     }).catch(err => {
-                        setErrors(['Ha habido un problema. Inténtelo más tarde.']);
+                        let errors = [];
+                        if (err.response.status === 400) {
+                            if (err.response.data === 'Bad Request: Dimensions must be a valid width,height pair') {
+                                errors = ['Las dimensiones no son válidas'];
+                            } else if (err.response.data === 'Bad Request: PriceMonth must be a number') {
+                                errors = ['El precio mensual no es válido'];
+                            } else if (err.response.data === 'Bad Request: PriceDay must be a number') {
+                                errors = ['El precio diario no es válido'];
+                            } else if (err.response.data === 'Bad Request: PriceHour must be a number') {
+                                errors = ['El precio por hora no es válido'];
+                            } else if (err.response.data === 'Bad Request: You must defined at least one valid price greater than 1') {
+                                errors = ['El precio debe ser mayor que 1'];
+                            } else if (err.response.data === 'Bad Request: Name must be between 2 and 50 characters') {
+                                errors = ['El nombre debe tener entre 2 y 50 caracteres'];
+                            } else if (err.response.data === 'Bad Request: Initial date must be a Date after today') {
+                                errors = ['La fecha de inicio debe ser posterior a hoy'];
+                            } else if (err.response.data === 'Bad Request: Final date must be a Date') {
+                                errors = ['La fecha de finalización debe ser una fecha'];
+                            } else if (err.response.data === 'Bad Request: Location must be a valid latitude,longitude pair') {
+                                errors = ['La localización no es válida'];
+                            } else if (err.response.data === 'Bad Request: Final date must be after initial date') {
+                                errors = ['La fecha de finalización debe ser posterior a la de inicio'];
+                            } else if (err.response.data === 'Bad Request: You must defined all the required fields to rent per hour') {
+                                errors = ['Todos los campos de alquiler por hora son obligatorios'];
+                            } else if (err.response.data === 'Bad Request: Space must be available between hours of the same day or at least with a difference of one hour') {
+                                errors = ['El espacio debe estar disponible entre las horas del mismo día o con una diferencia de una hora'];
+                            } else {
+                                errors = ['Ha habido un problema. Inténtelo más tarde.']
+                            }
+                        } else {
+                            errors = ['Ha habido un problema. Inténtelo más tarde.']
+                        }
+                        setErrors(errors);
                     });
 
                 // Si no es edit --> POST
@@ -236,7 +269,39 @@ export default function AdvertisementForm(props) {
                         setSuccess(true);
                         router.push('/')
                     }).catch(err => {
-                        setErrors(['Ha habido un problema. Inténtelo más tarde.']);
+                        let errors = [];
+                        if (err.response.status === 400) {
+                            if (err.response.data === 'Bad Request: Dimensions must be a valid width,height pair') {
+                                errors = ['Las dimensiones no son válidas'];
+                            } else if (err.response.data === 'Bad Request: PriceMonth must be a number') {
+                                errors = ['El precio mensual no es válido'];
+                            } else if (err.response.data === 'Bad Request: PriceDay must be a number') {
+                                errors = ['El precio diario no es válido'];
+                            } else if (err.response.data === 'Bad Request: PriceHour must be a number') {
+                                errors = ['El precio por hora no es válido'];
+                            } else if (err.response.data === 'Bad Request: You must defined at least one valid price greater than 1') {
+                                errors = ['El precio debe ser mayor que 1'];
+                            } else if (err.response.data === 'Bad Request: Name must be between 2 and 50 characters') {
+                                errors = ['El nombre debe tener entre 2 y 50 caracteres'];
+                            } else if (err.response.data === 'Bad Request: Initial date must be a Date after today') {
+                                errors = ['La fecha de inicio debe ser posterior a hoy'];
+                            } else if (err.response.data === 'Bad Request: Final date must be a Date') {
+                                errors = ['La fecha de finalización debe ser una fecha'];
+                            } else if (err.response.data === 'Bad Request: Location must be a valid latitude,longitude pair') {
+                                errors = ['La localización no es válida'];
+                            } else if (err.response.data === 'Bad Request: Final date must be after initial date') {
+                                errors = ['La fecha de finalización debe ser posterior a la de inicio'];
+                            } else if (err.response.data === 'Bad Request: You must defined all the required fields to rent per hour') {
+                                errors = ['Todos los campos de alquiler por hora son obligatorios'];
+                            } else if (err.response.data === 'Bad Request: Space must be available between hours of the same day or at least with a difference of one hour') {
+                                errors = ['El espacio debe estar disponible entre las horas del mismo día o con una diferencia de una hora'];
+                            } else {
+                                errors = ['Ha habido un problema. Inténtelo más tarde.']
+                            }
+                        } else {
+                            errors = ['Ha habido un problema. Inténtelo más tarde.']
+                        }
+                        setErrors(errors);
                     });
             }
         } else {
@@ -275,7 +340,6 @@ export default function AdvertisementForm(props) {
                 <main className='grid bg-gray-100  place-items-center md:py-4 '>
                     <form id="FORM_ID" onSubmit={handleSubmit} className='bg-white text-webcolor-50 p-6 md:rounded-xl w-full md:w-[750px] space-y-4 divide-y-2'>
                         <p className='text-center'>INFORMACIÓN DE TU ESPACIO</p>
-
                         {/* Tipos de espacios */}
                         <fieldset className='space-y-4'>
                             <p className='py-4'>Tipo de espacio</p>
